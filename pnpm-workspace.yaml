@@ -1,0 +1,8 @@
+allowBuilds:
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
+  workerd: true
+minimumReleaseAgeExclude:
+  - '@maplibre/maplibre-gl-style-spec@26.3.0'
+  - maplibre-gl@6.6.0
