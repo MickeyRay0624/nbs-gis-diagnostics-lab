@@ -1,0 +1,25 @@
+project:
+  name: Ganjam District WorldCover technical demonstration
+  aoi: ../../../public/data/ganjam-aoi.geojson
+  aoi_crs: EPSG:4326
+
+analysis:
+  target_crs: EPSG:6933
+  # A 100 m grid keeps a live demonstration fast. Use 30 for a detailed test.
+  target_resolution: 100
+  max_output_pixels: 5000000
+  output_nodata: 0
+  all_touched: false
+  # WorldCover code 0 is treated as NoData rather than a land-cover class.
+  unmapped_class_policy: nodata
+  rasters:
+    2020: data/ESA_WorldCover_10m_2020_v100_N18E084_Map.tif
+    2021: data/ESA_WorldCover_10m_2021_v200_N18E084_Map.tif
+  crosswalk: worldcover_crosswalk.csv
+  transitions:
+    - [2020, 2021]
+
+output:
+  directory: ../../outputs/worldcover-demo
+  write_maps: true
+  map_dpi: 160

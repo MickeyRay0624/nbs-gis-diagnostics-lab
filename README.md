@@ -4,6 +4,8 @@ A browser-based geospatial workspace for reproducible Nature-based Solutions dia
 
 The repository also contains an installable Python GIS engine and command-line runner for deterministic LULC change processing. See [`engine/README.md`](engine/README.md).
 
+A reproducible real-data technical demonstration uses the current Ganjam AOI with public ESA WorldCover rasters. See [`engine/examples/ganjam-worldcover-demo/README.md`](engine/examples/ganjam-worldcover-demo/README.md). Its 2020-2021 comparison demonstrates software behaviour only because the two WorldCover releases use different algorithm versions.
+
 ## Live demonstration
 
 https://mickeyray0624.github.io/nbs-gis-diagnostics-lab/

@@ -3,6 +3,7 @@
 /.vite/
 /.idea/
 /.venv*/
+/engine/outputs/
 **/__pycache__/
 **/.pytest_cache/
 **/.ruff_cache/
