@@ -1,0 +1,29 @@
+project:
+  name: Ganjam District LULC pilot
+  aoi: ../../../public/data/ganjam-aoi.geojson
+  aoi_crs: EPSG:4326
+
+analysis:
+  # Equal-area output grid for defensible area statistics.
+  target_crs: EPSG:6933
+  target_resolution: 30
+  max_output_pixels: 100000000
+  output_nodata: 0
+  all_touched: false
+  unmapped_class_policy: error
+
+  # Replace these placeholders with the approved classified GeoTIFFs.
+  rasters:
+    2002: data/lulc_2002.tif
+    2012: data/lulc_2012.tif
+    2022: data/lulc_2022.tif
+
+  crosswalk: class_crosswalk.csv
+  transitions:
+    - [2002, 2012]
+    - [2012, 2022]
+
+output:
+  directory: ../../outputs
+  write_maps: true
+  map_dpi: 180

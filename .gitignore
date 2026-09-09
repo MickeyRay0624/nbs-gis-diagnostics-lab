@@ -1,6 +1,12 @@
 /node_modules/
 /dist-pages/
 /.vite/
+/.idea/
+/.venv*/
+**/__pycache__/
+**/.pytest_cache/
+**/.ruff_cache/
+*.egg-info/
 .DS_Store
 *.log
 .env*

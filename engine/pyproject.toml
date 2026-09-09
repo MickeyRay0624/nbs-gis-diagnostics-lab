@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nbs-gis"
+version = "0.1.0"
+description = "Reproducible GIS processing tools for Nature-based Solutions diagnostics"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "MickeyRay0624" }]
+dependencies = [
+  "matplotlib>=3.9",
+  "numpy>=2.0",
+  "pyproj>=3.7",
+  "PyYAML>=6.0",
+  "rasterio>=1.4",
+  "shapely>=2.0",
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest>=8.3",
+  "ruff>=0.12",
+]
+
+[project.scripts]
+nbs-gis = "nbs_gis.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

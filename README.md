@@ -2,6 +2,8 @@
 
 A browser-based geospatial workspace for reproducible Nature-based Solutions diagnostics.
 
+The repository also contains an installable Python GIS engine and command-line runner for deterministic LULC change processing. See [`engine/README.md`](engine/README.md).
+
 ## Live demonstration
 
 https://mickeyray0624.github.io/nbs-gis-diagnostics-lab/
@@ -13,10 +15,12 @@ https://mickeyray0624.github.io/nbs-gis-diagnostics-lab/
 - Interactive OpenStreetMap basemap
 - Automated geometry checks, area and vertex metrics, bounding box and provenance
 - Downloadable AOI GeoJSON and machine-readable pre-flight manifest
+- Python package with `nbs-gis preflight` and `nbs-gis run-lulc` commands
+- Tested raster alignment, AOI masking, reclassification, area statistics and transition analysis
 
 ## What is not yet available
 
-The project does not yet contain the 2002, 2012 and 2022 LULC rasters, a class crosswalk, a fixed processing specification or reference outputs. The interface therefore keeps land-cover change analysis locked and does not present synthetic change values as scientific evidence.
+The project does not yet contain the approved 2002, 2012 and 2022 LULC rasters, a completed class crosswalk, fixed priority-area rules or reference outputs. The command-line preflight therefore reports the Ganjam example as blocked, and the interface does not present synthetic change values as scientific evidence.
 
 ## Data and map sources
 
