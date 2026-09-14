@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { AoiFeatureCollection } from "./types";
 import type { CrosswalkRow, Result, RunRequest, VectorCollection } from "./analysis/model";
-import { readRaster, readVector } from "./analysis/io";
+import { readRaster, readRasterFootprint, readVector, validateVector } from "./analysis/io";
 import { csv, download, ESRI, PALETTE, parseCrosswalk, WORLDCOVER } from "./analysis/presets";
 import { MapPanel } from "./MapPanel";
 import { Results } from "./Results";
+import { HelpGuide } from "./HelpGuide";
+import { FileUpload } from "./FileUpload";
 
 type DemoMetadata = { name: string; inputs: { year: number; file: string; sha256: string }[]; [key: string]: unknown };
 type Upload = { year: number; file?: File };
@@ -12,7 +13,10 @@ const BASE = import.meta.env.BASE_URL;
 const message = (e: unknown) => e instanceof Error ? e.message : String(e);
 
 export default function App() {
-  const [aoi, setAoi] = useState<AoiFeatureCollection | null>(null);
+  const [aoi, setAoi] = useState<VectorCollection | null>(null);
+  const [footprint, setFootprint] = useState<VectorCollection | null>(null);
+  const [footprintLoading, setFootprintLoading] = useState(false);
+  const [footprintError, setFootprintError] = useState<string | null>(null);
   const [metadata, setMetadata] = useState<DemoMetadata | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [dataset, setDataset] = useState("demo");
@@ -37,12 +41,29 @@ export default function App() {
     const controller = new AbortController();
     Promise.all([fetch(`${BASE}data/ganjam-aoi.geojson`, { signal: controller.signal }), fetch(`${BASE}data/worldcover/metadata.json`, { signal: controller.signal })])
       .then(async responses => { if (responses.some(r => !r.ok)) throw new Error("Public example could not be loaded. Reload to retry, or upload your own rasters."); return Promise.all(responses.map(r => r.json())); })
-      .then(([boundary, meta]) => { setAoi(boundary); setMetadata(meta); })
+      .then(([boundary, meta]) => { setAoi(validateVector(boundary)); setMetadata(meta); })
       .catch(e => { if (e.name !== "AbortError") setLoadError(message(e)); });
     return () => { controller.abort(); runToken.current++; worker.current?.terminate(); };
   }, []);
 
   useEffect(() => { setResult(null); setError(null); setStatus("Ready to run with the current settings"); }, [dataset, preset, module, years, uploads, rows, forest, cell, edge, boundaryEdge, vectors]);
+
+  // The runner sorts years before selecting its reference grid; preview the same input.
+  const firstFile = [...uploads].sort((a, b) => a.year - b.year)[0]?.file;
+  useEffect(() => {
+    let active = true;
+    setFootprint(null); setFootprintError(null); setFootprintLoading(false);
+    if (dataset === "upload" && firstFile && !vectors.aoi) {
+      setFootprintLoading(true);
+      readRasterFootprint(firstFile).then(value => { if (active) setFootprint(value); })
+        .catch(e => { if (active) setFootprintError(message(e)); })
+        .finally(() => { if (active) setFootprintLoading(false); });
+    }
+    return () => { active = false; };
+  }, [dataset, firstFile, vectors.aoi]);
+
+  const mapAoi = dataset === "demo" ? aoi : vectors.aoi ?? footprint;
+  const areaLabel = dataset === "demo" ? "Ganjam District, Odisha" : vectors.aoi ? vectorNames.aoi : firstFile?.name ?? "Your study area";
 
   const choosePreset = (name: string) => {
     setPreset(name); setRows(name === "worldcover" ? WORLDCOVER : name === "esri" ? ESRI : []);
@@ -80,26 +101,28 @@ export default function App() {
       if (token !== runToken.current) return;
       const request: RunRequest = { sources, crosswalk: rows, forestCodes: forest, edge, cell, countBoundary: boundaryEdge, module,
         dataset: dataset === "demo" ? "ESA WorldCover · Ganjam public demonstration" : `${{ worldcover: "WorldCover", esri: "ESRI land cover", glc: "GLC-FCS30D", custom: "Custom land cover" }[preset]} · uploaded rasters`,
-        aoi: dataset === "demo" ? aoi as unknown as VectorCollection : vectors.aoi,
+        aoi: dataset === "demo" ? aoi! : vectors.aoi,
         protectedAreas: vectors.protectedAreas, oecm: vectors.oecm,
         provenance: dataset === "demo" ? metadata! : { source: "User uploads", preset, vector_files: vectorNames } };
       worker.current?.terminate();
       const w = new Worker(new URL("./analysis/worker.ts", import.meta.url), { type: "module" }); worker.current = w;
       w.onmessage = event => {
+        if (token !== runToken.current) return;
         if (event.data.type === "progress") setStatus(event.data.message);
         if (event.data.type === "result") { setResult(event.data.result); setRunning(false); setStatus("Analysis complete · results reflect the selected settings"); w.terminate(); worker.current = null; }
         if (event.data.type === "error") { setError(event.data.message); setRunning(false); setStatus("Check the inputs and run again"); w.terminate(); worker.current = null; }
       };
-      w.onerror = () => { setError("The analysis worker stopped. Try a smaller study area or a coarser resolution."); setRunning(false); w.terminate(); worker.current = null; };
+      w.onerror = () => { if (token !== runToken.current) return; setError("The analysis worker stopped. Try a smaller study area or a coarser resolution."); setRunning(false); w.terminate(); worker.current = null; };
       w.postMessage(request, sources.flatMap(s => s.buffer ? [s.buffer] : []));
     } catch (e) { if (token === runToken.current) { setError(message(e)); setRunning(false); } }
   };
 
   return <div className="app-shell">
-    <header className="topbar"><div className="brand"><span className="brand-mark" aria-hidden="true">N</span><div><p className="eyebrow">Nature-based Solutions · Geospatial Diagnostics</p><p className="brand-title">NbS Diagnostics Lab</p></div></div><div className="topbar-actions"><span className="live-pill"><span /> Public data workspace</span><span className="version-label">v0.3</span></div></header>
+    <header className="topbar"><div className="brand"><span className="brand-mark" aria-hidden="true">N</span><div><p className="eyebrow">Nature-based Solutions · Geospatial Diagnostics</p><p className="brand-title">NbS Diagnostics Lab</p></div></div><div className="topbar-actions"><span className="live-pill"><span /> Public data workspace</span><nav className="workspace-links" aria-label="Workspace navigation"><a href="#study-area">Overview</a><a href="#analysis-output">Results</a><a href="#user-guide">Guide</a></nav><span className="version-label">v0.3.1</span></div></header>
     <main className="workspace">
       <section className="hero-panel"><div><p className="eyebrow accent">Ganjam pilot · Land cover & forest structure</p><h1>Explore how landscapes change.</h1><p className="hero-copy">Compare land cover, follow gains and losses, and examine forest fragmentation. Start with public data or bring your own study area.</p></div><div className="architecture-chip"><span><small>Explore</small>2–3 periods</span><b>→</b><span><small>Export</small>Maps & evidence</span></div></section>
       {dataset === "demo" && <div className="demo-notice"><strong>Public-data test</strong><span>ESA WorldCover 2020 and 2021 use different algorithms. These comparisons test the software and do not establish verified land-cover change. <a href="https://esa-worldcover.org/en/data-access" target="_blank" rel="noreferrer">Source & licence ↗</a></span></div>}
+      <HelpGuide />
       <div className="lab-grid">
         <aside className="control-panel card">
           <div className="section-heading"><div><p className="step-number">01 · RUN SETUP</p><h2>Configure your analysis</h2></div></div>
@@ -108,9 +131,9 @@ export default function App() {
             {dataset === "demo" ? <><p className="field-help">Full Ganjam district · 10 m source → 50 m equal-area test grid · no account needed.</p><fieldset className="period-fieldset"><legend className="field-label">Analysis years</legend><div className="checkbox-list inline">{[2020, 2021].map(y => <label key={y}><input type="checkbox" checked={years.includes(y)} onChange={e => setYears(e.target.checked ? [...years, y].sort() : years.filter(v => v !== y))} />{y}</label>)}</div></fieldset></> : <>
               <label className="field-label" htmlFor="preset">Source classification</label><select id="preset" value={preset} onChange={e => choosePreset(e.target.value)}><option value="worldcover">ESA WorldCover</option><option value="esri">ESRI / Impact Observatory</option><option value="glc">GLC-FCS30D · inspect source codes</option><option value="custom">Other categorical land cover</option></select>
               <p className="field-help">Single-band GeoTIFFs. WGS84, UTM, Web Mercator or EPSG:6933. Code 0 and declared NoData are excluded. Crop large tiles first.</p>
-              {uploads.map((u, i) => <div className="upload-period" key={i}><input aria-label={`Year ${i + 1}`} type="number" min={1900} max={2100} value={u.year} onChange={e => setUploads(v => v.map((x, n) => n === i ? { ...x, year: Number(e.target.value) } : x))} /><input aria-label={`GeoTIFF ${i + 1}`} type="file" accept=".tif,.tiff" onChange={e => { const file = e.target.files?.[0]; setUploads(v => v.map((x, n) => n === i ? { ...x, file } : x)); }} /><button className="remove-button" aria-label={`Remove period ${i + 1}`} onClick={() => setUploads(v => v.filter((_, n) => n !== i))}>×</button></div>)}
+              {uploads.map((u, i) => <div className="upload-period" key={i}><input aria-label={`Year ${i + 1}`} type="number" min={1900} max={2100} value={u.year} onChange={e => setUploads(v => v.map((x, n) => n === i ? { ...x, year: Number(e.target.value) } : x))} /><FileUpload label={`GeoTIFF ${i + 1}`} accept=".tif,.tiff" fileName={u.file?.name ?? ""} onChange={file => setUploads(v => v.map((x, n) => n === i ? { ...x, file } : x))} /><button className="remove-button" aria-label={`Remove period ${i + 1}`} onClick={() => setUploads(v => v.filter((_, n) => n !== i))}>×</button></div>)}
               <div className="output-actions">{uploads.length < 3 && <button onClick={() => setUploads(v => [...v, { year: (v.at(-1)?.year ?? 2019) + 1 }])}>+ Add period</button>}<button onClick={inspect}>Load raster class codes</button></div>
-              <label className="field-label" htmlFor="aoi-upload">AOI boundary (optional)</label><input id="aoi-upload" type="file" accept=".geojson,.json,.zip" onChange={e => loadVector("aoi", e.target.files?.[0])} /><p className="field-help">WGS84 GeoJSON or one zipped Shapefile with .shp, .dbf and .prj. Defaults to the first raster’s extent.</p>
+              <label className="field-label" htmlFor="aoi-upload">AOI boundary (optional)</label><FileUpload id="aoi-upload" label="AOI boundary (optional)" accept=".geojson,.json,.zip" fileName={vectorNames.aoi ?? ""} onChange={file => loadVector("aoi", file)} /><p className="field-help">WGS84 GeoJSON or one zipped Shapefile with .shp, .dbf and .prj. Defaults to the earliest-year raster’s extent.</p>
               {vectors.aoi && <button className="text-button" onClick={() => { setVectors(v => ({ ...v, aoi: undefined })); setVectorNames(v => ({ ...v, aoi: "" })); }}>Clear {vectorNames.aoi}</button>}
             </>}
             <label className="field-label" htmlFor="module">Diagnostic module</label><select id="module" value={module} onChange={e => setModule(e.target.value as RunRequest["module"])}><option value="both">LULC change + forest fragmentation</option><option value="lulc">LULC change only</option><option value="fragmentation">Forest fragmentation only</option></select>
@@ -118,11 +141,11 @@ export default function App() {
             <p className="field-help">Smaller cells retain more detail. Full Ganjam fits the browser at 50 m or coarser; the limit is 8 million analysis cells.</p>
             {module !== "lulc" && <><fieldset className="period-fieldset"><legend className="field-label">Classes counted as forest</legend><div className="checkbox-list">{uniqueClasses.map(c => <label key={c.code}><input type="checkbox" checked={forest.includes(c.code)} onChange={e => setForest(e.target.checked ? [...forest, c.code] : forest.filter(v => v !== c.code))} /><i style={{ background: c.color }} />{c.name}</label>)}</div></fieldset><label className="check-setting"><input type="checkbox" checked={boundaryEdge} onChange={e => setBoundaryEdge(e.target.checked)} />Count AOI / NoData boundaries as edges</label><p className="field-help">Off by default, following the reference method. Protection boundaries never create forest edges.</p></>}
             <details className="setup-details"><summary>Reclassify land cover</summary><p className="field-help">Default source classes are preserved. To merge classes, use the same target code, name and colour for each source.</p>
-              <label className="field-label" htmlFor="crosswalk">Import crosswalk CSV</label><input id="crosswalk" type="file" accept=".csv" onChange={async e => { const f = e.target.files?.[0]; if (f) try { setRows(parseCrosswalk(await f.text())); } catch (err) { setError(message(err)); } }} />
+              <label className="field-label" htmlFor="crosswalk">Import crosswalk CSV</label><FileUpload id="crosswalk" label="Import crosswalk CSV" accept=".csv" onChange={async f => { if (f) try { setRows(parseCrosswalk(await f.text())); } catch (err) { setError(message(err)); } }} />
               <div className="table-scroll crosswalk-table"><table><thead><tr><th>Source</th><th>Target</th><th>Name</th><th>Colour</th></tr></thead><tbody>{rows.map((r, i) => <tr key={i}><td>{r.source}</td><td><input aria-label={`Target code for source ${r.source}`} type="number" min={1} max={999} value={r.code} onChange={e => setRows(v => v.map((x, n) => n === i ? { ...x, code: Number(e.target.value) } : x))} /></td><td><input aria-label={`Target name for source ${r.source}`} value={r.name} onChange={e => setRows(v => v.map((x, n) => n === i ? { ...x, name: e.target.value } : x))} /></td><td><input aria-label={`Colour for source ${r.source}`} type="color" value={r.color} onChange={e => setRows(v => v.map((x, n) => n === i ? { ...x, color: e.target.value } : x))} /></td></tr>)}</tbody></table></div>
               <button className="quiet-button" onClick={() => download("crosswalk.csv", csv([["source_code", "target_code", "target_name", "color"], ...rows.map(r => [r.source, r.code, r.name, r.color])]), "text/csv")}>Export crosswalk CSV ↓</button>
             </details>
-            {module !== "lulc" && <details className="setup-details"><summary>Protection & OECM layers</summary><p className="field-help">Optional WGS84 polygon GeoJSON or zipped Shapefiles. Use a complete dataset for the study area. Protected polygons take precedence where layers overlap.</p>{(["protectedAreas", "oecm"] as const).map(key => <div key={key}><label className="field-label" htmlFor={key}>{key === "oecm" ? "OECM polygons" : "Protected-area polygons"}</label><input id={key} type="file" accept=".geojson,.json,.zip" onChange={e => loadVector(key, e.target.files?.[0])} />{vectors[key] && <button className="text-button" onClick={() => { setVectors(v => ({ ...v, [key]: undefined })); setVectorNames(v => ({ ...v, [key]: "" })); }}>Clear {vectorNames[key]}</button>}</div>)}</details>}
+            {module !== "lulc" && <details className="setup-details"><summary>Protection & OECM layers</summary><p className="field-help">Optional WGS84 polygon GeoJSON or zipped Shapefiles. Use a complete dataset for the study area. Protected polygons take precedence where layers overlap.</p>{(["protectedAreas", "oecm"] as const).map(key => <div key={key}><label className="field-label" htmlFor={key}>{key === "oecm" ? "OECM polygons" : "Protected-area polygons"}</label><FileUpload id={key} label={key === "oecm" ? "OECM polygons" : "Protected-area polygons"} accept=".geojson,.json,.zip" fileName={vectorNames[key] ?? ""} onChange={file => loadVector(key, file)} />{vectors[key] && <button className="text-button" onClick={() => { setVectors(v => ({ ...v, [key]: undefined })); setVectorNames(v => ({ ...v, [key]: "" })); }}>Clear {vectorNames[key]}</button>}</div>)}</details>}
           </fieldset>
           <button className="run-button" disabled={running || inspecting || (dataset === "demo" && (!aoi || !metadata))} onClick={run}><span>{running ? "Computing analysis…" : result ? "Run analysis again" : "Run analysis"}</span><span aria-hidden="true">→</span></button>
           {running && <button className="quiet-button cancel-button" onClick={() => { runToken.current++; worker.current?.terminate(); worker.current = null; setRunning(false); setStatus("Analysis cancelled. Change settings or run again."); }}>Cancel analysis</button>}
@@ -131,11 +154,24 @@ export default function App() {
           <p className="privacy-note">Files are processed in your browser. Uploaded data stays on your device.</p>
         </aside>
         <div className="results-column">
-          {result ? <Results key={String(result.manifest.computed_at)} result={result} /> : <>
-            <section className="card welcome-card"><p className="step-number">YOUR ANALYSIS WORKSPACE</p><h2>{running ? "Calculating from the selected rasters…" : "A complete workflow, ready to run."}</h2><p>One run produces comparable land-cover maps, transition tables and forest structure metrics. Change the forest definition or edge width to explore how the results respond.</p><div className="feature-strip"><span>01<br /><strong>Land-cover comparison</strong><small>Maps, matrix, gains & losses</small></span><span>02<br /><strong>Forest fragmentation</strong><small>Core, edge, patch & clearings</small></span><span>03<br /><strong>Reproducible outputs</strong><small>GeoTIFF, PNG, CSV & JSON</small></span></div>{running && <div className="computing-indicator"><i />{status}</div>}</section>
-            {dataset === "demo" && <section className="map-panel card"><div className="map-heading section-heading"><div><p className="step-number">STUDY AREA</p><h2>Ganjam District, Odisha</h2></div><span className="status-tag neutral">Pilot boundary · gbOpen 2021</span></div><MapPanel aoi={aoi} loading={!aoi} error={loadError} /></section>}
-            {dataset === "demo" && metadata && <section className="card result-section"><h2>Inspect the example inputs</h2><p className="section-copy">Download the same cropped rasters used by this page to test the upload workflow or compare results in another GIS tool.</p><div className="output-actions">{metadata.inputs.map(s => <a key={s.year} href={`${BASE}data/worldcover/${s.file}`} download>{s.year} GeoTIFF ↓</a>)}<a href={`${BASE}data/worldcover/python-reference.json`} download>Python reference results ↓</a><a href={`${BASE}data/ganjam-aoi.geojson`} download>AOI GeoJSON ↓</a></div></section>}
-          </>}
+          <section id="study-area" className="map-panel card" aria-labelledby="study-area-title">
+            <div className="map-heading section-heading"><div><p className="step-number">STUDY AREA · OVERVIEW</p><h2 id="study-area-title">{areaLabel}</h2></div><div className="overview-actions"><span className="status-tag neutral">{dataset === "demo" ? "Pilot boundary · gbOpen 2021" : vectors.aoi ? "Uploaded AOI" : "Earliest-year raster extent"}</span><button className="quiet-button" disabled={running || inspecting || (dataset === "demo" && (!aoi || !metadata))} onClick={run}>{running ? "Computing…" : "Run with current settings"}</button></div></div>
+            <MapPanel aoi={mapAoi} label={areaLabel} extentOnly={dataset === "upload" && !vectors.aoi}
+              loading={dataset === "demo" ? !aoi && !loadError : footprintLoading}
+              error={dataset === "demo" ? loadError : footprintError} />
+            <div className="overview-runbar">
+              <div><strong>{running ? "Analysis in progress" : result ? "Analysis complete" : "Ready when you are"}</strong><p role="status" aria-live="polite">{status}</p></div>
+              {running && <button className="quiet-button" onClick={() => { runToken.current++; worker.current?.terminate(); worker.current = null; setRunning(false); setStatus("Analysis cancelled. Change settings or run again."); }}>Stop computation</button>}
+              {result && <a href="#analysis-output">View results ↓</a>}
+            </div>
+            <p className="overview-note">The overview stays here throughout the run. Results appear below; use Overview in the header to return at any time.</p>
+          </section>
+          <div id="analysis-output" className="results-slot">
+            {result ? <Results key={String(result.manifest.computed_at)} result={result} /> :
+              <section className="card welcome-card"><p className="step-number">YOUR ANALYSIS WORKSPACE</p><h2>{running ? "Calculating from the selected rasters…" : "A complete workflow, ready to run."}</h2><p>One run produces comparable land-cover maps, transition tables and forest structure metrics. Change the forest definition or edge width to explore how the results respond.</p><div className="feature-strip"><span>01<br /><strong>Land-cover comparison</strong><small>Maps, matrix, gains & losses</small></span><span>02<br /><strong>Forest fragmentation</strong><small>Core, edge, patch & clearings</small></span><span>03<br /><strong>Reproducible outputs</strong><small>GeoTIFF, PNG, CSV & JSON</small></span></div>{running && <div className="computing-indicator"><i />{status}</div>}</section>}
+          </div>
+          {dataset === "demo" && metadata && <section className="card result-section"><h2>Inspect the example inputs</h2><p className="section-copy">Download the same cropped rasters used by this page to test the upload workflow or compare results in another GIS tool.</p><div className="output-actions">{metadata.inputs.map(s => <a key={s.year} href={`${BASE}data/worldcover/${s.file}`} download>{s.year} GeoTIFF ↓</a>)}<a href={`${BASE}data/worldcover/python-reference.json`} download>Python reference results ↓</a><a href={`${BASE}data/ganjam-aoi.geojson`} download>AOI GeoJSON ↓</a></div></section>}
+
         </div>
       </div>
     </main>

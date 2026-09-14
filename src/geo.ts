@@ -1,4 +1,5 @@
-import type { AoiFeatureCollection, AoiGeometry, Position } from "./types";
+import type { AoiGeometry, Position } from "./types";
+import type { VectorCollection } from "./analysis/model";
 
 const EARTH_RADIUS_M = 6_378_137;
 
@@ -43,13 +44,13 @@ export function geometryVertexCount(geometry: AoiGeometry) {
   );
 }
 
-export function collectionBounds(collection: AoiFeatureCollection) {
+export function collectionBounds(collection: { features: { geometry: VectorCollection["features"][number]["geometry"] }[] }) {
   let west = Number.POSITIVE_INFINITY;
   let south = Number.POSITIVE_INFINITY;
   let east = Number.NEGATIVE_INFINITY;
   let north = Number.NEGATIVE_INFINITY;
 
-  const visit = (position: Position) => {
+  const visit = (position: number[]) => {
     west = Math.min(west, position[0]);
     south = Math.min(south, position[1]);
     east = Math.max(east, position[0]);
@@ -58,9 +59,9 @@ export function collectionBounds(collection: AoiFeatureCollection) {
 
   collection.features.forEach((feature) => {
     if (feature.geometry.type === "Polygon") {
-      feature.geometry.coordinates.forEach((ring) => ring.forEach(visit));
+      (feature.geometry.coordinates as number[][][]).forEach((ring) => ring.forEach(visit));
     } else {
-      feature.geometry.coordinates.forEach((polygon) =>
+      (feature.geometry.coordinates as number[][][][]).forEach((polygon) =>
         polygon.forEach((ring) => ring.forEach(visit)),
       );
     }

@@ -1,4 +1,5 @@
-import { fromArrayBuffer, writeArrayBuffer } from "geotiff";
+import { fromArrayBuffer, fromBlob, writeArrayBuffer } from "geotiff";
+import type { GeoTIFFImage } from "geotiff";
 import proj4 from "proj4";
 import shp from "shpjs";
 import type { Grid, Raster, VectorCollection } from "./model";
@@ -15,8 +16,7 @@ export async function sha256(buffer: ArrayBuffer) {
   return Array.from(new Uint8Array(hash), v => v.toString(16).padStart(2, "0")).join("");
 }
 
-export async function readRaster(buffer: ArrayBuffer, year: number, name: string): Promise<Raster> {
-  const tiff = await fromArrayBuffer(buffer), image = await tiff.getImage();
+function readGrid(image: GeoTIFFImage, name: string) {
   const width = image.getWidth(), height = image.getHeight();
   if (width * height > 25_000_000) throw new Error(`${name}: crop the input to your study area first (maximum 25 million input pixels).`);
   if (image.getSamplesPerPixel() !== 1) throw new Error(`${name}: use a single-band categorical GeoTIFF, not an RGB image.`);
@@ -28,6 +28,28 @@ export async function readRaster(buffer: ArrayBuffer, year: number, name: string
   if (keys?.GTRasterTypeGeoKey === 2) throw new Error(`${name}: export a PixelIsArea raster before analysis.`);
   const [left, top] = image.getOrigin(), [rx, ry] = image.getResolution();
   if (![left, top, rx, ry].every(Number.isFinite) || rx <= 0 || ry >= 0) throw new Error(`${name}: invalid north-up georeferencing.`);
+  return { grid: { width, height, cell: rx, left, top, crs }, yCell: -ry };
+}
+
+/** Read only the TIFF header for the map preview; no pixel decoding or analysis. */
+export async function readRasterFootprint(file: File): Promise<VectorCollection> {
+  if (file.size > 100_000_000) throw new Error("GeoTIFF upload limit is 100 MB per file. Crop the input first.");
+  const tiff = await fromBlob(file);
+  const { grid, yCell } = readGrid(await tiff.getImage(), file.name);
+  const { left, top, width, height, cell, crs } = grid;
+  const ring: number[][] = [];
+  const corners = [[left, top], [left + width * cell, top], [left + width * cell, top - height * yCell], [left, top - height * yCell]];
+  for (let side = 0; side < 4; side++) {
+    const a = corners[side], b = corners[(side + 1) % 4];
+    for (let step = 0; step < 20; step++) ring.push(proj4(crs, "EPSG:4326", [a[0] + (b[0] - a[0]) * step / 20, a[1] + (b[1] - a[1]) * step / 20]));
+  }
+  ring.push([...ring[0]]);
+  return validateVector({ type: "FeatureCollection", features: [{ type: "Feature", properties: { name: file.name }, geometry: { type: "Polygon", coordinates: [ring] } }] });
+}
+
+export async function readRaster(buffer: ArrayBuffer, year: number, name: string): Promise<Raster> {
+  const tiff = await fromArrayBuffer(buffer), image = await tiff.getImage();
+  const { grid, yCell } = readGrid(image, name);
   const input = await image.readRasters({ samples: [0], interleave: true });
   const nodata = image.getGDALNoData();
   const data = new Uint16Array(input.length);
@@ -38,7 +60,7 @@ export async function readRaster(buffer: ArrayBuffer, year: number, name: string
     data[i] = value;
   }
   // Preserve both source resolutions until sampling into the square analysis grid.
-  const raster: Raster & { yCell: number } = { year, name, data, grid: { width, height, cell: rx, left, top, crs }, yCell: -ry, sha256: await sha256(buffer) };
+  const raster: Raster & { yCell: number } = { year, name, data, grid, yCell, sha256: await sha256(buffer) };
   return raster;
 }
 

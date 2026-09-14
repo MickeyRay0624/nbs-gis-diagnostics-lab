@@ -40,3 +40,15 @@ Synthetic files under `tests/fixtures/` are explicitly marked test-only and are 
 ## Limits
 
 WorldCover release algorithms differ. The demonstration is conditional on resampling, source class quality, forest definition and AOI boundary assumptions. No real protected-area or OECM evidence is included in the public example. Field validation, historical protection status, accepted project inputs and suitability/priority rules remain outside this software test.
+
+## v0.3.1 map and workflow regression checks
+
+The missing outline was reproduced in Chrome: the basemap rendered but MapLibre's GeoJSON worker never completed. MapLibre 6's separate worker was absent from the Vite build. Importing it with `?worker&url` and setting its URL emits a self-contained `maplibre-gl-worker-*.js` asset. The boundary now renders in both development and a production build served at `/nbs-gis-diagnostics-lab/`.
+
+- The Ganjam outline, fill and location label are visible. Locate study area fits the full boundary; Regional context zooms out while retaining the outline.
+- A public-data run preserves the overview, its scale and marker position. A normal pointer click on the overview run button leaves its viewport Y coordinate and height unchanged during and after completion; no automatic navigation occurs.
+- Public computation still passes all 91 numeric checks and the hashes covering 12,701,988 fragmentation pixels against Python. All 13 frontend regression tests pass.
+- The production upload workflow previews the georeferenced extent before calculation. Two 12 × 12 test TIFFs produce 143 valid pixels per period. Uploading an AOI changes the boundary and label; clearing it restores the raster footprint. Changing year order selects the same earliest-year reference raster as the analysis runner.
+- All 14 feature-guide sections, metric definitions, navigation and custom file-selection labels are English. The full English Markdown guide is downloadable. No Chinese text occurs in application source or served guide content.
+
+These checks exercise the map and browser workflow; they do not establish field accuracy of the source land-cover maps.

@@ -4,6 +4,8 @@ A browser workspace for land-cover change and forest fragmentation. Open the [li
 
 ## Available in the page
 
+- A persistent study-area overview with the selected boundary, a location label, fit/context controls and automatic uploaded-raster footprint preview. Running analysis keeps the map and its current view in place.
+- An English feature guide explains every control, calculation, metric and export. Open **Guide** in the header or read the [full guide](public/guide.en.md).
 - A ready-to-run Ganjam example with real ESA WorldCover 2020 v100 and 2021 v200 inputs.
 - Configurable years: 2–3 periods for LULC, 1–3 for the independent forest module.
 - Single-band GeoTIFF upload, nearest-neighbour alignment to a common EPSG:6933 equal-area grid, and optional polygon AOI masking.
@@ -27,7 +29,7 @@ WorldCover **2020 and 2021 use different algorithm versions**. Their apparent di
 - North-up, PixelIsArea, single-band categorical GeoTIFFs with integer class codes 1–65534. **Code 0 and the declared GeoTIFF NoData value are excluded.** Recode valid zero-valued classes before upload. RGB satellite images are not classified by this tool.
 - Supported input CRSs: EPSG:4326, EPSG:3857, EPSG:6933 and WGS84 UTM north/south zones. Outputs always use EPSG:6933, square cells and nearest-neighbour pixel-centre sampling.
 - Source rasters: at most 100 MB/file and 25 million pixels. Analysis: at most 8 million cells. Use cropped GeoTIFFs for full-resolution source products; smaller requested cells cannot recover detail absent from an input.
-- AOI/protection: polygon WGS84 GeoJSON, or a ZIP with one Shapefile layer including `.shp`, `.dbf`, `.shx` and `.prj`. Vector upload limit: 25 MB. GeoJSON coordinates must lie between 85°S and 85°N. The first raster's extent is used if no AOI is supplied.
+- AOI/protection: polygon WGS84 GeoJSON, or a ZIP with one Shapefile layer including `.shp`, `.dbf`, `.shx` and `.prj`. Vector upload limit: 25 MB. GeoJSON coordinates must lie between 85°S and 85°N. The earliest-year raster's extent is used if no AOI is supplied.
 - Crosswalk CSV columns: `source_code,target_code,target_name,color`. Target codes are 1–999. Merged classes must use identical target names and `#RRGGBB` colours. Unknown source codes block the run. ESRI clouds remain a source class; mask unreliable observations before analysis.
 - Years must be distinct. Missing files, invalid grids, unmapped classes, invalid forest definitions, edge widths below one cell and empty comparison footprints produce actionable errors. Changing settings clears old results; a running job can be cancelled.
 
@@ -45,6 +47,8 @@ The supplied SCALA ArcPy workflow is the reference for the standalone [Python mo
 Cross-boundary patch counts are recorded. A stratum can contain forest portions without owning a whole patch; its NP can therefore be zero. Clearing intersection counts need not sum to the whole-landscape count. Ignoring administrative edges also reduces perimeters used by shape metrics. “Unprotected” means outside the supplied polygons; their completeness and historical validity are not inferred.
 
 ## Local development and validation
+
+MapLibre 6's separate ESM worker is imported with Vite's `?worker&url` and registered before creating maps. This bundles its shared dependency and preserves the GitHub Pages base path. Without this, raster basemap tiles can render while the GeoJSON boundary silently fails. See the [official Vite integration](https://github.com/maplibre/maplibre-gl-js/blob/main/docs/index.md#esm).
 
 ```bash
 pnpm install --frozen-lockfile
