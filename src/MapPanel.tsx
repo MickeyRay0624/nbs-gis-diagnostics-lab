@@ -127,7 +127,7 @@ export function MapPanel({ aoi, loading, error }: MapPanelProps) {
         Ganjam ADM2 boundary
       </div>
       <div className={`map-load-state ${error ? "error" : ""}`}>
-        {error ? error : loading ? "Loading verified AOI…" : "Real boundary loaded"}
+        {error ? error : loading ? "Loading pilot AOI…" : "Pilot boundary loaded"}
       </div>
     </div>
   );

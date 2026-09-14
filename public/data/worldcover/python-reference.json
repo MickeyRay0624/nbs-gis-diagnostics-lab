@@ -1,0 +1,459 @@
+{
+  "grid": {
+    "crs": "EPSG:6933",
+    "width": 1962,
+    "height": 3237,
+    "cell": 50.0,
+    "left": 8121050.0,
+    "top": 2535150.0
+  },
+  "class_area_by_year": [
+    {
+      "area_ha": 435792.0,
+      "class_code": 10,
+      "class_name": "Tree cover",
+      "percent_of_valid_area": 51.836602,
+      "pixel_count": 1743168,
+      "year": 2020
+    },
+    {
+      "area_ha": 965.0,
+      "class_code": 20,
+      "class_name": "Shrubland",
+      "percent_of_valid_area": 0.114785,
+      "pixel_count": 3860,
+      "year": 2020
+    },
+    {
+      "area_ha": 51923.0,
+      "class_code": 30,
+      "class_name": "Grassland",
+      "percent_of_valid_area": 6.176139,
+      "pixel_count": 207692,
+      "year": 2020
+    },
+    {
+      "area_ha": 304694.5,
+      "class_code": 40,
+      "class_name": "Cropland",
+      "percent_of_valid_area": 36.242812,
+      "pixel_count": 1218778,
+      "year": 2020
+    },
+    {
+      "area_ha": 8247.25,
+      "class_code": 50,
+      "class_name": "Built-up",
+      "percent_of_valid_area": 0.980994,
+      "pixel_count": 32989,
+      "year": 2020
+    },
+    {
+      "area_ha": 18046.5,
+      "class_code": 60,
+      "class_name": "Bare / sparse vegetation",
+      "percent_of_valid_area": 2.146596,
+      "pixel_count": 72186,
+      "year": 2020
+    },
+    {
+      "area_ha": 0.0,
+      "class_code": 70,
+      "class_name": "Snow and ice",
+      "percent_of_valid_area": 0.0,
+      "pixel_count": 0,
+      "year": 2020
+    },
+    {
+      "area_ha": 19090.25,
+      "class_code": 80,
+      "class_name": "Permanent water bodies",
+      "percent_of_valid_area": 2.270748,
+      "pixel_count": 76361,
+      "year": 2020
+    },
+    {
+      "area_ha": 1944.75,
+      "class_code": 90,
+      "class_name": "Herbaceous wetland",
+      "percent_of_valid_area": 0.231324,
+      "pixel_count": 7779,
+      "year": 2020
+    },
+    {
+      "area_ha": 0.0,
+      "class_code": 95,
+      "class_name": "Mangroves",
+      "percent_of_valid_area": 0.0,
+      "pixel_count": 0,
+      "year": 2020
+    },
+    {
+      "area_ha": 0.0,
+      "class_code": 100,
+      "class_name": "Moss and lichen",
+      "percent_of_valid_area": 0.0,
+      "pixel_count": 0,
+      "year": 2020
+    },
+    {
+      "area_ha": 426261.0,
+      "class_code": 10,
+      "class_name": "Tree cover",
+      "percent_of_valid_area": 50.702909,
+      "pixel_count": 1705044,
+      "year": 2021
+    },
+    {
+      "area_ha": 171.0,
+      "class_code": 20,
+      "class_name": "Shrubland",
+      "percent_of_valid_area": 0.02034,
+      "pixel_count": 684,
+      "year": 2021
+    },
+    {
+      "area_ha": 58942.25,
+      "class_code": 30,
+      "class_name": "Grassland",
+      "percent_of_valid_area": 7.011065,
+      "pixel_count": 235769,
+      "year": 2021
+    },
+    {
+      "area_ha": 322674.0,
+      "class_code": 40,
+      "class_name": "Cropland",
+      "percent_of_valid_area": 38.381438,
+      "pixel_count": 1290696,
+      "year": 2021
+    },
+    {
+      "area_ha": 11224.5,
+      "class_code": 50,
+      "class_name": "Built-up",
+      "percent_of_valid_area": 1.335132,
+      "pixel_count": 44898,
+      "year": 2021
+    },
+    {
+      "area_ha": 2214.75,
+      "class_code": 60,
+      "class_name": "Bare / sparse vegetation",
+      "percent_of_valid_area": 0.26344,
+      "pixel_count": 8859,
+      "year": 2021
+    },
+    {
+      "area_ha": 0.0,
+      "class_code": 70,
+      "class_name": "Snow and ice",
+      "percent_of_valid_area": 0.0,
+      "pixel_count": 0,
+      "year": 2021
+    },
+    {
+      "area_ha": 17975.5,
+      "class_code": 80,
+      "class_name": "Permanent water bodies",
+      "percent_of_valid_area": 2.13815,
+      "pixel_count": 71902,
+      "year": 2021
+    },
+    {
+      "area_ha": 1240.25,
+      "class_code": 90,
+      "class_name": "Herbaceous wetland",
+      "percent_of_valid_area": 0.147525,
+      "pixel_count": 4961,
+      "year": 2021
+    },
+    {
+      "area_ha": 0.0,
+      "class_code": 95,
+      "class_name": "Mangroves",
+      "percent_of_valid_area": 0.0,
+      "pixel_count": 0,
+      "year": 2021
+    },
+    {
+      "area_ha": 0.0,
+      "class_code": 100,
+      "class_name": "Moss and lichen",
+      "percent_of_valid_area": 0.0,
+      "pixel_count": 0,
+      "year": 2021
+    }
+  ],
+  "transitions": [
+    {
+      "changed_area_ha": 96750.75,
+      "changed_percent": 11.508312,
+      "changed_pixel_count": 387003,
+      "end_year": 2021,
+      "gain_loss": [
+        {
+          "class_code": 10,
+          "class_name": "Tree cover",
+          "gain_ha": 21678.75,
+          "loss_ha": 31209.75,
+          "net_ha": -9531.0
+        },
+        {
+          "class_code": 20,
+          "class_name": "Shrubland",
+          "gain_ha": 140.25,
+          "loss_ha": 934.25,
+          "net_ha": -794.0
+        },
+        {
+          "class_code": 30,
+          "class_name": "Grassland",
+          "gain_ha": 29126.0,
+          "loss_ha": 22106.75,
+          "net_ha": 7019.25
+        },
+        {
+          "class_code": 40,
+          "class_name": "Cropland",
+          "gain_ha": 38117.25,
+          "loss_ha": 20137.75,
+          "net_ha": 17979.5
+        },
+        {
+          "class_code": 50,
+          "class_name": "Built-up",
+          "gain_ha": 3374.75,
+          "loss_ha": 397.5,
+          "net_ha": 2977.25
+        },
+        {
+          "class_code": 60,
+          "class_name": "Bare / sparse vegetation",
+          "gain_ha": 935.75,
+          "loss_ha": 16767.5,
+          "net_ha": -15831.75
+        },
+        {
+          "class_code": 70,
+          "class_name": "Snow and ice",
+          "gain_ha": 0.0,
+          "loss_ha": 0.0,
+          "net_ha": 0.0
+        },
+        {
+          "class_code": 80,
+          "class_name": "Permanent water bodies",
+          "gain_ha": 2793.5,
+          "loss_ha": 3908.25,
+          "net_ha": -1114.75
+        },
+        {
+          "class_code": 90,
+          "class_name": "Herbaceous wetland",
+          "gain_ha": 584.5,
+          "loss_ha": 1289.0,
+          "net_ha": -704.5
+        },
+        {
+          "class_code": 95,
+          "class_name": "Mangroves",
+          "gain_ha": 0.0,
+          "loss_ha": 0.0,
+          "net_ha": 0.0
+        },
+        {
+          "class_code": 100,
+          "class_name": "Moss and lichen",
+          "gain_ha": 0.0,
+          "loss_ha": 0.0,
+          "net_ha": 0.0
+        }
+      ],
+      "start_year": 2020,
+      "top_class_transitions": [
+        {
+          "area_ha": 20599.0,
+          "from_class": "Tree cover",
+          "from_code": 10,
+          "pixel_count": 82396,
+          "to_class": "Cropland",
+          "to_code": 40
+        },
+        {
+          "area_ha": 13872.5,
+          "from_class": "Grassland",
+          "from_code": 30,
+          "pixel_count": 55490,
+          "to_class": "Cropland",
+          "to_code": 40
+        },
+        {
+          "area_ha": 9279.5,
+          "from_class": "Cropland",
+          "from_code": 40,
+          "pixel_count": 37118,
+          "to_class": "Grassland",
+          "to_code": 30
+        },
+        {
+          "area_ha": 8910.5,
+          "from_class": "Tree cover",
+          "from_code": 10,
+          "pixel_count": 35642,
+          "to_class": "Grassland",
+          "to_code": 30
+        },
+        {
+          "area_ha": 8900.25,
+          "from_class": "Cropland",
+          "from_code": 40,
+          "pixel_count": 35601,
+          "to_class": "Tree cover",
+          "to_code": 10
+        },
+        {
+          "area_ha": 8540.5,
+          "from_class": "Bare / sparse vegetation",
+          "from_code": 60,
+          "pixel_count": 34162,
+          "to_class": "Grassland",
+          "to_code": 30
+        },
+        {
+          "area_ha": 7393.25,
+          "from_class": "Grassland",
+          "from_code": 30,
+          "pixel_count": 29573,
+          "to_class": "Tree cover",
+          "to_code": 10
+        },
+        {
+          "area_ha": 4229.75,
+          "from_class": "Bare / sparse vegetation",
+          "from_code": 60,
+          "pixel_count": 16919,
+          "to_class": "Tree cover",
+          "to_code": 10
+        },
+        {
+          "area_ha": 1879.75,
+          "from_class": "Permanent water bodies",
+          "from_code": 80,
+          "pixel_count": 7519,
+          "to_class": "Grassland",
+          "to_code": 30
+        },
+        {
+          "area_ha": 1842.75,
+          "from_class": "Bare / sparse vegetation",
+          "from_code": 60,
+          "pixel_count": 7371,
+          "to_class": "Cropland",
+          "to_code": 40
+        }
+      ],
+      "valid_pixel_count": 3362813
+    }
+  ],
+  "fragmentation": [
+    {
+      "AWMSI": 35.95756941323228,
+      "ED": 50.489872615575116,
+      "LPI": 24.781068706466876,
+      "MPE": 1663.2185259198307,
+      "MPS_ha": 17.075819913012815,
+      "MSI": 1.3209752116608606,
+      "NP": 25521,
+      "PLAND": 51.83660227315643,
+      "TE_m": 42447000.0,
+      "clearing_ha": 55445.5,
+      "clearings_intersecting": 34966,
+      "core_ha": 316692.25,
+      "core_pct": 72.67050565407351,
+      "edge_ha": 104008.25,
+      "forest_ha": 435792.0,
+      "landscape_ha": 840703.25,
+      "largest_patch_ha": 208335.25,
+      "patch_ha": 15091.5,
+      "stratum": "All",
+      "year": 2020
+    },
+    {
+      "AWMSI": 28.13316472686396,
+      "ED": 45.1474405505153,
+      "LPI": 22.541009565503643,
+      "MPE": 1758.5063009636767,
+      "MPS_ha": 19.748934395848778,
+      "MSI": 1.326545695221352,
+      "NP": 21584,
+      "PLAND": 50.7029085471003,
+      "TE_m": 37955600.0,
+      "clearing_ha": 45469.0,
+      "clearings_intersecting": 29175,
+      "core_ha": 316484.25,
+      "core_pct": 74.2465883578371,
+      "edge_ha": 97011.75,
+      "forest_ha": 426261.0,
+      "landscape_ha": 840703.25,
+      "largest_patch_ha": 189503.0,
+      "patch_ha": 12765.0,
+      "stratum": "All",
+      "year": 2021
+    }
+  ],
+  "qa": {
+    "checks": [
+      {
+        "id": "preflight",
+        "message": "All mandatory preflight checks passed",
+        "status": "pass"
+      },
+      {
+        "id": "common-grid",
+        "message": "All output rasters use the same CRS, transform and dimensions",
+        "status": "pass"
+      },
+      {
+        "id": "class-area-conservation",
+        "message": "Class counts equal mapped valid-pixel counts for every year",
+        "status": "pass"
+      },
+      {
+        "id": "priority-analysis",
+        "message": "Priority rules have not yet been approved",
+        "status": "not-run"
+      }
+    ],
+    "fragmentation": {
+      "2020": {
+        "class_conservation": true,
+        "clearing_connectivity": 4,
+        "connectivity": 8,
+        "count_boundary_as_edge": false,
+        "edge_width_m": 50.0,
+        "forest_pixels": 1743168,
+        "protection_available": false,
+        "straddling_patches": 0,
+        "valid_pixels": 3362813
+      },
+      "2021": {
+        "class_conservation": true,
+        "clearing_connectivity": 4,
+        "connectivity": 8,
+        "count_boundary_as_edge": false,
+        "edge_width_m": 50.0,
+        "forest_pixels": 1705044,
+        "protection_available": false,
+        "straddling_patches": 0,
+        "valid_pixels": 3362813
+      }
+    },
+    "status": "pass",
+    "warnings": []
+  },
+  "fragmentation_pixel_sha256": {
+    "2020": "1ce399a0df29e5935d375f73d72c99e402157ed0bda22bdd9a8d54600c6a371b",
+    "2021": "2b57ebd03835daf19dcbca445d7cc562f801410bef694561b85a16ec2e3efc67"
+  }
+}

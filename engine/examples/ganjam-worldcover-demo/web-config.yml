@@ -1,0 +1,25 @@
+project:
+  name: Ganjam WorldCover browser validation
+  aoi: ../../../public/data/ganjam-aoi.geojson
+  aoi_crs: EPSG:4326
+analysis:
+  target_crs: EPSG:6933
+  target_resolution: 50
+  max_output_pixels: 8000000
+  output_nodata: 0
+  all_touched: false
+  unmapped_class_policy: nodata
+  rasters:
+    2020: data/ESA_WorldCover_10m_2020_v100_N18E084_Map.tif
+    2021: data/ESA_WorldCover_10m_2021_v200_N18E084_Map.tif
+  crosswalk: worldcover_crosswalk.csv
+  transitions:
+    - [2020, 2021]
+fragmentation:
+  enabled: true
+  forest_codes: [10, 95]
+  edge_width_m: 50
+  count_boundary_as_edge: false
+output:
+  directory: ../../outputs/browser-validation
+  write_maps: false

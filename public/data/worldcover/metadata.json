@@ -1,0 +1,34 @@
+{
+  "name": "ESA WorldCover \u00b7 Ganjam",
+  "grid": {
+    "crs": "EPSG:6933",
+    "width": 1962,
+    "height": 3237,
+    "cell": 50.0,
+    "left": 8121050.0,
+    "top": 2535150.0
+  },
+  "inputs": [
+    {
+      "year": 2020,
+      "file": "ganjam_2020_50m.tif",
+      "sha256": "85e43ef947c4f711df20d0779c8fe0eb9250a5cb0629c8cb42eaab3cccd300ca",
+      "original_sha256": "a041e63bc1043b1fe2413ccdacb9ad781c910fa143277a6c6a45fa3c3bce3564",
+      "original_url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v100/2020/map/ESA_WorldCover_10m_2020_v100_N18E084_Map.tif"
+    },
+    {
+      "year": 2021,
+      "file": "ganjam_2021_50m.tif",
+      "sha256": "3dca5ce65eaf8f3b069ba7314a6a127ff289a93b21b03efda5e4e44028a33a07",
+      "original_sha256": "43a88a24791410e97c68b06be427b2d59a5fbcf73eeb7c7ed224c516fbc7b815",
+      "original_url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N18E084_Map.tif"
+    }
+  ],
+  "source_url": "https://esa-worldcover.org/en/data-access",
+  "license": "CC BY 4.0",
+  "boundary": "geoBoundaries gbOpen IND ADM2, 2021; ODbL 1.0",
+  "attribution": "\u00a9 ESA WorldCover project 2020/2021 / Contains modified Copernicus Sentinel data processed by ESA WorldCover consortium.",
+  "processing": "Original 10 m classes resampled by nearest neighbour to a 50 m EPSG:6933 grid and masked to the Ganjam pilot boundary.",
+  "limitation": "2020 v100 and 2021 v200 use different algorithms. Differences are for software testing and are not verified land-cover change.",
+  "protection": "No protected-area or OECM dataset included."
+}

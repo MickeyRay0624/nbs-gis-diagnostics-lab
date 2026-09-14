@@ -38,6 +38,7 @@ def _path_check(checks: list[dict[str, Any]], check_id: str, path: Path, label: 
 def run_preflight(config: RunConfig) -> dict[str, Any]:
     checks: list[dict[str, Any]] = []
     aoi: AoiData | None = None
+    crosswalk = None
 
     if _path_check(checks, "aoi-file", config.project.aoi_path, "AOI GeoJSON"):
         try:
@@ -122,6 +123,22 @@ def run_preflight(config: RunConfig) -> dict[str, Any]:
             )
         except NbsGisError as error:
             _check(checks, "crosswalk-schema", "error", str(error))
+
+    if config.fragmentation.enabled:
+        frag = config.fragmentation
+        if crosswalk and set(frag.forest_codes) - set(crosswalk.target_classes):
+            _check(checks, "forest-classes", "error",
+                   "Forest codes must be target classes in the crosswalk")
+        else:
+            _check(checks, "forest-classes", "pass", "Forest target classes configured",
+                   forest_codes=list(frag.forest_codes), edge_width_m=frag.edge_width_m)
+        for label, path in (("protected", frag.protected_areas), ("oecm", frag.oecm)):
+            if path and _path_check(checks, f"{label}-file", path, f"{label} polygons"):
+                try:
+                    load_aoi(path, "EPSG:4326")
+                    _check(checks, f"{label}-geometry", "pass", "Polygon geometry is valid")
+                except NbsGisError as error:
+                    _check(checks, f"{label}-geometry", "error", str(error))
 
     raster_metadata: dict[str, Any] = {}
     for year, path in config.analysis.rasters.items():

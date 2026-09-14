@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nbs-gis"
-version = "0.1.0"
+version = "0.2.0"
 description = "Reproducible GIS processing tools for Nature-based Solutions diagnostics"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -16,6 +16,7 @@ dependencies = [
   "PyYAML>=6.0",
   "rasterio>=1.4",
   "shapely>=2.0",
+  "scipy>=1.14",
 ]
 
 [project.optional-dependencies]

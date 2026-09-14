@@ -11,6 +11,7 @@ from typing import Any
 import numpy as np
 import pyproj
 import rasterio
+import scipy
 import shapely
 
 from nbs_gis import __version__
@@ -18,6 +19,7 @@ from nbs_gis.aoi import load_aoi, transform_geometry
 from nbs_gis.config import RunConfig
 from nbs_gis.crosswalk import Crosswalk, load_crosswalk
 from nbs_gis.errors import PipelineError, PreflightBlocked
+from nbs_gis.fragmentation import fragment_raster, protection_grid, write_metrics
 from nbs_gis.grid import build_grid, parse_target_crs
 from nbs_gis.plotting import write_change_map, write_lulc_map
 from nbs_gis.preflight import run_preflight
@@ -88,6 +90,13 @@ def _transition_summary(
         }
         for (start, end), count in changed[:10]
     ]
+    gain_loss = []
+    for code, target in sorted(crosswalk.target_classes.items()):
+        gain = sum(n for (a, b), n in transition.transition_counts.items() if b == code and a != b)
+        loss = sum(n for (a, b), n in transition.transition_counts.items() if a == code and a != b)
+        gain_loss.append({"class_code": code, "class_name": target.name,
+                          "gain_ha": gain * pixel_area_ha, "loss_ha": loss * pixel_area_ha,
+                          "net_ha": (gain - loss) * pixel_area_ha})
     return {
         "start_year": transition.start_year,
         "end_year": transition.end_year,
@@ -100,6 +109,7 @@ def _transition_summary(
         if transition.valid_pixel_count
         else 0,
         "top_class_transitions": top_changes,
+        "gain_loss": gain_loss,
     }
 
 
@@ -180,6 +190,15 @@ def _normalized_config(config: RunConfig) -> dict[str, Any]:
             "directory": str(config.output.directory),
             "write_maps": config.output.write_maps,
             "map_dpi": config.output.map_dpi,
+        },
+        "fragmentation": {
+            "enabled": config.fragmentation.enabled,
+            "forest_codes": list(config.fragmentation.forest_codes),
+            "edge_width_m": config.fragmentation.edge_width_m,
+            "count_boundary_as_edge": config.fragmentation.count_boundary_as_edge,
+            "protected_areas": str(config.fragmentation.protected_areas)
+            if config.fragmentation.protected_areas else None,
+            "oecm": str(config.fragmentation.oecm) if config.fragmentation.oecm else None,
         },
     }
 
@@ -292,6 +311,26 @@ def run_lulc(config: RunConfig, requested_run_id: str | None = None) -> Path:
                     config.output.map_dpi,
                 )
 
+        gain_rows = [{"start_year": t["start_year"], "end_year": t["end_year"], **row}
+                     for t in transition_summaries for row in t["gain_loss"]]
+        write_metrics(table_directory / "gain_loss_by_period.csv", gain_rows)
+        fragmentation_rows = []
+        fragmentation_qa = {}
+        if config.fragmentation.enabled:
+            frag = config.fragmentation
+            if set(frag.forest_codes) - set(crosswalk.target_classes):
+                raise PipelineError("Forest codes must be target classes in the crosswalk")
+            strata = protection_grid(frag.protected_areas, frag.oecm, grid)
+            for year, result in processed.items():
+                rows, checks = fragment_raster(
+                    result.path, raster_directory / f"fragmentation_{year}.tif",
+                    list(frag.forest_codes), frag.edge_width_m, strata,
+                    frag.count_boundary_as_edge,
+                )
+                fragmentation_rows.extend({"year": year, **row} for row in rows)
+                fragmentation_qa[str(year)] = checks
+            write_metrics(table_directory / "forest_fragmentation.csv", fragmentation_rows)
+
         summary = {
             "schema": "nbs-lulc-summary/v0.1",
             "run_id": run_id,
@@ -299,6 +338,7 @@ def run_lulc(config: RunConfig, requested_run_id: str | None = None) -> Path:
             "years": sorted(processed),
             "class_area_by_year": area_rows,
             "transitions": transition_summaries,
+            "fragmentation": fragmentation_rows,
             "priority_analysis": {
                 "status": "blocked-pending-approved-specification",
                 "missing_decisions": [
@@ -339,6 +379,7 @@ def run_lulc(config: RunConfig, requested_run_id: str | None = None) -> Path:
                 },
             ],
             "warnings": warnings,
+            "fragmentation": fragmentation_qa,
         }
         write_json(working_directory / "qa_report.json", qa)
 
@@ -350,6 +391,10 @@ def run_lulc(config: RunConfig, requested_run_id: str | None = None) -> Path:
                 str(year): _input_record(path) for year, path in config.analysis.rasters.items()
             },
         }
+        for label, path in (("protected_areas", config.fragmentation.protected_areas),
+                            ("oecm", config.fragmentation.oecm)):
+            if path and config.fragmentation.enabled:
+                input_records[label] = _input_record(path)
         output_files = sorted(path for path in working_directory.rglob("*") if path.is_file())
         output_records = [
             {
@@ -375,6 +420,7 @@ def run_lulc(config: RunConfig, requested_run_id: str | None = None) -> Path:
                 "rasterio": rasterio.__version__,
                 "shapely": shapely.__version__,
                 "pyproj": pyproj.__version__,
+                "scipy": scipy.__version__,
             },
             "configuration": _normalized_config(config),
             "target_grid": {

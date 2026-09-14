@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -37,11 +38,22 @@ class OutputConfig:
 
 
 @dataclass(frozen=True)
+class FragmentationConfig:
+    enabled: bool = False
+    forest_codes: tuple[int, ...] = (10, 95)
+    edge_width_m: float = 50
+    count_boundary_as_edge: bool = False
+    protected_areas: Path | None = None
+    oecm: Path | None = None
+
+
+@dataclass(frozen=True)
 class RunConfig:
     source_path: Path
     project: ProjectConfig
     analysis: AnalysisConfig
     output: OutputConfig
+    fragmentation: FragmentationConfig = FragmentationConfig()
 
 
 def _mapping(value: Any, label: str) -> dict[str, Any]:
@@ -68,7 +80,7 @@ def _positive_float(value: Any, label: str) -> float:
         parsed = float(value)
     except (TypeError, ValueError) as error:
         raise ConfigError(f"{label} must be numeric") from error
-    if parsed <= 0:
+    if not math.isfinite(parsed) or parsed <= 0:
         raise ConfigError(f"{label} must be greater than zero")
     return parsed
 
@@ -184,9 +196,33 @@ def load_config(path: str | Path) -> RunConfig:
         map_dpi=_positive_int(output_raw.get("map_dpi", 160), "output.map_dpi"),
     )
 
+    frag_raw = _mapping(root.get("fragmentation", {}), "fragmentation")
+    codes = frag_raw.get("forest_codes", [10, 95])
+    if not isinstance(codes, list) or not codes or any(
+        not isinstance(code, int) or isinstance(code, bool) or code < 1 or code > 999
+        for code in codes
+    ):
+        raise ConfigError("fragmentation.forest_codes must be a list of target codes 1–999")
+    fragmentation = FragmentationConfig(
+        enabled=_boolean(frag_raw.get("enabled", False), "fragmentation.enabled"),
+        forest_codes=tuple(codes),
+        edge_width_m=_positive_float(
+            frag_raw.get("edge_width_m", 50), "fragmentation.edge_width_m"
+        ),
+        count_boundary_as_edge=_boolean(
+            frag_raw.get("count_boundary_as_edge", False), "fragmentation.count_boundary_as_edge"
+        ),
+        protected_areas=_resolve(base, frag_raw["protected_areas"], "fragmentation.protected_areas")
+        if frag_raw.get("protected_areas") else None,
+        oecm=_resolve(base, frag_raw["oecm"], "fragmentation.oecm")
+        if frag_raw.get("oecm") else None,
+    )
+    if fragmentation.enabled and fragmentation.edge_width_m < analysis.target_resolution:
+        raise ConfigError("Forest edge width must be at least the target resolution")
     return RunConfig(
         source_path=source_path,
         project=project,
         analysis=analysis,
         output=output,
+        fragmentation=fragmentation,
     )

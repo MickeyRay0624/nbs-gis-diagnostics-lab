@@ -92,3 +92,26 @@ The tests generate small temporary GeoTIFF fixtures with known results. They are
 ruff check engine/src engine/tests
 pytest engine/tests
 ```
+
+## Forest fragmentation and gain/loss outputs (v0.2)
+
+`run-lulc` now exports `tables/gain_loss_by_period.csv` with gross gain, gross loss and net change on the pairwise common valid footprint. Years and transition pairs remain configurable.
+
+Enable the optional forest module in the YAML configuration:
+
+```yaml
+fragmentation:
+  enabled: true
+  forest_codes: [10, 95]   # Target crosswalk codes; choose for your dataset
+  edge_width_m: 50
+  count_boundary_as_edge: false
+  # Optional WGS84 polygon GeoJSON, paths relative to this config:
+  # protected_areas: protected.geojson
+  # oecm: oecm.geojson
+```
+
+The edge width must be at least the target resolution. For WorldCover browser validation, use `engine/examples/ganjam-worldcover-demo/web-config.yml` (50 m grid). The older 100 m demo config remains an LULC-only demonstration.
+
+Additional outputs are `rasters/fragmentation_<year>.tif` and `tables/forest_fragmentation.csv`. Classification codes: 0 non-forest, 1 patch, 2 edge, 3 internal clearing, 4 core, 255 NoData. The forest module also exposes `classify_forest()` for array processing and `fragment_raster()` for a single prepared raster, independently of the LULC pipeline. Input grids must be north-up, square and projected in metres.
+
+See the root README for the complete metric definitions, protection precedence, cross-boundary patch treatment and deliberate corrections to the supplied reference. No protection layer produces only `All`; unknown protection status is not labelled unprotected. Fragmentation metrics and QA are included in `summary.json`, and the manifest records SciPy, parameters and protection input hashes.
