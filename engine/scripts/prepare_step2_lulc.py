@@ -42,7 +42,7 @@ def main():
     ]
     for path in [config_dir / "crosswalk.csv", output / "crosswalk.csv"]:
         with path.open("w") as f:
-            w = csv.DictWriter(f, fieldnames=list(rows[0]))
+            w = csv.DictWriter(f, fieldnames=list(rows[0]), lineterminator="\n")
             w.writeheader()
             w.writerows(rows)
     inputs = []
