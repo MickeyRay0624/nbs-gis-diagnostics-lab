@@ -17,7 +17,7 @@ export function HelpGuide() {
         <thead><tr><th>Field</th><th>Meaning</th><th>Formula / convention</th></tr></thead>
         <tbody>{metricDefinitions.map(row => <tr key={row[0]}><th>{row[0]}</th><td>{row[1]}</td><td>{row[2]}</td></tr>)}</tbody>
       </table></div></details>
-      <div className="output-actions"><a href={`${import.meta.env.BASE_URL}guide.en.md`} download>Download full guide ↓</a><a href="https://github.com/MickeyRay0624/nbs-gis-diagnostics-lab/tree/main/src/analysis" target="_blank" rel="noreferrer">Calculation source code ↗</a></div>
+      <div className="output-actions"><a href={`${import.meta.env.BASE_URL}guide.en.md`} download>Download full guide ↓</a><a href="https://github.com/MickeyRay0624/nbs-gis-diagnostics-lab/blob/main/docs/user-guide.en.md" target="_blank" rel="noreferrer">Read user manual on GitHub ↗</a><a href="https://github.com/MickeyRay0624/nbs-gis-diagnostics-lab/tree/main/src/analysis" target="_blank" rel="noreferrer">Calculation source code ↗</a></div>
     </details>
   </section>;
 }

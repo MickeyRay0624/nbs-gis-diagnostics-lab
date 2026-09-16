@@ -4,6 +4,10 @@ An English-language Ganjam Step 2 workspace for public-data environmental screen
 
 Version **0.4.0** implements all seven base modules. Technical calculations are separate from expert acceptance, protected-area/OECM applicability and field verification.
 
+**[Open the website](https://mickeyray0624.github.io/nbs-gis-diagnostics-lab/)** · **[Read the English user manual](docs/user-guide.en.md)** · [Download the manual](https://mickeyray0624.github.io/nbs-gis-diagnostics-lab/guide.en.md)
+
+The manual covers operation of every module, the real Ganjam public datasets used for testing, calculation formulas, exports and interpretation limits. The Chinese manual is kept locally by the project owner and is excluded from this release's repository tree and website.
+
 | Module | First-release public inputs | Main outputs |
 | --- | --- | --- |
 | Land-cover change | GLC-FCS30D 2002 / 2012 / 2022, 30 m source on a 50 m equal-area grid | Editable ten-class crosswalk, three pairwise transitions, gains/losses, class areas |
@@ -14,7 +18,7 @@ Version **0.4.0** implements all seven base modules. Technical calculations are 
 | River flood hazard | JRC/CEMS-GloFAS v2.1.2, 3 arc seconds | 10-, 100-, 500-year depths; inundated area; permanent-water and spurious-depth flags |
 | Land degradation | Trends.Earth SDG 15.3.1 v1.2 | All three subindicators, SOC percentage change, one-out-all-out, component completeness, baseline and 2023 status |
 
-Drought is a **MODIS seasonal alternative**, not FAO ASIS. Climate scenarios differ from the reference report’s RCP2.6. Land-degradation periods follow the publisher, including the documented discrepancy between its latest land-cover/SOC record (2015–2022) and TIFF labels (2015–2023). Full methods and limitations are in the catalog and [English feature guide](public/guide.en.md).
+Drought is a **MODIS seasonal alternative**, not FAO ASIS. Climate scenarios differ from the reference report’s RCP2.6. Land-degradation periods follow the publisher, including the documented discrepancy between its latest land-cover/SOC record (2015–2022) and TIFF labels (2015–2023). Full methods and limitations are in the catalog and [English user manual](docs/user-guide.en.md).
 
 ## Run locally
 
@@ -70,3 +74,5 @@ Sources, versions, licences and attribution accompany every module in [the data 
 The previous ESA WorldCover 2020/2021 package remains under `public/data/worldcover` for regression testing. Its algorithms differ between years, so it is not the default diagnostic series.
 
 Only cropped public data and non-sensitive provenance belong in Git. Raw inputs and signed Earth Engine download links remain in ignored `engine/outputs`; transient links are deleted after acquisition. Pushes to `main` run checks, build and deploy through the existing GitHub Pages workflow.
+
+Maintain the English manual in `docs/user-guide.en.md`. `pnpm run docs:build` creates the identical website download at `public/guide.en.md`; both build commands run that step automatically.

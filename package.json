@@ -8,8 +8,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "build:pages": "tsc --noEmit && vite build",
+    "build": "pnpm run docs:build && tsc --noEmit && vite build",
+    "build:pages": "pnpm run docs:build && tsc --noEmit && vite build",
+    "docs:build": "tsx scripts/generate-guide.ts",
     "preview": "vite preview",
     "test": "tsx --test tests/*.test.ts",
     "test:demo": "tsx tests/validate-demo.ts",

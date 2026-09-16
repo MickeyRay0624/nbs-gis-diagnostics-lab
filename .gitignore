@@ -12,3 +12,6 @@
 *.log
 .env*
 !.env.example
+# Chinese manuals are maintained outside the public repository.
+/docs/*.zh-CN.md
+/public/*.zh-CN.md
