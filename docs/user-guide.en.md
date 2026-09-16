@@ -293,6 +293,3 @@ The canonical English manual is `docs/user-guide.en.md`. `pnpm run docs:build` c
 
 The first-release technical standard is **a complete diagnostic supported by public data**: all seven base modules have documented numeric inputs, executable calculations, maps, statistics, machine-readable exports, provenance, coverage/uncertainty notes and Step 3 field-check questions. Land degradation includes all three required subindicators.
 
-Expert acceptance remains separate. Review the class crosswalk and forest definition, local cropping seasons, monsoon observation coverage, climate thresholds/model selection, Trends.Earth period discrepancy, SOC modelling, protection/OECM applicability and local corroborating evidence. Missing protection polygons do not demonstrate absence of protection.
-
-Deferred extensions include authenticated ASIS access, a low-emission climate scenario, automatic acquisition for arbitrary regions, event forecasting, wildfire and other extra hazards, irrigation/salinity/waterlogging extensions, a unified weighted risk score, intervention selection and cost-benefit analysis. The website supports diagnosis and review; it does not automatically choose an NbS intervention.
