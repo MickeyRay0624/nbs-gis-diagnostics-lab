@@ -271,7 +271,7 @@ pnpm build
 
 For the separate Python engine and scientific tests, create a virtual environment, install `./engine[test,data]`, then run `pytest engine/tests` and `ruff check engine/src engine/tests`. Full source rebuilding, including Earth Engine export names and sequential preparation commands, is documented in the [data preparation guide](https://github.com/MickeyRay0624/nbs-gis-diagnostics-lab/blob/main/docs/step2-data.md). Runtime/source responsibilities are implemented in `src/analysis`, `src/step2` and `engine/scripts`.
 
-The canonical English manual is `docs/user-guide.en.md`. `pnpm run docs:build` copies it to `public/guide.en.md` for the website download. The Chinese manual is maintained separately on the owner's local computer and is not included in this release's repository tree or site assets.
+The canonical English manual is `docs/user-guide.en.md`. `pnpm run docs:build` copies it to `public/guide.en.md` for the website download. 
 
 ## 10. Troubleshooting
 
@@ -289,7 +289,7 @@ The canonical English manual is `docs/user-guide.en.md`. `pnpm run docs:build` c
 | Results disappeared after reload | Results are not a saved account/session. Run again and export files before closing. |
 | The deployed page appears outdated | Reload after the GitHub Pages deployment has completed; a cached tab may still hold the previous code. |
 
-## 11. Completion standard and deferred work
+## 11. Completion standard 
 
 The first-release technical standard is **a complete diagnostic supported by public data**: all seven base modules have documented numeric inputs, executable calculations, maps, statistics, machine-readable exports, provenance, coverage/uncertainty notes and Step 3 field-check questions. Land degradation includes all three required subindicators.
 
