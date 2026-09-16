@@ -13,6 +13,20 @@ export const ESRI: CrosswalkRow[] = [
   [9, "Snow / ice", "#f2faff"], [10, "Clouds", "#c8c8c8"], [11, "Rangeland", "#c6ad8d"],
 ].map(([code, name, color]) => ({ source: Number(code), code: Number(code), name: String(name), color: String(color) }));
 
+// Explicit project legend for GLC-FCS30D; orchards are cropland, mangroves forest.
+export const GLCFCS: CrosswalkRow[] = [
+  {code:1,name:"Cropland",color:"#deb85b",sources:[10,11,12,20]},
+  {code:2,name:"Forest (including mangroves)",color:"#246445",sources:[51,52,61,62,71,72,81,82,91,92,185]},
+  {code:3,name:"Shrubland",color:"#b6ac51",sources:[120,121,122]},
+  {code:4,name:"Grassland",color:"#98bd61",sources:[130]},
+  {code:5,name:"Wetland",color:"#63b6a4",sources:[181,182,183,184,186,187]},
+  {code:6,name:"Built-up",color:"#cf7058",sources:[190]},
+  {code:7,name:"Bare land",color:"#b2aaa0",sources:[200,201,202]},
+  {code:8,name:"Water",color:"#589dc4",sources:[210]},
+  {code:9,name:"Snow and ice",color:"#d7e9ed",sources:[220]},
+  {code:10,name:"Other / sparse vegetation",color:"#c5bca1",sources:[140,150,152,153]},
+].flatMap(({sources,...c})=>sources.map(source=>({...c,source})));
+
 export const PALETTE = ["#286845", "#deb85b", "#589dc4", "#af7ac5", "#cf7058", "#7aab86", "#8a9283", "#caa77e"];
 
 export function csv(rows: (string | number | boolean)[][]): string {

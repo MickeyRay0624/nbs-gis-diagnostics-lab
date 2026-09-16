@@ -42,9 +42,11 @@ export async function runAnalysis(request: RunRequest, progress: (text: string) 
   const codes = [...classes.keys()].sort((a, b) => a - b);
   progress("Calculating transitions, gains, losses and quality checks…");
   const transitions = request.module === "fragmentation" ? [] : periods.slice(1).map((p, i) => transition(periods[i], p, codes));
+  if (request.module !== "fragmentation" && periods.length === 3) transitions.push(transition(periods[0], periods[2], codes));
   const hashVector = async (v: unknown) => v ? sha256(new TextEncoder().encode(JSON.stringify(v)).buffer) : null;
   return { grid, classes: codes.map(c => classes.get(c)!), periods, transitions, manifest: {
     schema: "nbs-browser-analysis/v1", computed_at: new Date().toISOString(), dataset: request.dataset,
+    transition_pairs: transitions.map(t=>[t.start,t.end]),
     module: request.module, years: periods.map(p => p.year), grid, resampling: "nearest-neighbour; pixel-centre sampling",
     inputs: inputs.map(i => ({ name: i.name, year: i.year, sha256: i.sha256, grid: i.grid })),
     provenance: request.provenance, crosswalk: request.crosswalk, source_nodata: "GeoTIFF NoData and code 0",

@@ -1,0 +1,39 @@
+{
+  "status": "pass",
+  "checked_numeric_values": 174,
+  "fragmentation_pixels_compared": 19052982,
+  "elapsed_seconds": 2.6279249579999995,
+  "inputs": [
+    {
+      "year": 2002,
+      "file": "ganjam_2002_50m.tif",
+      "sha256": "fc6e2b142cfbaca4ea7ee4ce11886feb92cdd7b2e14da6ce58fe0ae294eb5176"
+    },
+    {
+      "year": 2012,
+      "file": "ganjam_2012_50m.tif",
+      "sha256": "a5c68b3c788e07506b83ea16bcd7adbca563c7a0057d74cce5c267790988388e"
+    },
+    {
+      "year": 2022,
+      "file": "ganjam_2022_50m.tif",
+      "sha256": "7a57dfa15ca48fe5a2f48245fd465d11bc37cd2fe52583ffe32494d9b9a723d0"
+    }
+  ],
+  "grid": {
+    "width": 1962,
+    "height": 3237,
+    "left": 8121050,
+    "top": 2535150,
+    "cell": 50,
+    "crs": "EPSG:6933"
+  },
+  "checks": [
+    "Class counts match Python",
+    "Common-footprint transitions match Python",
+    "Gross gains, losses and net changes match Python",
+    "All forest metrics match Python within 1e-6",
+    "Every fragmentation classification pixel matches Python by SHA-256"
+  ],
+  "limitation": "Software validation against independent Python/SciPy implementation. Not field validation or verified land-cover change."
+}

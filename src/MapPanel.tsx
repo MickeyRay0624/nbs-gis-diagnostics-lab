@@ -4,6 +4,7 @@ import mapWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import type { GeoJSONSource, GeoJSONSourceSpecification, StyleSpecification } from "maplibre-gl";
 import { collectionBounds } from "./geo";
 import type { VectorCollection } from "./analysis/model";
+import type { MapOverlay } from "./step2/model";
 
 // MapLibre 6 has a separate ESM worker. Bundle its shared imports for GitHub Pages.
 maplibregl.setWorkerUrl(mapWorkerUrl);
@@ -14,6 +15,8 @@ interface MapPanelProps {
   loading: boolean;
   error: string | null;
   extentOnly?: boolean;
+  overlay?: MapOverlay | null;
+  opacity?: number;
 }
 
 // The study-area layer must not wait for remote basemap tiles to finish loading.
@@ -23,12 +26,14 @@ const baseStyle: StyleSpecification = {
   layers: [{ id: "background", type: "background", paint: { "background-color": "#e5ebe1" } }],
 };
 
-export function MapPanel({ aoi, label, loading, error, extentOnly = false }: MapPanelProps) {
+export function MapPanel({ aoi, label, loading, error, extentOnly = false, overlay, opacity = .8 }: MapPanelProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<maplibregl.Map | null>(null);
   const [layerReady, setLayerReady] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
   const [basemapError, setBasemapError] = useState(false);
+  const geometryKey = JSON.stringify(aoi?.features.map(f=>f.geometry) ?? null);
+  const fittedGeometry = useRef<string | null>(null);
   const focusRef = useRef<(context?: boolean) => void>(() => {});
 
   useEffect(() => {
@@ -70,7 +75,7 @@ export function MapPanel({ aoi, label, loading, error, extentOnly = false }: Map
   useEffect(() => {
     if (!map) return;
     let active = true;
-    let autoFit = true;
+    let autoFit = fittedGeometry.current !== geometryKey;
     let marker: maplibregl.Marker | undefined;
     setLayerReady(false);
     const source = map.getSource("study-area") as GeoJSONSource;
@@ -96,7 +101,7 @@ export function MapPanel({ aoi, label, loading, error, extentOnly = false }: Map
       element.title = extentOnly ? "Centre of the input raster extent" : "Selected study area";
       marker = new maplibregl.Marker({ element, anchor: "bottom" })
         .setLngLat([(b.west + b.east) / 2, (b.south + b.north) / 2]).addTo(map);
-      focus();
+      if (fittedGeometry.current !== geometryKey) { focus(); fittedGeometry.current = geometryKey; }
     } else map.jumpTo({ center: [0, 15], zoom: 1.5 });
 
     const onMove = (event: maplibregl.MapLibreEvent) => { if (event.originalEvent) autoFit = false; };
@@ -104,7 +109,24 @@ export function MapPanel({ aoi, label, loading, error, extentOnly = false }: Map
     const resize = new ResizeObserver(() => { map.resize(); if (autoFit) focus(); });
     if (containerRef.current) resize.observe(containerRef.current);
     return () => { active = false; marker?.remove(); resize.disconnect(); map.off("movestart", onMove); focusRef.current = () => {}; };
-  }, [map, aoi, label, extentOnly]);
+  }, [map, aoi, label, extentOnly, geometryKey]);
+
+  useEffect(() => {
+    if (!map) return;
+    if (!overlay) {
+      if (map.getLayer("diagnostic")) map.removeLayer("diagnostic");
+      if (map.getSource("diagnostic")) map.removeSource("diagnostic");
+      return;
+    }
+    const coordinates = overlay.coordinates as [[number, number], [number, number], [number, number], [number, number]];
+    const source = map.getSource("diagnostic") as maplibregl.ImageSource | undefined;
+    if (source) source.updateImage({ url: overlay.url, coordinates });
+    else {
+      map.addSource("diagnostic", { type: "image", url: overlay.url, coordinates });
+      map.addLayer({ id: "diagnostic", type: "raster", source: "diagnostic", paint: { "raster-opacity": opacity, "raster-resampling": "nearest", "raster-fade-duration": 0 } }, "study-area-halo");
+    }
+  }, [map, overlay]);
+  useEffect(() => { if (map?.getLayer("diagnostic")) map.setPaintProperty("diagnostic", "raster-opacity", opacity); }, [map, opacity, overlay]);
 
   const b = aoi ? collectionBounds(aoi) : null;
   return <>
@@ -115,7 +137,7 @@ export function MapPanel({ aoi, label, loading, error, extentOnly = false }: Map
     </div>
     <div className="map-frame">
       <div ref={containerRef} className="map-canvas" aria-label={`Interactive study-area map: ${label}`} />
-      <div className="map-layer-badge"><span className="layer-swatch" />{aoi ? label : "No study area selected"}</div>
+      <div className="map-layer-badge"><span className="layer-swatch" />{overlay?.label ?? (aoi ? label : "No study area selected")}</div>
       <div className={`map-load-state ${error || mapError ? "error" : ""}`} role="status">
         {error || mapError || (loading ? "Reading study-area boundary…" : !aoi ? "Select a GeoTIFF or upload an AOI" : layerReady ? "Boundary layer ready" : "Drawing selected boundary…")}
       </div>

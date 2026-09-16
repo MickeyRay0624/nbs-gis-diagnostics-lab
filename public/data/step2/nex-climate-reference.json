@@ -1,0 +1,674 @@
+[
+  {
+    "name": "baseline ensemble hot",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 27.65947273486089,
+    "min": 2.7555556297302246,
+    "max": 50.622222900390625
+  },
+  {
+    "name": "baseline ensemble warm",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 248.7749020694614,
+    "min": 176.53334045410156,
+    "max": 267.31109619140625
+  },
+  {
+    "name": "baseline ensemble frost",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "baseline ensemble temperature",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 26.111471908597,
+    "min": 23.02414894104004,
+    "max": 26.88501739501953
+  },
+  {
+    "name": "baseline ensemble rain",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.00845777985898758,
+    "min": 0.0,
+    "max": 0.02222222276031971
+  },
+  {
+    "name": "baseline ensemble dry",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 9.90140286164183,
+    "min": 9.108922004699707,
+    "max": 10.758398056030273
+  },
+  {
+    "name": "ssp245 ensemble hot",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 50.19443751293215,
+    "min": 11.288888931274414,
+    "max": 73.4000015258789
+  },
+  {
+    "name": "ssp245 ensemble warm",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 277.51614611656026,
+    "min": 215.7888946533203,
+    "max": 294.6777648925781
+  },
+  {
+    "name": "ssp245 ensemble frost",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "ssp245 ensemble temperature",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 27.4195405195128,
+    "min": 24.438119888305664,
+    "max": 28.125699996948242
+  },
+  {
+    "name": "ssp245 ensemble rain",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0372058409695567,
+    "min": 0.011111111380159855,
+    "max": 0.07777778059244156
+  },
+  {
+    "name": "ssp245 ensemble dry",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 9.641695245184026,
+    "min": 8.963891983032227,
+    "max": 10.661249160766602
+  },
+  {
+    "name": "ssp585 ensemble hot",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 59.698517686989504,
+    "min": 12.244444847106934,
+    "max": 85.87777709960938
+  },
+  {
+    "name": "ssp585 ensemble warm",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 285.6108682868444,
+    "min": 226.8222198486328,
+    "max": 302.45556640625
+  },
+  {
+    "name": "ssp585 ensemble frost",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "ssp585 ensemble temperature",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 27.808514173978754,
+    "min": 24.85710906982422,
+    "max": 28.50472068786621
+  },
+  {
+    "name": "ssp585 ensemble rain",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0355026346996234,
+    "min": 0.0,
+    "max": 0.06666667014360428
+  },
+  {
+    "name": "ssp585 ensemble dry",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 9.990456381714477,
+    "min": 9.175310134887695,
+    "max": 10.747196197509766
+  },
+  {
+    "name": "ssp245 hot change model minimum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 15.097091544191624,
+    "min": 6.166666507720947,
+    "max": 19.46666717529297
+  },
+  {
+    "name": "ssp245 hot change model maximum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 34.21725923833176,
+    "min": 10.466666221618652,
+    "max": 43.400001525878906
+  },
+  {
+    "name": "ssp245 warm change model minimum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 20.115906423247996,
+    "min": 18.133333206176758,
+    "max": 28.46666717529297
+  },
+  {
+    "name": "ssp245 warm change model maximum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 40.96507432645707,
+    "min": 33.43333435058594,
+    "max": 56.13333511352539
+  },
+  {
+    "name": "ssp245 frost change model minimum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "ssp245 frost change model maximum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "ssp245 temperature change model minimum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 1.0294421966834606,
+    "min": 0.9225199222564697,
+    "max": 1.0968109369277954
+  },
+  {
+    "name": "ssp245 temperature change model maximum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 1.8156768595290302,
+    "min": 1.6127523183822632,
+    "max": 2.052102565765381
+  },
+  {
+    "name": "ssp245 rain change model minimum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.006399730572993806,
+    "min": -0.03333333507180214,
+    "max": 0.03333333507180214
+  },
+  {
+    "name": "ssp245 rain change model maximum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.05188299915820823,
+    "min": 0.0,
+    "max": 0.13333334028720856
+  },
+  {
+    "name": "ssp245 dry change model minimum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": -0.6837633432226221,
+    "min": -1.1213682889938354,
+    "max": -0.17148026823997498
+  },
+  {
+    "name": "ssp245 dry change model maximum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.2937716753180681,
+    "min": -0.3320169746875763,
+    "max": 0.9167038202285767
+  },
+  {
+    "name": "ssp585 hot change model minimum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 11.763360524451985,
+    "min": 3.8333332538604736,
+    "max": 18.933332443237305
+  },
+  {
+    "name": "ssp585 hot change model maximum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 52.78175080385085,
+    "min": 15.266666412353516,
+    "max": 67.33333587646484
+  },
+  {
+    "name": "ssp585 warm change model minimum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 29.173886634504612,
+    "min": 23.866666793823242,
+    "max": 37.93333435058594
+  },
+  {
+    "name": "ssp585 warm change model maximum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 45.64851646196885,
+    "min": 39.06666564941406,
+    "max": 65.56666564941406
+  },
+  {
+    "name": "ssp585 frost change model minimum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "ssp585 frost change model maximum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "ssp585 temperature change model minimum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 1.1887042227852607,
+    "min": 1.0884531736373901,
+    "max": 1.277251124382019
+  },
+  {
+    "name": "ssp585 temperature change model maximum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 2.2909362145481516,
+    "min": 2.0203866958618164,
+    "max": 2.604710817337036
+  },
+  {
+    "name": "ssp585 rain change model minimum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": -0.0017240627872452039,
+    "min": -0.03333333507180214,
+    "max": 0.03333333507180214
+  },
+  {
+    "name": "ssp585 rain change model maximum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.05863202786884264,
+    "min": 0.0,
+    "max": 0.10000000149011612
+  },
+  {
+    "name": "ssp585 dry change model minimum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": -0.6746050765951959,
+    "min": -1.0944056510925293,
+    "max": -0.323736310005188
+  },
+  {
+    "name": "ssp585 dry change model maximum",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 1.1641411361313585,
+    "min": 0.4479779303073883,
+    "max": 1.6380120515823364
+  },
+  {
+    "name": "ACCESS-CM2 baseline hot",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 29.3004876755881,
+    "min": 1.2999999523162842,
+    "max": 56.43333435058594
+  },
+  {
+    "name": "ACCESS-CM2 baseline warm",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 249.05026619519188,
+    "min": 173.39999389648438,
+    "max": 267.8999938964844
+  },
+  {
+    "name": "ACCESS-CM2 baseline frost",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "ACCESS-CM2 baseline temperature",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 26.20643698244496,
+    "min": 23.125301361083984,
+    "max": 26.968950271606445
+  },
+  {
+    "name": "ACCESS-CM2 baseline rain",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.006081065205165423,
+    "min": 0.0,
+    "max": 0.03333333507180214
+  },
+  {
+    "name": "ACCESS-CM2 baseline dry",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 8.86511842032132,
+    "min": 8.192245483398438,
+    "max": 9.929097175598145
+  },
+  {
+    "name": "MIROC6 baseline hot",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 28.85999137944339,
+    "min": 4.133333206176758,
+    "max": 51.63333511352539
+  },
+  {
+    "name": "MIROC6 baseline warm",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 247.48370474206612,
+    "min": 173.93333435058594,
+    "max": 266.4333190917969
+  },
+  {
+    "name": "MIROC6 baseline frost",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "MIROC6 baseline temperature",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 26.08715748374636,
+    "min": 23.00807762145996,
+    "max": 26.84838104248047
+  },
+  {
+    "name": "MIROC6 baseline rain",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0007760794818652315,
+    "min": 0.0,
+    "max": 0.03333333507180214
+  },
+  {
+    "name": "MIROC6 baseline dry",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 10.546747695432865,
+    "min": 9.642075538635254,
+    "max": 11.549615859985352
+  },
+  {
+    "name": "MPI-ESM1-2-HR baseline hot",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 24.817939867539064,
+    "min": 2.8333332538604736,
+    "max": 44.099998474121094
+  },
+  {
+    "name": "MPI-ESM1-2-HR baseline warm",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 249.79073894455888,
+    "min": 182.26666259765625,
+    "max": 267.6000061035156
+  },
+  {
+    "name": "MPI-ESM1-2-HR baseline frost",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "MPI-ESM1-2-HR baseline temperature",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 26.04082096772359,
+    "min": 22.939069747924805,
+    "max": 26.837718963623047
+  },
+  {
+    "name": "MPI-ESM1-2-HR baseline rain",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.018516195598854986,
+    "min": 0.0,
+    "max": 0.06666667014360428
+  },
+  {
+    "name": "MPI-ESM1-2-HR baseline dry",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 10.292342159726573,
+    "min": 9.288841247558594,
+    "max": 11.685001373291016
+  },
+  {
+    "name": "ACCESS-CM2 ssp245 hot",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 63.51774652710935,
+    "min": 11.766666412353516,
+    "max": 92.4000015258789
+  },
+  {
+    "name": "ACCESS-CM2 ssp245 warm",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 290.0153379583037,
+    "min": 229.53334045410156,
+    "max": 306.3333435058594
+  },
+  {
+    "name": "ACCESS-CM2 ssp245 frost",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "ACCESS-CM2 ssp245 temperature",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 28.02211385191363,
+    "min": 25.137454986572266,
+    "max": 28.67131805419922
+  },
+  {
+    "name": "ACCESS-CM2 ssp245 rain",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.044431858895726,
+    "min": 0.0,
+    "max": 0.13333334028720856
+  },
+  {
+    "name": "ACCESS-CM2 ssp245 dry",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 8.417523048283737,
+    "min": 7.850880146026611,
+    "max": 9.207128524780273
+  },
+  {
+    "name": "MIROC6 ssp245 hot",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 46.99007650629113,
+    "min": 10.300000190734863,
+    "max": 69.30000305175781
+  },
+  {
+    "name": "MIROC6 ssp245 warm",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 272.62645748041103,
+    "min": 207.10000610351562,
+    "max": 290.73333740234375
+  },
+  {
+    "name": "MIROC6 ssp245 frost",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "MIROC6 ssp245 temperature",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 27.16621707877571,
+    "min": 24.143516540527344,
+    "max": 27.895795822143555
+  },
+  {
+    "name": "MIROC6 ssp245 rain",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.029058512867567207,
+    "min": 0.0,
+    "max": 0.06666667014360428
+  },
+  {
+    "name": "MIROC6 ssp245 dry",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 9.921448910942873,
+    "min": 9.376130104064941,
+    "max": 10.773786544799805
+  },
+  {
+    "name": "MPI-ESM1-2-HR ssp245 hot",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 40.075489815932805,
+    "min": 11.800000190734863,
+    "max": 58.5
+  },
+  {
+    "name": "MPI-ESM1-2-HR ssp245 warm",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 269.9066435508136,
+    "min": 210.73333740234375,
+    "max": 286.9666748046875
+  },
+  {
+    "name": "MPI-ESM1-2-HR ssp245 frost",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "MPI-ESM1-2-HR ssp245 temperature",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 27.070290483221868,
+    "min": 24.033388137817383,
+    "max": 27.809988021850586
+  },
+  {
+    "name": "MPI-ESM1-2-HR ssp245 rain",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.03812715318394046,
+    "min": 0.0,
+    "max": 0.06666667014360428
+  },
+  {
+    "name": "MPI-ESM1-2-HR ssp245 dry",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 10.586113810196295,
+    "min": 9.435710906982422,
+    "max": 12.601705551147461
+  },
+  {
+    "name": "ACCESS-CM2 ssp585 hot",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 82.08223728602744,
+    "min": 16.566667556762695,
+    "max": 114.66666412353516
+  },
+  {
+    "name": "ACCESS-CM2 ssp585 warm",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 294.6987831730459,
+    "min": 238.96665954589844,
+    "max": 311.3999938964844
+  },
+  {
+    "name": "ACCESS-CM2 ssp585 frost",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "ACCESS-CM2 ssp585 temperature",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 28.49737330072645,
+    "min": 25.671810150146484,
+    "max": 29.11100959777832
+  },
+  {
+    "name": "ACCESS-CM2 ssp585 rain",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.047005815455249046,
+    "min": 0.0,
+    "max": 0.13333334028720856
+  },
+  {
+    "name": "ACCESS-CM2 ssp585 dry",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 8.191620719845183,
+    "min": 7.735993385314941,
+    "max": 8.893729209899902
+  },
+  {
+    "name": "MIROC6 ssp585 hot",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 60.43201692232773,
+    "min": 13.5,
+    "max": 85.9000015258789
+  },
+  {
+    "name": "MIROC6 ssp585 warm",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 283.1692042438334,
+    "min": 221.3000030517578,
+    "max": 301.76666259765625
+  },
+  {
+    "name": "MIROC6 ssp585 frost",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "MIROC6 ssp585 temperature",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 27.698644086981165,
+    "min": 24.71650505065918,
+    "max": 28.405134201049805
+  },
+  {
+    "name": "MIROC6 ssp585 rain",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.02204965726986555,
+    "min": 0.0,
+    "max": 0.13333334028720856
+  },
+  {
+    "name": "MIROC6 ssp585 dry",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 10.323265359168442,
+    "min": 9.544668197631836,
+    "max": 10.708641052246094
+  },
+  {
+    "name": "MPI-ESM1-2-HR ssp585 hot",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 36.581300686355185,
+    "min": 6.666666507720947,
+    "max": 57.06666564941406
+  },
+  {
+    "name": "MPI-ESM1-2-HR ssp585 warm",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 278.9646236198538,
+    "min": 220.1999969482422,
+    "max": 294.20001220703125
+  },
+  {
+    "name": "MPI-ESM1-2-HR ssp585 frost",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  {
+    "name": "MPI-ESM1-2-HR ssp585 temperature",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 27.229525140183156,
+    "min": 24.183015823364258,
+    "max": 27.99802017211914
+  },
+  {
+    "name": "MPI-ESM1-2-HR ssp585 rain",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 0.037452433116572204,
+    "min": 0.0,
+    "max": 0.10000000149011612
+  },
+  {
+    "name": "MPI-ESM1-2-HR ssp585 dry",
+    "validAreaKm2": 8407.089988708496,
+    "mean": 11.456483283009474,
+    "min": 9.981216430664062,
+    "max": 13.095137596130371
+  }
+]

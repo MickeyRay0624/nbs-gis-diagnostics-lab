@@ -1,0 +1,615 @@
+{
+  "status": "pass",
+  "catalog_sha256": "c703e7208d7b3003da1cc715d1872b951ff55498d33ed232511f329d64b116c7",
+  "modules": [
+    {
+      "id": "flood",
+      "layers": [
+        {
+          "id": "jrc-flood-1",
+          "validAreaKm2": 688.7946463633093,
+          "coveragePct": 8.19302085072339,
+          "mean": 2.125122396534092
+        },
+        {
+          "id": "jrc-flood-2",
+          "validAreaKm2": 802.5769605889765,
+          "coveragePct": 9.546429849786293,
+          "mean": 2.8015234192676073
+        },
+        {
+          "id": "jrc-flood-3",
+          "validAreaKm2": 846.9523580341678,
+          "coveragePct": 10.074262867140819,
+          "mean": 3.205776808152441
+        },
+        {
+          "id": "jrc-flood-4",
+          "validAreaKm2": 8407.090118689168,
+          "coveragePct": 100,
+          "mean": null
+        },
+        {
+          "id": "jrc-flood-5",
+          "validAreaKm2": 8407.090118689168,
+          "coveragePct": 100,
+          "mean": null
+        }
+      ]
+    },
+    {
+      "id": "groundwater",
+      "layers": [
+        {
+          "id": "gldas-groundwater-1",
+          "validAreaKm2": 8052.643852233887,
+          "coveragePct": 95.78396166865511,
+          "mean": 584.7295909848463
+        },
+        {
+          "id": "gldas-groundwater-2",
+          "validAreaKm2": 8052.643852233887,
+          "coveragePct": 95.78396166865511,
+          "mean": 589.1867419510348
+        },
+        {
+          "id": "groundwater-change",
+          "validAreaKm2": 8052.643852233887,
+          "coveragePct": 95.78396166865511,
+          "mean": 4.45715096618852
+        },
+        {
+          "id": "gldas-groundwater-3",
+          "validAreaKm2": 8052.643852233887,
+          "coveragePct": 95.78396166865511,
+          "mean": 0.10388509870069779
+        }
+      ]
+    },
+    {
+      "id": "climate",
+      "layers": [
+        {
+          "id": "nex-climate-1",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 27.65947273486089
+        },
+        {
+          "id": "nex-climate-2",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 248.7749020694614
+        },
+        {
+          "id": "nex-climate-3",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0
+        },
+        {
+          "id": "nex-climate-4",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 26.111471908597004
+        },
+        {
+          "id": "nex-climate-5",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0.00845777985898758
+        },
+        {
+          "id": "nex-climate-6",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 9.90140286164183
+        },
+        {
+          "id": "nex-climate-7",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 50.19443751293215
+        },
+        {
+          "id": "nex-climate-8",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 277.51614611656026
+        },
+        {
+          "id": "nex-climate-9",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0
+        },
+        {
+          "id": "nex-climate-10",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 27.4195405195128
+        },
+        {
+          "id": "nex-climate-11",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0.0372058409695567
+        },
+        {
+          "id": "nex-climate-12",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 9.641695245184026
+        },
+        {
+          "id": "nex-climate-13",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 59.698517686989504
+        },
+        {
+          "id": "nex-climate-14",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 285.6108682868444
+        },
+        {
+          "id": "nex-climate-15",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0
+        },
+        {
+          "id": "nex-climate-16",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 27.808514173978754
+        },
+        {
+          "id": "nex-climate-17",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0.0355026346996234
+        },
+        {
+          "id": "nex-climate-18",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 9.990456381714475
+        },
+        {
+          "id": "nex-climate-ssp245-hot-change",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 22.534964746065622
+        },
+        {
+          "id": "nex-climate-19",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 15.097091544191624
+        },
+        {
+          "id": "nex-climate-20",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 34.21725923833178
+        },
+        {
+          "id": "nex-climate-ssp245-warm-change",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 28.741244047098878
+        },
+        {
+          "id": "nex-climate-21",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 20.115906423247996
+        },
+        {
+          "id": "nex-climate-22",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 40.96507432645707
+        },
+        {
+          "id": "nex-climate-ssp245-frost-change",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0
+        },
+        {
+          "id": "nex-climate-23",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0
+        },
+        {
+          "id": "nex-climate-24",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0
+        },
+        {
+          "id": "nex-climate-ssp245-temperature-change",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 1.3080686109158
+        },
+        {
+          "id": "nex-climate-25",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 1.0294421966834606
+        },
+        {
+          "id": "nex-climate-26",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 1.8156768595290302
+        },
+        {
+          "id": "nex-climate-ssp245-rain-change",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0.028748061536536508
+        },
+        {
+          "id": "nex-climate-27",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0.006399730572993806
+        },
+        {
+          "id": "nex-climate-28",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0.05188299915820823
+        },
+        {
+          "id": "nex-climate-ssp245-dry-change",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": -0.25970761645780477
+        },
+        {
+          "id": "nex-climate-29",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": -0.6837633432226221
+        },
+        {
+          "id": "nex-climate-30",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0.2937716753180681
+        },
+        {
+          "id": "nex-climate-ssp585-hot-change",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 32.03904475036945
+        },
+        {
+          "id": "nex-climate-31",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 11.763360524451985
+        },
+        {
+          "id": "nex-climate-32",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 52.781750803850855
+        },
+        {
+          "id": "nex-climate-ssp585-warm-change",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 36.83596621738297
+        },
+        {
+          "id": "nex-climate-33",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 29.173886634504612
+        },
+        {
+          "id": "nex-climate-34",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 45.64851646196885
+        },
+        {
+          "id": "nex-climate-ssp585-frost-change",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0
+        },
+        {
+          "id": "nex-climate-35",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0
+        },
+        {
+          "id": "nex-climate-36",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0
+        },
+        {
+          "id": "nex-climate-ssp585-temperature-change",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 1.697042265381754
+        },
+        {
+          "id": "nex-climate-37",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 1.1887042227852607
+        },
+        {
+          "id": "nex-climate-38",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 2.2909362145481516
+        },
+        {
+          "id": "nex-climate-ssp585-rain-change",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0.027044855277914007
+        },
+        {
+          "id": "nex-climate-39",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": -0.0017240627872452039
+        },
+        {
+          "id": "nex-climate-40",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0.05863202786884264
+        },
+        {
+          "id": "nex-climate-ssp585-dry-change",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 0.08905352007264472
+        },
+        {
+          "id": "nex-climate-41",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": -0.6746050765951959
+        },
+        {
+          "id": "nex-climate-42",
+          "validAreaKm2": 8407.089988708496,
+          "coveragePct": 100,
+          "mean": 1.1641411361313585
+        }
+      ]
+    },
+    {
+      "id": "degradation",
+      "layers": [
+        {
+          "id": "trendsearth-degradation-combined-baseline",
+          "validAreaKm2": 8197.561279466083,
+          "coveragePct": 98.78929504065447,
+          "mean": null
+        },
+        {
+          "id": "trendsearth-degradation-1",
+          "validAreaKm2": 8206.290776020183,
+          "coveragePct": 98.89449471910025,
+          "mean": null
+        },
+        {
+          "id": "trendsearth-degradation-2",
+          "validAreaKm2": 8298.025890449531,
+          "coveragePct": 100,
+          "mean": null
+        },
+        {
+          "id": "trendsearth-degradation-3",
+          "validAreaKm2": 8207.780494432895,
+          "coveragePct": 98.91244740365894,
+          "mean": null
+        },
+        {
+          "id": "trendsearth-degradation-4",
+          "validAreaKm2": 8208.014449331908,
+          "coveragePct": 98.91526680796187,
+          "mean": -0.06666923838611902
+        },
+        {
+          "id": "trendsearth-degradation-5",
+          "validAreaKm2": 8206.290776020183,
+          "coveragePct": 98.89449471910025,
+          "mean": null
+        },
+        {
+          "id": "trendsearth-degradation-6",
+          "validAreaKm2": 8196.298100178303,
+          "coveragePct": 98.77407239246733,
+          "mean": null
+        },
+        {
+          "id": "trendsearth-degradation-7",
+          "validAreaKm2": 8298.025890449531,
+          "coveragePct": 100,
+          "mean": null
+        },
+        {
+          "id": "trendsearth-degradation-combined-monitoring",
+          "validAreaKm2": 8197.234630108984,
+          "coveragePct": 98.78535856996359,
+          "mean": null
+        },
+        {
+          "id": "trendsearth-degradation-8",
+          "validAreaKm2": 8206.369126880809,
+          "coveragePct": 98.89543892994823,
+          "mean": null
+        },
+        {
+          "id": "trendsearth-degradation-9",
+          "validAreaKm2": 8298.025890449531,
+          "coveragePct": 100,
+          "mean": null
+        },
+        {
+          "id": "trendsearth-degradation-10",
+          "validAreaKm2": 8207.905487794427,
+          "coveragePct": 98.91395370603956,
+          "mean": null
+        },
+        {
+          "id": "trendsearth-degradation-11",
+          "validAreaKm2": 8208.014449331908,
+          "coveragePct": 98.91526680796187,
+          "mean": 0.031196598181241052
+        },
+        {
+          "id": "trendsearth-degradation-12",
+          "validAreaKm2": 8206.369126880809,
+          "coveragePct": 98.89543892994823,
+          "mean": null
+        },
+        {
+          "id": "trendsearth-degradation-13",
+          "validAreaKm2": 8196.376451038928,
+          "coveragePct": 98.77501660331531,
+          "mean": null
+        },
+        {
+          "id": "trendsearth-degradation-14",
+          "validAreaKm2": 8298.025890449531,
+          "coveragePct": 100,
+          "mean": null
+        },
+        {
+          "id": "trendsearth-degradation-15",
+          "validAreaKm2": 8196.259280310185,
+          "coveragePct": 98.77360457194436,
+          "mean": null
+        }
+      ]
+    },
+    {
+      "id": "drought",
+      "layers": [
+        {
+          "id": "modis-drought-1",
+          "validAreaKm2": 2867.491664984089,
+          "coveragePct": 67.12519469291871,
+          "mean": 56.32472342983005
+        },
+        {
+          "id": "modis-drought-2",
+          "validAreaKm2": 3638.6731040813174,
+          "coveragePct": 85.17780313642187,
+          "mean": 34.020360957578475
+        },
+        {
+          "id": "modis-drought-3",
+          "validAreaKm2": 4253.760481192238,
+          "coveragePct": 99.57640120242753,
+          "mean": 49.46145825393579
+        },
+        {
+          "id": "modis-drought-4",
+          "validAreaKm2": 4226.8350647375655,
+          "coveragePct": 98.94610335578398,
+          "mean": 80.43689443570305
+        },
+        {
+          "id": "modis-drought-5",
+          "validAreaKm2": 2867.491664984089,
+          "coveragePct": 67.12519469291871,
+          "mean": 53.14555564273223
+        },
+        {
+          "id": "modis-drought-6",
+          "validAreaKm2": 3638.6731040813174,
+          "coveragePct": 85.17780313642187,
+          "mean": 57.3684685734756
+        },
+        {
+          "id": "modis-drought-change-1",
+          "validAreaKm2": 2861.884165027004,
+          "coveragePct": 66.99392856546793,
+          "mean": -22.971066008235475
+        },
+        {
+          "id": "modis-drought-change-3",
+          "validAreaKm2": 4226.8350647375655,
+          "coveragePct": 98.94610335578398,
+          "mean": 30.84167399004179
+        },
+        {
+          "id": "modis-drought-change-5",
+          "validAreaKm2": 2861.884165027004,
+          "coveragePct": 66.99392856546793,
+          "mean": 4.141878278779164
+        },
+        {
+          "id": "modis-drought-7",
+          "validAreaKm2": 4270.015952797115,
+          "coveragePct": 99.95692600381648,
+          "mean": 58.77880487538107
+        },
+        {
+          "id": "modis-drought-8",
+          "validAreaKm2": 4240.736016059268,
+          "coveragePct": 99.27151112428092,
+          "mean": 23.219386221059466
+        },
+        {
+          "id": "modis-drought-9",
+          "validAreaKm2": 4271.143511907171,
+          "coveragePct": 99.9833210673888,
+          "mean": 99.84165967966086
+        },
+        {
+          "id": "modis-drought-10",
+          "validAreaKm2": 4254.952242462404,
+          "coveragePct": 99.60429917620867,
+          "mean": 94.11112758593663
+        },
+        {
+          "id": "modis-drought-11",
+          "validAreaKm2": 4270.026601337801,
+          "coveragePct": 99.95717527581107,
+          "mean": 70.48563985336502
+        },
+        {
+          "id": "modis-drought-12",
+          "validAreaKm2": 4243.175888760455,
+          "coveragePct": 99.32862617437611,
+          "mean": 33.880432476362216
+        },
+        {
+          "id": "modis-drought-13",
+          "validAreaKm2": 4271.00351191356,
+          "coveragePct": 99.98004380351985,
+          "mean": 98.92192666830472
+        },
+        {
+          "id": "modis-drought-14",
+          "validAreaKm2": 4254.637242464788,
+          "coveragePct": 99.59692533222285,
+          "mean": 74.4127772000365
+        }
+      ]
+    }
+  ],
+  "checks": 575,
+  "limitation": "Independent arithmetic and package validation; not field validation or expert acceptance."
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Baseline monthly-mean storage mm",
+    "validAreaKm2": 8052.643852233887,
+    "mean": 584.7295909848463,
+    "min": 481.379150390625,
+    "max": 674.7874145507812
+  },
+  {
+    "name": "Monitoring monthly-mean storage mm",
+    "validAreaKm2": 8052.643852233887,
+    "mean": 589.1867419510348,
+    "min": 485.7456359863281,
+    "max": 674.7393188476562
+  },
+  {
+    "name": "Annual Theil-Sen storage trend mm/year",
+    "validAreaKm2": 8052.643852233887,
+    "mean": 0.1038850987006978,
+    "min": -0.8974202275276184,
+    "max": 0.7330692410469055
+  }
+]

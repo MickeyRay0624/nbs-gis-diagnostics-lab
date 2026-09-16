@@ -1,0 +1,91 @@
+{
+  "status": "pass",
+  "method": "Independent NumPy aggregation from daily ACCESS-CM2 historical values; normal and leap years",
+  "checks": [
+    {
+      "year": 1991,
+      "metric": "hot",
+      "maxAbsoluteError": 0.0,
+      "tolerance": 1e-06,
+      "validPixels": 32
+    },
+    {
+      "year": 1991,
+      "metric": "warm",
+      "maxAbsoluteError": 0.0,
+      "tolerance": 1e-06,
+      "validPixels": 32
+    },
+    {
+      "year": 1991,
+      "metric": "frost",
+      "maxAbsoluteError": 0.0,
+      "tolerance": 1e-06,
+      "validPixels": 32
+    },
+    {
+      "year": 1991,
+      "metric": "temperature",
+      "maxAbsoluteError": 1.52587890625e-05,
+      "tolerance": 5e-05,
+      "validPixels": 32
+    },
+    {
+      "year": 1991,
+      "metric": "rain",
+      "maxAbsoluteError": 0.0,
+      "tolerance": 1e-06,
+      "validPixels": 32
+    },
+    {
+      "year": 1991,
+      "metric": "dry",
+      "maxAbsoluteError": 0.0,
+      "tolerance": 1e-06,
+      "validPixels": 32
+    },
+    {
+      "year": 1992,
+      "metric": "hot",
+      "maxAbsoluteError": 0.0,
+      "tolerance": 1e-06,
+      "validPixels": 32
+    },
+    {
+      "year": 1992,
+      "metric": "warm",
+      "maxAbsoluteError": 0.0,
+      "tolerance": 1e-06,
+      "validPixels": 32
+    },
+    {
+      "year": 1992,
+      "metric": "frost",
+      "maxAbsoluteError": 0.0,
+      "tolerance": 1e-06,
+      "validPixels": 32
+    },
+    {
+      "year": 1992,
+      "metric": "temperature",
+      "maxAbsoluteError": 1.33514404296875e-05,
+      "tolerance": 5e-05,
+      "validPixels": 32
+    },
+    {
+      "year": 1992,
+      "metric": "rain",
+      "maxAbsoluteError": 0.0,
+      "tolerance": 1e-06,
+      "validPixels": 32
+    },
+    {
+      "year": 1992,
+      "metric": "dry",
+      "maxAbsoluteError": 0.0,
+      "tolerance": 1e-06,
+      "validPixels": 32
+    }
+  ],
+  "limitation": "Checks annual aggregation, not climate-model skill or all model/scenario outputs."
+}

@@ -1,0 +1,100 @@
+[
+  {
+    "name": "Kharif 2013 VHI",
+    "validAreaKm2": 2867.491664984089,
+    "mean": 56.32472342982998,
+    "min": 1.5849329233169556,
+    "max": 100.0
+  },
+  {
+    "name": "Kharif 2023 VHI",
+    "validAreaKm2": 3638.6731040813174,
+    "mean": 34.02036095757861,
+    "min": 0.0,
+    "max": 87.88742065429688
+  },
+  {
+    "name": "Rabi 2013\u20132014 VHI",
+    "validAreaKm2": 4253.760481192238,
+    "mean": 49.46145825393586,
+    "min": 0.0,
+    "max": 91.93323516845703
+  },
+  {
+    "name": "Rabi 2023\u20132024 VHI",
+    "validAreaKm2": 4226.8350647375655,
+    "mean": 80.43689443570295,
+    "min": 17.826356887817383,
+    "max": 100.0
+  },
+  {
+    "name": "Two-season 2013 VHI",
+    "validAreaKm2": 2867.491664984089,
+    "mean": 53.14555564273227,
+    "min": 2.731377363204956,
+    "max": 85.20628356933594
+  },
+  {
+    "name": "Two-season 2023 VHI",
+    "validAreaKm2": 3638.6731040813174,
+    "mean": 57.36846857347561,
+    "min": 18.35516929626465,
+    "max": 92.20991516113281
+  },
+  {
+    "name": "Kharif NDVI valid observations 2013",
+    "validAreaKm2": 4270.015952797115,
+    "mean": 58.77880487538113,
+    "min": 11.11111068725586,
+    "max": 100.0
+  },
+  {
+    "name": "Kharif LST valid observations 2013",
+    "validAreaKm2": 4240.736016059268,
+    "mean": 23.219386221059427,
+    "min": 5.263157844543457,
+    "max": 52.6315803527832
+  },
+  {
+    "name": "Rabi NDVI valid observations 2013",
+    "validAreaKm2": 4271.143511907171,
+    "mean": 99.84165967966089,
+    "min": 10.0,
+    "max": 100.0
+  },
+  {
+    "name": "Rabi LST valid observations 2013",
+    "validAreaKm2": 4254.952242462404,
+    "mean": 94.11112758593663,
+    "min": 5.0,
+    "max": 100.0
+  },
+  {
+    "name": "Kharif NDVI valid observations 2023",
+    "validAreaKm2": 4270.026601337801,
+    "mean": 70.4856398533652,
+    "min": 11.11111068725586,
+    "max": 100.0
+  },
+  {
+    "name": "Kharif LST valid observations 2023",
+    "validAreaKm2": 4243.175888760455,
+    "mean": 33.88043247636198,
+    "min": 5.263157844543457,
+    "max": 57.894737243652344
+  },
+  {
+    "name": "Rabi NDVI valid observations 2023",
+    "validAreaKm2": 4271.00351191356,
+    "mean": 98.92192666830475,
+    "min": 10.0,
+    "max": 100.0
+  },
+  {
+    "name": "Rabi LST valid observations 2023",
+    "validAreaKm2": 4254.637242464788,
+    "mean": 74.41277720003652,
+    "min": 5.0,
+    "max": 95.0
+  }
+]

@@ -1,8 +1,8 @@
 export const guideContent = {
   "title": "How to use each feature and understand the calculations",
-  "lead": "Quick start: keep the Ganjam 2020/2021 demo, 50 m cells and 50 m edge width → Run with current settings → read results below the overview.",
+  "lead": "Choose one of the seven diagnostics. For land cover and forest, keep Ganjam 2002/2012/2022, 50 m cells and 50 m edge width, then run. Other modules use prepared numeric inputs; select a layer after running and inspect its coverage.",
   "architectureTitle": "How does it compute without an analysis backend?",
-  "architecture": "GitHub Pages serves static HTML, CSS, JavaScript and public sample files. Your browser executes the downloaded program using your computer's CPU and memory. The main thread manages controls, maps and downloads; a separate Web Worker reads rasters, aligns and reclassifies them, and calculates change and fragmentation before returning arrays. A Web Worker is a browser thread, not a remote server. Uploaded file contents are not sent to a server. Basemap tiles and sample downloads still need the network. Python cropped and prepared the 50 m demo inputs before publication.",
+  "architecture": "GitHub Pages serves static HTML, CSS, JavaScript and public sample files. Your browser executes the downloaded program using your computer's CPU and memory. The main thread manages controls, maps and downloads; a separate Web Worker reads rasters, aligns and reclassifies them, and calculates change and fragmentation before returning arrays. A Web Worker is a browser thread, not a remote server. Uploaded file contents are not sent to a server. Basemap tiles and sample downloads still need the network. Earth Engine and Python prepare public source data before publication. The five numeric modules read prepared values and area weights, then perform map arithmetic, subindicator combination and statistics locally. Upstream satellite composites, climate projections and provider models are not rerun inside the page.",
   "limits": "Current caps: 100 MB and 25 million input pixels per TIFF, 8 million analysis cells, 25 MB per vector file, and 3 periods. Usable size also depends on device memory. Crop or coarsen larger jobs, or use the repository's separate Python command-line engine; the website does not call that engine.",
   "steps": [
     "Static host serves code and samples",
@@ -16,12 +16,12 @@ export const guideContent = {
     {
       "title": "Study-area overview",
       "how": "Use Locate study area to fit the boundary and Regional context to see its surroundings. Overview in the header returns here.",
-      "method": "The demo reads the Ganjam GeoJSON. Uploads show the AOI, or the earliest-year GeoTIFF footprint transformed to longitude/latitude. MapLibre draws the outline and fits the view over OpenStreetMap tiles. This is a location map; calculated raster maps appear below."
+      "method": "The demo reads the Ganjam GeoJSON. Uploads show the AOI, or the earliest-year GeoTIFF footprint transformed to longitude/latitude. MapLibre draws the outline and fits the view over OpenStreetMap tiles. The selected result is overlaid on this shared map. Use the year selector for land cover and forest, and the layer selector below for numeric diagnostics. Opacity and visibility affect only display."
     },
     {
       "title": "Public example and years",
-      "how": "Choose Public example, keep 2020, 2021 and 50 m, then run both modules. Download the sample TIFFs to try the upload workflow.",
-      "method": "Original ESA WorldCover is 10 m. Python prepared the cropped 50 m EPSG:6933 equal-area inputs using nearest-neighbour sampling. Every browser run recomputes the analysis and verifies input SHA-256 hashes. The 2020 v100 and 2021 v200 algorithms differ; their differences are not verified real-world change."
+      "how": "Choose Public data, keep 2002, 2012, 2022 and 50 m, then run both modules. Download the sample TIFFs to try the upload workflow.",
+      "method": "GLC-FCS30D is a consistent 30 m product. Earth Engine and Python prepare the cropped 50 m EPSG:6933 inputs with nearest-neighbour sampling. The browser verifies hashes and applies an editable ten-class crosswalk. The source fine classes remain in the input files. Classification errors and resampling mean mapped change still needs local review."
     },
     {
       "title": "Upload rasters, AOI and class inspection",
@@ -31,12 +31,12 @@ export const guideContent = {
     {
       "title": "Diagnostic module",
       "how": "LULC change needs 2–3 distinct years. Forest fragmentation accepts 1–3 years. Running both needs 2–3.",
-      "method": "LULC compares adjacent periods after sorting by year: three periods yield two comparisons. Fragmentation is calculated independently for each year."
+      "method": "LULC compares adjacent periods plus first-to-last when three years are supplied: three periods yield three comparisons. Fragmentation is calculated independently for each year."
     },
     {
       "title": "Analysis resolution",
       "how": "Grid resolution is in metres. Start at 50 m; use 100 m or coarser for larger areas. Edge width must be at least one analysis cell.",
-      "method": "Inputs are aligned by nearest-neighbour sampling to one EPSG:6933 equal-area grid; pixel centres determine AOI membership. Area in hectares = pixel count × cell size² / 10,000. Finer grids need more memory; upsampling the 50 m demo does not restore 10 m detail."
+      "method": "Inputs are aligned by nearest-neighbour sampling to one EPSG:6933 equal-area grid; pixel centres determine AOI membership. Area in hectares = pixel count × cell size² / 10,000. Finer grids need more memory; upsampling the 50 m public inputs does not restore 30 m source detail."
     },
     {
       "title": "Reclassification crosswalk",
@@ -45,7 +45,7 @@ export const guideContent = {
     },
     {
       "title": "Forest definition",
-      "how": "Select target classes in Classes counted as forest. The WorldCover demo defaults to Tree cover (10) and Mangroves (95). Review your selection after reclassification.",
+      "how": "Select target classes in Classes counted as forest. The GLC-FCS30D project legend defaults to Forest including mangroves (2); orchards remain cropland. Review your selection after reclassification.",
       "method": "Selected classes become a binary forest mask; other valid classes are non-forest. This is a user-defined analytical mask. Tree cover is not automatically a national legal definition of forest."
     },
     {
@@ -60,7 +60,7 @@ export const guideContent = {
     },
     {
       "title": "Land-cover and class-difference maps",
-      "how": "After a run, choose Land cover for yearly maps or Class difference for adjacent-year differences. Hover to inspect pixel classes and use the legend for colours.",
+      "how": "After a run, choose Land cover for yearly maps or Class difference for pairwise differences, including first-to-last. Hover to inspect pixel classes and use the legend for colours.",
       "method": "Canvas colours the calculated arrays with transparent NoData. Differences use only cells valid in both periods: same class = 0, different = 1. The overview basemap does not enter area or distance calculations."
     },
     {

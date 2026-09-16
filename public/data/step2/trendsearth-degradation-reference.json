@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Productivity class \u00b7 baseline",
+    "validAreaKm2": 8206.290776020182,
+    "mean": 0.4438200163847012,
+    "min": -1.0,
+    "max": 1.0
+  },
+  {
+    "name": "Land-cover subindicator \u00b7 baseline",
+    "validAreaKm2": 8298.025890449531,
+    "mean": -0.004793490585229052,
+    "min": -1.0,
+    "max": 1.0
+  },
+  {
+    "name": "Soil-carbon subindicator \u00b7 baseline",
+    "validAreaKm2": 8207.780494432893,
+    "mean": -0.003184271955332329,
+    "min": -1.0,
+    "max": 1.0
+  },
+  {
+    "name": "SOC change (%) \u00b7 baseline",
+    "validAreaKm2": 8208.014449331906,
+    "mean": -0.06666923838611903,
+    "min": -67.0,
+    "max": 28.0
+  },
+  {
+    "name": "Productivity dynamics (5 classes) \u00b7 baseline",
+    "validAreaKm2": 8206.290776020182,
+    "mean": 4.3795376314846335,
+    "min": 1.0,
+    "max": 5.0
+  },
+  {
+    "name": "Published SDG indicator \u00b7 baseline",
+    "validAreaKm2": 8196.298100178301,
+    "mean": 0.43888566466046885,
+    "min": -1.0,
+    "max": 1.0
+  },
+  {
+    "name": "Complete component coverage \u00b7 baseline",
+    "validAreaKm2": 8298.025890449531,
+    "mean": 0.9877125298816439,
+    "min": 0.0,
+    "max": 1.0
+  },
+  {
+    "name": "Productivity class \u00b7 monitoring",
+    "validAreaKm2": 8206.369126880807,
+    "mean": 0.6721417627798301,
+    "min": -1.0,
+    "max": 1.0
+  },
+  {
+    "name": "Land-cover subindicator \u00b7 monitoring",
+    "validAreaKm2": 8298.025890449531,
+    "mean": 0.021126775860176295,
+    "min": -1.0,
+    "max": 1.0
+  },
+  {
+    "name": "Soil-carbon subindicator \u00b7 monitoring",
+    "validAreaKm2": 8207.905487794425,
+    "mean": -0.0017264867608589468,
+    "min": -1.0,
+    "max": 1.0
+  },
+  {
+    "name": "SOC change (%) \u00b7 monitoring",
+    "validAreaKm2": 8208.014449331906,
+    "mean": 0.03119659818124106,
+    "min": -75.0,
+    "max": 11.0
+  },
+  {
+    "name": "Productivity dynamics (5 classes) \u00b7 monitoring",
+    "validAreaKm2": 8206.369126880807,
+    "mean": 4.588394791596418,
+    "min": 1.0,
+    "max": 5.0
+  },
+  {
+    "name": "Published SDG indicator \u00b7 monitoring",
+    "validAreaKm2": 8196.376451038926,
+    "mean": 0.6722588369791213,
+    "min": -1.0,
+    "max": 1.0
+  },
+  {
+    "name": "Complete component coverage \u00b7 monitoring",
+    "validAreaKm2": 8298.025890449531,
+    "mean": 0.98773703501393,
+    "min": 0.0,
+    "max": 1.0
+  },
+  {
+    "name": "Published land-condition status in 2023",
+    "validAreaKm2": 8196.259280310183,
+    "mean": 5.7795667399750235,
+    "min": 1.0,
+    "max": 7.0
+  }
+]

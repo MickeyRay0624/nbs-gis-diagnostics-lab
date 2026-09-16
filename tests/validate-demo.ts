@@ -1,20 +1,22 @@
 import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
 import { runAnalysis } from "../src/analysis/runner";
-import { WORLDCOVER } from "../src/analysis/presets";
+import { WORLDCOVER, GLCFCS } from "../src/analysis/presets";
 import { sha256 } from "../src/analysis/io";
 
 const root = new URL("../public/data/", import.meta.url);
 const read = async (path: string) => JSON.parse(await readFile(new URL(path, root), "utf8"));
-const metadata = await read("worldcover/metadata.json"), reference = await read("worldcover/python-reference.json");
+const dataset = process.argv.includes("--glcfcs") ? "glcfcs" : "worldcover";
+const metadata = await read(`${dataset}/metadata.json`), reference = await read(`${dataset}/python-reference.json`);
 const sources = await Promise.all(metadata.inputs.map(async (s: {year: number; file: string; sha256: string}) => {
-  const buffer = await readFile(new URL(`worldcover/${s.file}`, root));
+  const buffer = await readFile(new URL(`${dataset}/${s.file}`, root));
   return { year: s.year, name: s.file, expectedSha256: s.sha256, buffer: buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength) as ArrayBuffer };
 }));
 const started = performance.now();
-const result = await runAnalysis({ sources, crosswalk: WORLDCOVER, forestCodes: [10, 95], edge: 50, cell: 50, countBoundary: false,
-  module: "both", dataset: "ESA WorldCover · Ganjam public demonstration", aoi: await read("ganjam-aoi.geojson"), provenance: metadata }, console.log);
+const result = await runAnalysis({ sources, crosswalk: dataset === "glcfcs" ? GLCFCS : WORLDCOVER, forestCodes: dataset === "glcfcs" ? [2] : [10, 95], edge: 50, cell: 50, countBoundary: false,
+  module: "both", dataset: metadata.name, aoi: await read("ganjam-aoi.geojson"), provenance: metadata }, console.log);
 assert.deepEqual(result.grid, reference.grid);
+assert.equal(result.transitions.length,reference.transitions.length,"All configured comparison periods must be validated");
 let checked = 0;
 for (const row of reference.class_area_by_year) {
   const period = result.periods.find(p => p.year === row.year)!;
@@ -42,5 +44,5 @@ const report = { status: "pass", checked_numeric_values: checked, fragmentation_
   elapsed_seconds: (performance.now() - started) / 1000, inputs: metadata.inputs, grid: result.grid,
   checks: ["Class counts match Python", "Common-footprint transitions match Python", "Gross gains, losses and net changes match Python", "All forest metrics match Python within 1e-6", "Every fragmentation classification pixel matches Python by SHA-256"],
   limitation: "Software validation against independent Python/SciPy implementation. Not field validation or verified land-cover change." };
-await writeFile(new URL("worldcover/validation.json", root), JSON.stringify(report, null, 2) + "\n");
+await writeFile(new URL(`${dataset}/validation.json`, root), JSON.stringify(report, null, 2) + "\n");
 console.log(JSON.stringify(report, null, 2));

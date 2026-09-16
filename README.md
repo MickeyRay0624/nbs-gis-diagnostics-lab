@@ -1,79 +1,72 @@
 # NbS GIS Diagnostics Lab
 
-A browser workspace for land-cover change and forest fragmentation. Open the [live workspace](https://mickeyray0624.github.io/nbs-gis-diagnostics-lab/), choose a module and click **Run analysis**. Computation runs locally in a Web Worker; GitHub Pages does not need a Python server and uploaded files are not sent to a service.
+An English-language Ganjam Step 2 workspace for public-data environmental screening. The static frontend runs on GitHub Pages; Python and Earth Engine prepare the public inputs. No credentials or analysis server are embedded in the website.
 
-## Available in the page
+Version **0.4.0** implements all seven base modules. Technical calculations are separate from expert acceptance, protected-area/OECM applicability and field verification.
 
-- A persistent study-area overview with the selected boundary, a location label, fit/context controls and automatic uploaded-raster footprint preview. Running analysis keeps the map and its current view in place.
-- An English feature guide explains every control, calculation, metric and export. Open **Guide** in the header or read the [full guide](public/guide.en.md).
-- A ready-to-run Ganjam example with real ESA WorldCover 2020 v100 and 2021 v200 inputs.
-- Configurable years: 2–3 periods for LULC, 1–3 for the independent forest module.
-- Single-band GeoTIFF upload, nearest-neighbour alignment to a common EPSG:6933 equal-area grid, and optional polygon AOI masking.
-- WorldCover and ESRI class presets; GLC-FCS30D or other rasters can import their observed codes, then use a CSV crosswalk for class names, colours and aggregation. These are local uploads, not authenticated Earth Engine connections.
-- An editable crosswalk and selectable forest classes; configurable grid size, forest edge width and AOI boundary treatment.
-- Land-cover maps, pairwise class-difference maps, transition matrices and gross gains/losses/net change on the **common valid footprint**.
-- Forest core, edge, patch and internal-clearing maps, with area, patch count, edge density, shape, mean patch size and largest-patch metrics.
-- Optional protected-area and OECM GeoJSON or zipped Shapefile uploads. Protected areas take precedence over OECMs in overlap. Without protection data only `All` is reported.
-- Downloads: map PNGs with legends, analysis GeoTIFFs, class-area/transition/gain-loss/forest-metric CSVs, crosswalk CSV and a JSON run manifest with input hashes, parameters and QA.
+| Module | First-release public inputs | Main outputs |
+| --- | --- | --- |
+| Land-cover change | GLC-FCS30D 2002 / 2012 / 2022, 30 m source on a 50 m equal-area grid | Editable ten-class crosswalk, three pairwise transitions, gains/losses, class areas |
+| Forest fragmentation | Same three land-cover maps; forest includes mangroves, excludes orchards | Core, edge, patch, internal clearing; patch/edge/shape metrics; optional protection/OECM strata |
+| Groundwater | GLDAS 2.2 daily GWS, February 2003–December 2023, native 0.25° | Monthly series, 2003–2013 / 2014–2023 means, change, Theil–Sen trend |
+| Drought / vegetation stress | MOD13A2.061 + MOD11A2.061, 2001–2023 seasonal reference, fixed 2022 crop mask | Kharif/Rabi VHI for 2013 and 2023, common-footprint change, seasonal series, observation coverage |
+| Climate extremes | NEX-GDDP-CMIP6 v1.1, three models, native 0.25° | Six indices; 1991–2020 vs 2040–2069; SSP2-4.5 / SSP5-8.5; model range and annual series |
+| River flood hazard | JRC/CEMS-GloFAS v2.1.2, 3 arc seconds | 10-, 100-, 500-year depths; inundated area; permanent-water and spurious-depth flags |
+| Land degradation | Trends.Earth SDG 15.3.1 v1.2 | All three subindicators, SOC percentage change, one-out-all-out, component completeness, baseline and 2023 status |
 
-## Start with public data
+Drought is a **MODIS seasonal alternative**, not FAO ASIS. Climate scenarios differ from the reference report’s RCP2.6. Land-degradation periods follow the publisher, including the documented discrepancy between its latest land-cover/SOC record (2015–2022) and TIFF labels (2015–2023). Full methods and limitations are in the catalog and [English feature guide](public/guide.en.md).
 
-The example uses the gbOpen Ganjam district boundary and public WorldCover tile `N18E084`. Original 10 m classes were resampled by nearest neighbour onto a **50 m** EPSG:6933 grid and masked to the AOI. The two compressed inputs total approximately 1.3 MB. The example does not contain protected-area or OECM evidence.
+## Run locally
 
-WorldCover **2020 and 2021 use different algorithm versions**. Their apparent differences combine algorithm and real land-cover differences; this is a software demonstration, not a verified land-cover change assessment. Coarser resampling affects fragmentation; a 50 m edge is only one cell on the default test grid. Project decisions require suitable source data, a reviewed forest definition, and GIS validation.
+Use Node 22.13+ and pnpm:
 
-[Input provenance](public/data/worldcover/metadata.json) · [Independent Python reference](public/data/worldcover/python-reference.json) · [Cross-language validation](public/data/worldcover/validation.json) · [Validation notes](docs/validation.md)
-
-## Upload contract
-
-- North-up, PixelIsArea, single-band categorical GeoTIFFs with integer class codes 1–65534. **Code 0 and the declared GeoTIFF NoData value are excluded.** Recode valid zero-valued classes before upload. RGB satellite images are not classified by this tool.
-- Supported input CRSs: EPSG:4326, EPSG:3857, EPSG:6933 and WGS84 UTM north/south zones. Outputs always use EPSG:6933, square cells and nearest-neighbour pixel-centre sampling.
-- Source rasters: at most 100 MB/file and 25 million pixels. Analysis: at most 8 million cells. Use cropped GeoTIFFs for full-resolution source products; smaller requested cells cannot recover detail absent from an input.
-- AOI/protection: polygon WGS84 GeoJSON, or a ZIP with one Shapefile layer including `.shp`, `.dbf`, `.shx` and `.prj`. Vector upload limit: 25 MB. GeoJSON coordinates must lie between 85°S and 85°N. The earliest-year raster's extent is used if no AOI is supplied.
-- Crosswalk CSV columns: `source_code,target_code,target_name,color`. Target codes are 1–999. Merged classes must use identical target names and `#RRGGBB` colours. Unknown source codes block the run. ESRI clouds remain a source class; mask unreliable observations before analysis.
-- Years must be distinct. Missing files, invalid grids, unmapped classes, invalid forest definitions, edge widths below one cell and empty comparison footprints produce actionable errors. Changing settings clears old results; a running job can be cancelled.
-
-## Forest method
-
-The supplied SCALA ArcPy workflow is the reference for the standalone [Python module](engine/src/nbs_gis/fragmentation.py) and [browser implementation](src/analysis/compute.ts). Neither implementation requires ArcGIS.
-
-1. Build a binary forest mask from selected target classes.
-2. Identify eight-connected forest patches over the whole valid AOI. Protection polygons never split the forest before classification.
-3. Use exact Euclidean pixel-centre distance to known non-forest. Core is strictly farther than the chosen edge width. Patches with no core are classified as `Patch`; remaining non-core forest is `Edge`.
-4. Internal clearings are four-connected, enclosed **non-forest** components. Components touching NoData or the grid perimeter are excluded. Clearings are not added to forest area. This follows the supplied script's *clearing* meaning; it is not the “perforated forest” class of other fragmentation tools.
-5. Administrative/NoData boundaries do not create edges by default. An explicit option counts them. All-forest landscapes with ignored boundaries have no observed ecological edge.
-6. Stratify only after classification. Class area and ecological edge length are allocated pixel by pixel. NP, MPS, MSI, AWMSI and MPE use whole patches assigned by majority area (ties: Protected, OECM, Unprotected). MPS uses the actual mean area of assigned whole patches. LPI uses the largest patch's **intersection** with the stratum divided by stratum landscape area; it cannot exceed 100%.
-
-Cross-boundary patch counts are recorded. A stratum can contain forest portions without owning a whole patch; its NP can therefore be zero. Clearing intersection counts need not sum to the whole-landscape count. Ignoring administrative edges also reduces perimeters used by shape metrics. “Unprotected” means outside the supplied polygons; their completeness and historical validity are not inferred.
-
-## Local development and validation
-
-MapLibre 6's separate ESM worker is imported with Vite's `?worker&url` and registered before creating maps. This bundles its shared dependency and preserves the GitHub Pages base path. Without this, raster basemap tiles can render while the GeoJSON boundary silently fails. See the [official Vite integration](https://github.com/maplibre/maplibre-gl-js/blob/main/docs/index.md#esm).
-
-```bash
+```sh
 pnpm install --frozen-lockfile
 pnpm dev
+```
+
+Choose a module and run it. The overview shows Ganjam’s boundary and selected result; switching modules retains the map. Land cover and forest share one configurable run. Other modules use the prepared numeric package. Export GeoTIFF, PNG, CSV, time series and JSON manifests, then download the diagnostic brief to assemble session evidence for review.
+
+The complete public diagnostic inputs occupy roughly **4.5 MB compressed**, excluding the retained WorldCover regression example. Native coarse grids remain coarse. Maps do not imply village-scale precision.
+
+## Execution and data handling
+
+- Earth Engine / Python: source acquisition, provider quality filtering, temporal aggregation, model indices and public data preparation.
+- Browser Web Workers: input hashes, categorical alignment/reclassification, forest analysis, continuous-map arithmetic, subindicator combination and weighted statistics.
+- GitHub Pages: static code, prepared public rasters and provenance. The website does not authenticate to Google or launch cloud work.
+- Uploaded files: local processing. Input limits, grid checks, band checks and memory budgets reject unsupported packages.
+
+Continuous-module area weights use AOI intersections in square kilometres. Crop and terrestrial modules use documented eligible-area masks. The land-cover engine uses cell-centre allocation. Zero and negative values are valid numeric data; NoData never becomes stable land, no drought or safe floodplain.
+
+For a new numeric package, select one `nbs-step2/v1` catalog JSON and its TIFFs in the review section. The current numeric workspace requires the same Ganjam boundary hash. Land-cover uploads retain the existing custom-AOI workflow. Changing one module’s source does not silently change the others.
+
+## Validation
+
+```sh
 pnpm test
-pnpm run test:demo
+pnpm run test:demo       # retained two-period WorldCover regression
+pnpm run test:glcfcs     # actual three-period land-cover/forest package
+pnpm run test:step2      # all five numeric packages and 97 result layers
 pnpm build
+python -m pip install -e './engine[test,data]'
+pytest engine/tests
+ruff check engine/src engine/tests
 ```
 
-The frontend tests include hand-calculated forests, NoData, Euclidean distances, class crosswalks, GeoTIFF round trips, uploaded three-period data and protection/OECM overlaps. `test:demo` compares the actual browser computation code with Python/SciPy results: 91 numeric values and all 12,701,988 fragmentation cells across the two public rasters.
+The public validation files record Python/browser agreement, full forest-class pixel hashes, numeric band summaries and class-area conservation. Climate annual indices were independently recomputed from daily values for a normal and leap year. Land-degradation combinations are checked against the published indicator on complete observations; integer SOC values exactly ±10% remain uncertain because rounding can cross the threshold.
 
-For the Python package and configurable batch workflow, see [engine/README.md](engine/README.md). To rebuild public inputs from the original downloaded tiles:
+These checks validate software and data handling, **not environmental attribution or field accuracy**. See [data preparation and reproducibility](docs/step2-data.md), [validation evidence](docs/step2-validation.md) and the separate [Python engine guide](engine/README.md).
 
-```bash
-bash engine/examples/ganjam-worldcover-demo/download_data.sh
-.venv-engine/bin/python engine/scripts/prepare_web_demo.py
-pnpm run test:demo
-```
+## Review gate and deferred work
 
-Only cropped open inputs and non-sensitive provenance are published. Original tiles and full local run manifests remain in ignored directories. Pushes to `main` build, test and deploy through GitHub Pages.
+Seven prepared modules do not mean expert signoff. Review the class crosswalk, forest definition, cropping calendars, climate thresholds, source-period discrepancy, protection/OECM applicability and Step 3 field questions. Missing protection polygons do not establish that land is unprotected.
 
-## Sources
+Deferred: automatic arbitrary-AOI acquisition, restricted ASIS access, low-emission climate scenario, event forecasting, a single weighted risk score, additional hazards, intervention selection and cost-benefit analysis. No reviewed status is fabricated.
 
-- [ESA WorldCover data access and licence](https://esa-worldcover.org/en/data-access), CC BY 4.0. [2020 v100](https://doi.org/10.5281/zenodo.5571936), [2021 v200](https://doi.org/10.5281/zenodo.7254221).
-- © ESA WorldCover project 2020/2021 / Contains modified Copernicus Sentinel data processed by ESA WorldCover consortium.
-- [geoBoundaries gbOpen, India ADM2](https://www.geoboundaries.org/api/current/gbOpen/IND/ADM2/), boundary represented year 2021, ODbL 1.0. This is the pilot boundary, pending project acceptance.
-- [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), basemap.
-- [GLC-FCS30D product paper and dataset](https://essd.copernicus.org/articles/16/1353/2024/), for user-supplied GLC-FCS30D workflows.
+## Sources and deployment
+
+Sources, versions, licences and attribution accompany every module in [the data catalog](public/data/step2/catalog.json). Boundary: geoBoundaries gbOpen IND ADM2 (2021), ODbL 1.0. Basemap: OpenStreetMap contributors. Source authors retain their rights; modified public inputs are attributed in the catalog.
+
+The previous ESA WorldCover 2020/2021 package remains under `public/data/worldcover` for regression testing. Its algorithms differ between years, so it is not the default diagnostic series.
+
+Only cropped public data and non-sensitive provenance belong in Git. Raw inputs and signed Earth Engine download links remain in ignored `engine/outputs`; transient links are deleted after acquisition. Pushes to `main` run checks, build and deploy through the existing GitHub Pages workflow.

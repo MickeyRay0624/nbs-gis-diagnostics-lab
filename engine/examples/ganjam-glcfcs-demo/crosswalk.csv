@@ -1,0 +1,36 @@
+source_code,target_code,target_name,color
+10,1,Cropland,#deb85b
+11,1,Cropland,#deb85b
+12,1,Cropland,#deb85b
+20,1,Cropland,#deb85b
+51,2,Forest (including mangroves),#246445
+52,2,Forest (including mangroves),#246445
+61,2,Forest (including mangroves),#246445
+62,2,Forest (including mangroves),#246445
+71,2,Forest (including mangroves),#246445
+72,2,Forest (including mangroves),#246445
+81,2,Forest (including mangroves),#246445
+82,2,Forest (including mangroves),#246445
+91,2,Forest (including mangroves),#246445
+92,2,Forest (including mangroves),#246445
+185,2,Forest (including mangroves),#246445
+120,3,Shrubland,#b6ac51
+121,3,Shrubland,#b6ac51
+122,3,Shrubland,#b6ac51
+130,4,Grassland,#98bd61
+181,5,Wetland,#63b6a4
+182,5,Wetland,#63b6a4
+183,5,Wetland,#63b6a4
+184,5,Wetland,#63b6a4
+186,5,Wetland,#63b6a4
+187,5,Wetland,#63b6a4
+190,6,Built-up,#cf7058
+200,7,Bare land,#b2aaa0
+201,7,Bare land,#b2aaa0
+202,7,Bare land,#b2aaa0
+210,8,Water,#589dc4
+220,9,Snow and ice,#d7e9ed
+140,10,Other / sparse vegetation,#c5bca1
+150,10,Other / sparse vegetation,#c5bca1
+152,10,Other / sparse vegetation,#c5bca1
+153,10,Other / sparse vegetation,#c5bca1

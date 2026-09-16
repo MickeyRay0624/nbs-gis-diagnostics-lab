@@ -39,7 +39,7 @@ jobs:
         uses: actions/configure-pages@v6
 
       - name: Test browser analysis
-        run: pnpm test && pnpm run test:demo
+        run: pnpm test && pnpm run test:demo && pnpm run test:glcfcs && pnpm run test:step2
 
       - name: Build static site
         run: pnpm run build:pages

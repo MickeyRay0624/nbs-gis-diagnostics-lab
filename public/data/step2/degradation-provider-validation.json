@@ -1,0 +1,18 @@
+[
+  {
+    "period": "baseline",
+    "comparedCompletePixels": 141801,
+    "mismatchedPixels": 0,
+    "mismatchAreaKm2": 0.0,
+    "partiallyObservedDegradedAreaKm2": 1.4971341867931187,
+    "roundedSOCThresholdAreaKm2": 0.23395489901304245
+  },
+  {
+    "period": "monitoring",
+    "comparedCompletePixels": 141804,
+    "mismatchedPixels": 0,
+    "mismatchAreaKm2": 0.0,
+    "partiallyObservedDegradedAreaKm2": 0.9671406075358391,
+    "roundedSOCThresholdAreaKm2": 0.10896153748035431
+  }
+]

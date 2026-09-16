@@ -1,0 +1,44 @@
+{
+  "name": "GLC-FCS30D \u00b7 Ganjam",
+  "grid": {
+    "crs": "EPSG:6933",
+    "width": 1962,
+    "height": 3237,
+    "cell": 50,
+    "left": 8121050.0,
+    "top": 2535150.0
+  },
+  "inputs": [
+    {
+      "year": 2002,
+      "file": "ganjam_2002_50m.tif",
+      "sha256": "fc6e2b142cfbaca4ea7ee4ce11886feb92cdd7b2e14da6ce58fe0ae294eb5176"
+    },
+    {
+      "year": 2012,
+      "file": "ganjam_2012_50m.tif",
+      "sha256": "a5c68b3c788e07506b83ea16bcd7adbca563c7a0057d74cce5c267790988388e"
+    },
+    {
+      "year": 2022,
+      "file": "ganjam_2022_50m.tif",
+      "sha256": "7a57dfa15ca48fe5a2f48245fd465d11bc37cd2fe52583ffe32494d9b9a723d0"
+    }
+  ],
+  "source_url": "https://essd.copernicus.org/articles/16/1353/2024/",
+  "license": "CC BY 4.0",
+  "boundary": "geoBoundaries gbOpen IND ADM2, 2021; ODbL 1.0",
+  "attribution": "Zhang et al. (2024), GLC-FCS30D; community Earth Engine hosting by Samapriya Roy.",
+  "processing": "Nearest-neighbour 30 m source \u2192 50 m EPSG:6933 browser grid; cell-centre AOI mask. Fine source classes retained, editable ten-class crosswalk applied at runtime.",
+  "limitation": "Consistent product supports screening, not verified change. Classification errors, mixed pixels and 50 m resampling can affect small patches. Orchards remain cropland; mangroves count as forest.",
+  "protection": "Protection/OECM applicability and completeness await review.",
+  "source": {
+    "id": "glcfcs",
+    "name": "GLC-FCS30D annual land cover",
+    "url": "https://essd.copernicus.org/articles/16/1353/2024/",
+    "version": "1985\u20132022 release; annual bands 2002, 2012, 2022",
+    "licence": "CC BY 4.0",
+    "description": "30 m source; Google Earth Engine community-hosted collection projects/sat-io/open-datasets/GLC-FCS30D/annual. Four tiles E80N20, E80N25, E85N20 and E85N25. Dataset DOI: 10.5281/zenodo.8239305."
+  },
+  "source_export_sha256": "075538f31704a86d0ef68e3babb3dc3db6ec441dd0a69bf356dd42435f49cabb"
+}

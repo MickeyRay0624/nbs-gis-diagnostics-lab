@@ -1,6 +1,6 @@
 {
   "name": "nbs-gis-diagnostics-lab",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -12,7 +12,9 @@
     "build:pages": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "tsx --test tests/*.test.ts",
-    "test:demo": "tsx tests/validate-demo.ts"
+    "test:demo": "tsx tests/validate-demo.ts",
+    "test:glcfcs": "tsx tests/validate-demo.ts --glcfcs",
+    "test:step2": "tsx tests/validate-step2.ts"
   },
   "dependencies": {
     "geotiff": "^3.0.5",

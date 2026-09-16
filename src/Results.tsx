@@ -1,19 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FRAGMENT_CLASSES } from "./analysis/model";
 import type { Result } from "./analysis/model";
 import { csv, download } from "./analysis/presets";
 import { RasterView } from "./RasterView";
 
 const number = (n: number, digits = 1) => n.toLocaleString("en", { maximumFractionDigits: digits });
-export function Results({ result }: { result: Result }) {
+export function Results({ result, selectedView }: { result: Result; selectedView?: "lulc" | "fragmentation" }) {
   const hasForest = !!result.periods[0].fragmentation;
   const [tab, setTab] = useState<"lulc" | "forest" | "change">(result.transitions.length ? "lulc" : "forest");
   const [pair, setPair] = useState(0);
+  useEffect(() => { if (selectedView) setTab(selectedView === "fragmentation" && hasForest ? "forest" : "lulc"); }, [selectedView, hasForest]);
   const ha = result.grid.cell ** 2 / 10000, t = result.transitions[pair];
   const latest = result.periods.at(-1)!, fm = latest.fragmentation?.metrics[0];
   const className = (code: number) => result.classes.find(c => c.code === code)?.name ?? String(code);
   const maxGain = t ? Math.max(1, ...t.gains.flatMap(g => [g.loss, g.gain])) : 1;
-  const attribution = String(result.manifest.dataset).includes("WorldCover") ? "© ESA WorldCover 2020/2021 · modified Copernicus Sentinel data · Technical demonstration" : "User-supplied categorical land cover · Technical analysis";
+  const attribution = String(result.manifest.dataset).includes("WorldCover") ? "© ESA WorldCover 2020/2021 · modified Copernicus Sentinel data · Technical demonstration" : String(result.manifest.dataset).includes("GLC-FCS30D") ? "Zhang et al. (2024) · GLC-FCS30D · CC BY 4.0 · Technical screening" : "User-supplied categorical land cover · Technical analysis";
   const areaRows = [["year", "class_code", "class_name", "pixels", "area_ha"], ...result.periods.flatMap(p => result.classes.map(c => [p.year, c.code, c.name, p.counts[c.code] ?? 0, (p.counts[c.code] ?? 0) * ha]))];
   const fragRows = result.periods.flatMap(p => (p.fragmentation?.metrics ?? []).map(m => ({ year: p.year, ...m })));
   const exportMetrics = () => { if (fragRows.length) download("forest_fragmentation.csv", csv([Object.keys(fragRows[0]), ...fragRows.map(r => Object.values(r))]), "text/csv"); };
@@ -21,7 +22,7 @@ export function Results({ result }: { result: Result }) {
     <div className="metric-row">
       <article><small>Mapped area · {latest.year}</small><strong>{number(latest.valid * ha / 100)} <i>km²</i></strong><span>{number(latest.valid, 0)} valid pixels</span></article>
       <article><small>{fm ? `Forest cover · ${latest.year}` : "Comparable area"}</small><strong>{fm ? `${number(fm.PLAND)}%` : `${number(t.valid * ha / 100)} km²`}</strong><span>{fm ? `${number(fm.forest_ha)} ha of selected forest classes` : "Common valid footprint for both periods"}</span></article>
-      <article><small>{fm ? "Core share of forest" : "Class difference"}</small><strong>{number(fm ? fm.core_pct : t.changed / t.valid * 100)}<i> %</i></strong><span>{fm ? `${number(fm.NP, 0)} connected forest patches` : `${t.start}–${t.end} · software test`}</span></article>
+      <article><small>{fm ? "Core share of forest" : "Class difference"}</small><strong>{number(fm ? fm.core_pct : t.changed / t.valid * 100)}<i> %</i></strong><span>{fm ? `${number(fm.NP, 0)} connected forest patches` : `${t.start}–${t.end} · mapped class change`}</span></article>
     </div>
 
     <section className="card result-section">

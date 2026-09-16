@@ -18,9 +18,13 @@ test("three uploaded periods, polygon AOI, zipped protection and OECM overlap", 
   const result = await runAnalysis({ sources: await Promise.all([2017, 2021, 2025].map(input)),
     crosswalk: WORLDCOVER, forestCodes: [10], edge: 50, cell: 50, countBoundary: false, module: "both", dataset: "SYNTHETIC TEST ONLY", provenance: {},
     aoi: await vector("test_only_aoi.geojson"), protectedAreas: await vector("test_only_protected.zip"), oecm: await vector("test_only_oecm.geojson") }, () => {});
-  assert.equal(result.periods.length, 3); assert.equal(result.transitions.length, 2);
+  assert.equal(result.periods.length, 3); assert.equal(result.transitions.length, 3);
   assert.deepEqual(result.periods.map(p => p.valid), [143, 143, 143]);
-  assert.deepEqual(result.transitions.map(t => t.changed), [5, 5]);
+  assert.deepEqual(result.transitions.slice(0,2).map(t => t.changed), [5, 5]);
+  assert.deepEqual(result.transitions.map(t=>[t.start,t.end]),[[2017,2021],[2021,2025],[2017,2025]]);
+  let fullChange = 0;
+  result.periods[0].data.forEach((value,i)=>{const target=result.periods[2].data[i];if(value && target && value!==target)fullChange++;});
+  assert.equal(result.transitions[2].changed,fullChange);
   assert.deepEqual(result.periods[0].fragmentation!.metrics.map(m => m.stratum), ["All", "Protected", "OECM", "Unprotected"]);
   const first = result.periods[0].fragmentation!.metrics;
   assert.equal(first[1].landscape_ha, 71 * .25);

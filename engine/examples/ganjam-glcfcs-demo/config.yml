@@ -1,0 +1,23 @@
+project:
+  name: Ganjam GLC-FCS30D Step 2
+  aoi: ../../../public/data/ganjam-aoi.geojson
+analysis:
+  target_crs: EPSG:6933
+  target_resolution: 50
+  max_output_pixels: 8000000
+  output_nodata: 0
+  unmapped_class_policy: error
+  rasters:
+    2002: ../../../public/data/glcfcs/ganjam_2002_50m.tif
+    2012: ../../../public/data/glcfcs/ganjam_2012_50m.tif
+    2022: ../../../public/data/glcfcs/ganjam_2022_50m.tif
+  crosswalk: crosswalk.csv
+  transitions: [[2002, 2012], [2012, 2022], [2002, 2022]]
+fragmentation:
+  enabled: true
+  forest_codes: [2]
+  edge_width_m: 50
+  count_boundary_as_edge: false
+output:
+  directory: ../../outputs/glcfcs-validation
+  write_maps: false
