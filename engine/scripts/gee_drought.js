@@ -12,7 +12,7 @@ var lst = ee.ImageCollection('MODIS/061/MOD11A2').map(function(i) {
 });
 function season(collection,start,end,name) {
   var selected=collection.filterDate(start,end);
-  return selected.mean().rename(name).addBands(selected.count().divide(selected.size()).multiply(100).rename(name+'_coverage')); 
+  return selected.mean().rename(name).addBands(selected.count().divide(selected.size()).multiply(100).rename(name+'_coverage'));
 }
 for(var y=2001;y<=2023;y++) {
   (function(year) {
