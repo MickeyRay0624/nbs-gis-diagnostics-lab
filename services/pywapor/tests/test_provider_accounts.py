@@ -42,7 +42,7 @@ def test_laads_uses_one_official_token_and_restricts_credential_destination(monk
         return Response()
 
     monkeypatch.setattr(requests, 'post', post)
-    viirs = SimpleNamespace()
+    viirs = SimpleNamespace(download_url=lambda *args, **kwargs: None)
     accounts = SimpleNamespace(get=lambda name: ('fixture-nasa', 'fixture-password'))
     configure_laads(viirs, accounts)
     data_url = 'https://ladsweb.modaps.eosdis.nasa.gov/opendap/test.nc'
@@ -69,7 +69,29 @@ def test_laads_does_not_accept_missing_token(monkeypatch):
         def raise_for_status(self): pass
         def json(self): return {}
     monkeypatch.setattr(requests, 'post', lambda *a, **kw: Response())
-    viirs = SimpleNamespace()
+    viirs = SimpleNamespace(download_url=lambda *args, **kwargs: None)
     configure_laads(viirs, SimpleNamespace(get=lambda _: ('fixture-user', 'fixture-password')))
     with pytest.raises(RuntimeError, match='did not return'):
         viirs.setup_session('https://urs.earthdata.nasa.gov')
+
+
+def test_laads_authorization_check_does_not_download_a_whole_swath():
+    viirs = SimpleNamespace(download_url=lambda *args, **kwargs: None)
+    configure_laads(viirs, SimpleNamespace())
+    class Response:
+        headers = {'Content-Type': 'application/x-netcdf;ver=4'}
+        def __enter__(self): return self
+        def __exit__(self, *args): pass
+        def raise_for_status(self): pass
+        @property
+        def content(self): raise AssertionError('Authorization must not read a whole data file')
+    calls = []
+    def get(url, **kwargs):
+        calls.append(kwargs)
+        return Response()
+    session = SimpleNamespace(get=get)
+    viirs._authorize_urs_session(session, 'https://ladsweb.modaps.eosdis.nasa.gov/test')
+    assert calls == [{'stream': True, 'verify': True}]
+    Response.headers = {'Content-Type': 'text/html'}
+    with pytest.raises(RuntimeError, match='requested VIIRS data'):
+        viirs._authorize_urs_session(session, 'https://ladsweb.modaps.eosdis.nasa.gov/test')

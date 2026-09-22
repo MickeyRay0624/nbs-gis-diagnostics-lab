@@ -2,7 +2,7 @@ name: nbs-pywapor
 services:
   api:
     build: .
-    image: nbs-pywapor:0.4.2
+    image: nbs-pywapor:0.4.4
     init: true
     restart: unless-stopped
     env_file: .env
@@ -23,7 +23,7 @@ services:
       driver: json-file
       options: {max-size: "5m", max-file: "2"}
   worker:
-    image: nbs-pywapor:0.4.2
+    image: nbs-pywapor:0.4.4
     init: true
     command: ["python", "-m", "online.worker"]
     restart: unless-stopped

@@ -13,8 +13,20 @@ The worker now configures CDSE's directly imported credential getter as well as
 the shared getter. NASA's browser OAuth callback stalled in the server client;
 the official EDL token route returned a valid 20,541-byte VIIRS geolocation
 NetCDF (4 × 4 finite latitude values). The service uses that route with a
-process-local token and a restricted HTTPS data session. All 35 service tests
-pass, including noninteractive credentials and token destination checks.
+process-local token and a restricted HTTPS data session. The authorization
+check no longer downloads a whole swath before the actual download.
+
+VIIRS geolocation now reads the matching compressed NASA source through four
+verified byte ranges, then copies only the original latitude/longitude arrays
+and attributes. A 166,276,277-byte source downloaded in 73.04 seconds; copying
+its coordinate arrays took 28.1 seconds. All 512 coordinate values in the actual
+16 × 16 study-area window and 338 regularly spaced coordinates across the swath
+exactly matched the corresponding OPeNDAP response. Thermal/cloud-mask subsets
+and quality rules are unchanged. These checks concern input/transport equality,
+not field accuracy or model validity. All 40 service tests pass, including
+noninteractive credentials, token destinations, lossless packed-coordinate
+copying, truncated range rejection and required-source checks. Fresh custom
+runs record SHA-256 hashes of the prepared provider inputs in their manifests.
 
 These are provider-access checks. A fresh small-area acquisition/model/export
 run is still required before enabling public custom-water submissions. The

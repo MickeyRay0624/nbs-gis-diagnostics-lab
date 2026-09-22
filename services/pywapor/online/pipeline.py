@@ -9,6 +9,7 @@ import time
 
 from .config import configure_accounts
 from .providers import configure_laads
+from .source_audit import acquired_manifest, required_products
 
 
 def stage(folder, title):
@@ -50,6 +51,7 @@ def main():
     project = pywapor.Project(str(model), request["bbox"], [request["start"], request["end"]])
     project.load_configuration(name="WaPOR3_level_2")
     project.configuration.to_json(str(model / "configuration.json"))
+    required = required_products(project.configuration.full)
     started, timings = time.monotonic(), {}
     # One task at a time; small chunks and one computational thread keep this
     # pilot compatible with a shared 2-vCPU host.
@@ -64,6 +66,8 @@ def main():
             stage(folder, title)
             before = time.monotonic()
             fn()
+            if key == "download" and request["mode"] == "custom":
+                source_manifest = acquired_manifest(model, required, project.dss)
             timings[key] = round(time.monotonic() - before, 3)
     stage(folder, "Checking model output and preparing maps and downloads")
     (folder / "model-run.json").write_text(json.dumps({"version": pywapor.__version__, "stages_seconds": timings,

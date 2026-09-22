@@ -83,7 +83,7 @@ provider secrets or access codes in a public web root or in Git.
 2. Run `python3 prepare-build.py` in a full repository checkout, then `docker compose build`. The images install their own compatible Python/GDAL
    environment. Existing host Python installations are not modified.
 3. Create `data`, give it mode `700`, and assign it to the image user. For the pinned image that user
-   is UID/GID **57439**; verify with `docker run --rm nbs-pywapor:0.4.2 id`.
+   is UID/GID **57439**; verify with `docker run --rm nbs-pywapor:0.4.4 id`.
 4. Provision sources once, either from the FAO archive:
 
    ```sh
@@ -124,6 +124,14 @@ instead of the interactive OAuth callback. Tokens stay in process memory, are
 reused within a job, and are sent only to the HTTPS LAADS data host. Existing
 tokens are not revoked. Provider passwords still belong only in the private
 server environment; browser visitors do not need their own provider accounts.
+
+The authorization check streams only the response headers. VIIRS geolocation
+uses the matching, compressed NASA archive file, downloaded in four verified
+byte ranges. Only the original latitude/longitude arrays and attributes are
+copied, without spatial subsampling. Thermal observations and cloud masks retain
+their upstream OPeNDAP subsets and quality rules. Required source products must
+all be present; each prepared provider input's relative path, size and SHA-256
+is recorded in the run manifest before modelling.
 
 Before opening custom regions to analysts, perform a controlled small-area run
 with a valid historical period and verify acquisition, quality filtering and

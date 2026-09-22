@@ -4,6 +4,8 @@ from urllib.parse import urlsplit
 
 import requests
 
+from .viirs_download import configure_geolocation_download
+
 
 LAADS_HOST = "ladsweb.modaps.eosdis.nasa.gov"
 TOKEN_URL = "https://urs.earthdata.nasa.gov/api/users/find_or_create_token"
@@ -54,7 +56,19 @@ def configure_laads(viirs, accounts):
             LAADSSession.check_url(check_url)
         return LAADSSession()
 
+    def authorize_session(session, url, verify=True, max_hops=4):
+        # The upstream OAuth check reads the entire geolocation response into
+        # memory, then downloads it again. With token authentication, checking
+        # the status/type while streaming is sufficient; the normal downloader
+        # fetches and verifies the actual NetCDF next.
+        with session.get(url, stream=True, verify=verify) as response:
+            response.raise_for_status()
+            if "netcdf" not in response.headers.get("Content-Type", "").lower():
+                raise RuntimeError("NASA did not return the requested VIIRS data.")
+
     # Patch only VIIRS's direct import. Its geolocation selection, thermal and
     # cloud-mask downloads, quality filtering and all model calculations stay
     # in pyWaPOR. The public sample never calls this configuration.
     viirs.setup_session = setup_session
+    viirs._authorize_urs_session = authorize_session
+    configure_geolocation_download(viirs, LAADSSession)
