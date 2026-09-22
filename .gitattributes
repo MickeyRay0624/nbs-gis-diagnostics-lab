@@ -1,0 +1,2 @@
+# The downloadable Windows launcher is hashed with its CRLF bytes intact.
+*.bat -text whitespace=cr-at-eol

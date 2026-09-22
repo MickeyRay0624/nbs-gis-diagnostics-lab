@@ -56,7 +56,7 @@ export function rasterImage(layer: DisplayLayer, aoi?: VectorCollection | null):
   return { canvas, overlay: { url: canvas.toDataURL("image/png"), coordinates: [ll(left, top), ll(right, top), ll(right, bottom), ll(left, bottom)], label: layer.spec.title } };
 }
 
-export function mapPng(layer: LayerResult, map: HTMLCanvasElement, attribution: string): Promise<Blob> {
+export function mapPng(layer: LayerResult, map: HTMLCanvasElement, attribution: string, studyArea: string): Promise<Blob> {
   const out = document.createElement("canvas"); out.width = 1000;
   const rows = layer.spec.categories ? Math.ceil(layer.spec.categories.length / 2) : 2;
   out.height = map.height + 320 + rows * 25;
@@ -86,7 +86,7 @@ export function mapPng(layer: LayerResult, map: HTMLCanvasElement, attribution: 
     ctx.fillStyle = "#102d2c"; const d = domain(layer); ctx.fillText(d[0].toFixed(2), 30, y + 39); ctx.fillText(`${d[1].toFixed(2)} ${layer.spec.unit}`, 430, y + 39); y += 55;
   }
   ctx.fillStyle = "#647572";
-  y = wrap(`Ganjam · transparent = missing / excluded · coverage ${layer.stats.coveragePct.toFixed(1)}% of eligible area`, y + 20, 13);
+  y = wrap(`${studyArea} · transparent = missing / excluded · coverage ${layer.stats.coveragePct.toFixed(1)}% of eligible area`, y + 20, 13);
   y = wrap(attribution, y, 12);
   wrap("Technical screening · expert review pending. See the run manifest for methods and limitations.", y, 13);
   return new Promise((resolve, reject) => out.toBlob(blob => blob ? resolve(blob) : reject(new Error("PNG export failed.")), "image/png"));

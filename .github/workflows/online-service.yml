@@ -1,0 +1,47 @@
+name: Test online compute service
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "services/pywapor/**"
+      - "engine/localprep/**"
+      - "engine/src/**"
+      - ".github/workflows/online-service.yml"
+  pull_request:
+    paths:
+      - "services/pywapor/**"
+      - "engine/localprep/**"
+      - "engine/src/**"
+      - ".github/workflows/online-service.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            services/pywapor/requirements-api.txt
+            services/pywapor/requirements-diagnostics.lock.txt
+            services/pywapor/requirements-test.txt
+      - name: Install pinned dependencies
+        run: >-
+          python -m pip install
+          -r services/pywapor/requirements-api.txt
+          -r services/pywapor/requirements-diagnostics.lock.txt
+          -r services/pywapor/requirements-test.txt
+      - name: Validate the build context and reference hashes
+        run: python services/pywapor/prepare-build.py
+      - name: Test sessions, queues and unified analyses
+        working-directory: services/pywapor
+        env:
+          PYTHONPATH: .:../../engine/localprep:../../engine/src
+        run: python -m pytest tests -q --tb=short

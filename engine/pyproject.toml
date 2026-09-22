@@ -22,6 +22,8 @@ dependencies = [
 [project.optional-dependencies]
 data = ["requests>=2.32"]
 test = [
+  "netCDF4>=1.7,<2",
+  "pyhdf==0.11.6",
   "pytest>=8.3",
   "ruff>=0.12",
   "requests>=2.32",
@@ -43,3 +45,7 @@ line-length = 100
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
+
+# Long source URLs and user-facing scientific method strings remain readable.
+[tool.ruff.lint.per-file-ignores]
+"localprep/**/*.py" = ["E501"]

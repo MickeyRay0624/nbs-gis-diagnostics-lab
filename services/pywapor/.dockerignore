@@ -1,0 +1,10 @@
+data
+.env*
+source-sample
+export-smoke
+web
+web-*
+*.log
+tests
+**/__pycache__
+**/.pytest_cache

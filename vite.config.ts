@@ -6,7 +6,7 @@ const repositoryName =
 const base = process.env.GITHUB_ACTIONS === "true" ? `/${repositoryName}/` : "/";
 
 export default defineConfig({
-  base,
+  base: process.env.NBS_BASE_PATH ?? base,
   plugins: [react()],
   build: {
     outDir: "dist-pages",

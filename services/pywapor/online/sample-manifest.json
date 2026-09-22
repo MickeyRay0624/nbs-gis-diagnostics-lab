@@ -1,0 +1,43 @@
+{
+  "source_url": "https://storage.googleapis.com/fao-cog-data/pywapor_test_data/test_data.zip",
+  "sha256": "d12faabf5d525574d4c4fd8b6e954dc92893dd30437a329e152924bfc459b99a",
+  "files": [
+    {
+      "path": "fayoum/STATICS/WaPOR3.nc",
+      "bytes": 42666,
+      "sha256": "6cd2c6a7dc1a08b5508654e491102fcb1bf9ee77ecf9084286ff3ffd4a716a00"
+    },
+    {
+      "path": "fayoum/COPERNICUS/GLO90.nc",
+      "bytes": 583375,
+      "sha256": "272315fa1b61da6d09d9da22d049242615d3f115a3bfd5fa792e4fcde4feae05"
+    },
+    {
+      "path": "fayoum/SENTINEL2/S2MSI2A_R60m.nc",
+      "bytes": 24028036,
+      "sha256": "959e5446ba2bf4e218b99c2a192abb40a74771228f428f2f647b0cfe2aaef7f5"
+    },
+    {
+      "path": "fayoum/CHIRPS/P05.nc",
+      "bytes": 35782,
+      "sha256": "31681e4fb0c6cac2ea13532ea40d7795478450b26554dbb41a28621d31a39185"
+    },
+    {
+      "path": "fayoum/ERA5/sis-agrometeorological-indicators.nc",
+      "bytes": 22829,
+      "sha256": "ef11bef3148f3e8aac95820ea31e4e9e2469c55f557fcaf7928f949a807b537f"
+    },
+    {
+      "path": "fayoum/ERA5/reanalysis-era5-single-levels.nc",
+      "bytes": 438529,
+      "sha256": "c324b67b2fe12919136fd8e72f732479f2f465040b6d31e5f91f6a3978e3321c"
+    },
+    {
+      "path": "fayoum/VIIRSL1/VNP02IMG.nc",
+      "bytes": 499359,
+      "sha256": "7201b0ffd57e42e97d05642005ac835a469ac46e7ecbdad1e67f7fd3a8e95618"
+    }
+  ],
+  "retrieval_scope": "Public FAO archive of provider-level products; no live authenticated provider downloads were performed.",
+  "upstream_example": "https://bitbucket.org/cioapps/pywapor/src/master/tests/colab_notebook_tests.ipynb"
+}

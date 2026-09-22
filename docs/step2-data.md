@@ -1,5 +1,7 @@
 # Ganjam Step 2 data workflow
 
+This is the retained reference-package preparation workflow. The v0.7 online service now also acquires and computes new-area environmental inputs on the server; see [service deployment](../services/pywapor/README.md). The browser-only controls described below belong to the temporarily hidden advanced tools.
+
 The first release targets a complete diagnostic using public data for seven modules: land-cover change, forest fragmentation, groundwater storage, drought / vegetation stress, climate extremes, river flooding and land degradation. Outputs are technical screening evidence. Expert acceptance, protection applicability and unresolved data gaps remain visible.
 
 ## Execution

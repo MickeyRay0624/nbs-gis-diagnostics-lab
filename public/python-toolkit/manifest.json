@@ -1,0 +1,54 @@
+{
+  "schema": "nbs-python-toolkit/v1",
+  "version": "0.7.0",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "0101ea3b63fa590aa4a490c1ebedea00e8fab591e51e319abab2e93f58d2035d"
+    },
+    {
+      "path": "Start Windows.bat",
+      "sha256": "163f264a7ae5ce05ffceb961ea21bd92e3dc66a9759238bb26b0ef64a06df058"
+    },
+    {
+      "path": "Start macOS.command",
+      "sha256": "53dbe2754c09ff43f1895ca2eeb5b2de6971393c7917373b989193482074dd9f"
+    },
+    {
+      "path": "nbs_prepare/__init__.py",
+      "sha256": "62d41744b8c52f2742d555a7ff8121251c0db2eccd4ed8b6740624f210d30e4a"
+    },
+    {
+      "path": "nbs_prepare/config.py",
+      "sha256": "8d1c18153742552d9c0fdff9dc51eeaa433ecab4b07f59b224eda98780315025"
+    },
+    {
+      "path": "nbs_prepare/core.py",
+      "sha256": "7cc195e9003e8e0b5370a561d0930747cbd6e32a651cb4a3fa39b3018ff9aa33"
+    },
+    {
+      "path": "nbs_prepare/gldas.py",
+      "sha256": "0773f028bd08908f72a96a114bae110b5d2ae1d3d6c5e47757f0838a4cc665e7"
+    },
+    {
+      "path": "nbs_prepare/main.py",
+      "sha256": "c835796c077ba9154b438e710977cf3c9f8ad044bc685917996ac977504eefda"
+    },
+    {
+      "path": "nbs_prepare/modules.py",
+      "sha256": "ff49a02bf1e7e4d6138b480e4cddc251b7d3c9b5a7b88fc1bada120447c3f331"
+    },
+    {
+      "path": "nbs_prepare/sources.py",
+      "sha256": "feb0777b648a4cf27e450dc7efad2f6f5b2fb878bf8c7bc98aafce97fd39f1c4"
+    },
+    {
+      "path": "requirements.txt",
+      "sha256": "91f978bd894e8871e8785e6d78891dc8b886faf0c81176d7d16510aaa2349238"
+    },
+    {
+      "path": "run.py",
+      "sha256": "6be28d003d990176b970ba0268dff788aab66fe9e00440d1e258bd76240603a2"
+    }
+  ]
+}

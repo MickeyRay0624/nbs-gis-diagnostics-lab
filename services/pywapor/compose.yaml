@@ -1,0 +1,68 @@
+name: nbs-pywapor
+services:
+  api:
+    build: .
+    image: nbs-pywapor:0.3.0
+    init: true
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/data
+    ports:
+      - "127.0.0.1:8021:8080"
+    mem_limit: 256m
+    cpus: 0.25
+    healthcheck:
+      test: ["CMD", "/opt/conda/bin/python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/api/health',timeout=5)"]
+      start_interval: 2s
+      start_period: 10s
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: json-file
+      options: {max-size: "5m", max-file: "2"}
+  worker:
+    image: nbs-pywapor:0.3.0
+    init: true
+    command: ["python", "-m", "online.worker"]
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NBS_COMPUTE_LOCK: /data/compute.lock
+    volumes:
+      - ./data:/data
+    mem_limit: 1536m
+    memswap_limit: 3g
+    cpus: 1.0
+    stop_grace_period: 30s
+    depends_on:
+      api: {condition: service_healthy}
+    logging:
+      driver: json-file
+      options: {max-size: "5m", max-file: "2"}
+  diagnostics-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.diagnostics
+    image: nbs-diagnostics:0.2.0
+    init: true
+    command: ["python", "-m", "diagnostics.worker"]
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NBS_DATA_DIR: /data/diagnostics
+      NBS_COMPUTE_LOCK: /data/compute.lock
+      NBS_JOB_TIMEOUT_SECONDS: 14400
+      NBS_MAX_JOB_GB: 12
+    volumes:
+      - ./data:/data
+    mem_limit: 1536m
+    memswap_limit: 3g
+    cpus: 1.0
+    stop_grace_period: 30s
+    depends_on:
+      api: {condition: service_healthy}
+    logging:
+      driver: json-file
+      options: {max-size: "5m", max-file: "2"}

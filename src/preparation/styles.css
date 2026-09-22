@@ -1,0 +1,54 @@
+.prep-card { margin: 22px 0; padding: clamp(20px, 3vw, 36px); }
+.prep-card h2 { margin: 6px 0; font-family: Georgia, serif; font-weight: 500; font-size: 28px; }
+.prep-card h3 { margin-top: 0; }
+.prep-card p, .prep-card li { font-size: 13px; line-height: 1.7; color: var(--muted); }
+.prep-card a { color: var(--accent-dark); }
+.prep-card .section-heading { align-items: center; margin: 0; }
+.prep-card .section-heading > div { max-width: 800px; }
+.prep-flow { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 22px; font-size: 12px; color: var(--accent-dark); }
+.prep-flow span { padding: 7px 12px; background: #f0f4e9; border-radius: 30px; }
+.prep-flow a { align-self: center; margin-left: auto; }
+.prep-body { margin-top: 26px; }
+.prep-steps { display: flex; gap: 12px; border-bottom: 1px solid var(--line); padding-bottom: 20px; margin-bottom: 24px; }
+.prep-steps button { display: flex; align-items: center; gap: 9px; padding: 10px 16px; border: 1px solid transparent; background: transparent; border-radius: 9px; color: var(--muted); cursor: pointer; font-size: 13px; }
+.prep-steps button span { border: 1px solid var(--line); width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; }
+.prep-steps button[aria-current] { background: var(--accent-dark); color: white; }
+.prep-region-grid, .prep-review-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 36px; }
+.prep-field { display: flex; flex-direction: column; gap: 8px; font-size: 12px; font-weight: 650; margin-bottom: 18px; }
+.prep-field input, .prep-field select, .prep-years input { width: 100%; min-width: 0; font: inherit; padding: 11px 12px; color: var(--ink); background: white; border: 1px solid var(--line); border-radius: 8px; }
+.prep-field input:focus-visible { outline: 2px solid var(--accent-dark); outline-offset: 2px; }
+.prep-field small { font-weight: 400; line-height: 1.6; color: var(--muted); }
+.prep-bounds { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+.prep-map { min-width: 0; border-radius: 14px; overflow: hidden; background: #f4f6ee; }
+.prep-map .map-canvas { min-height: 320px; height: 360px; }
+.prep-map > p { padding: 0 16px; }
+.prep-callout { background: #f0f4e9; padding: 16px 18px; border-radius: 10px; margin: 16px 0; font-size: 13px; line-height: 1.6; }
+.prep-callout p { margin-bottom: 0; }
+.prep-module-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; }
+.prep-module-options > label { display: flex; align-items: flex-start; gap: 10px; border: 1px solid var(--line); padding: 18px; border-radius: 10px; cursor: pointer; }
+.prep-module-options > label.selected { background: #f2f7eb; border-color: #81a270; }
+.prep-module-options input { margin-top: 3px; }
+.prep-module-options span { display: flex; flex-direction: column; gap: 7px; }
+.prep-module-options strong { font-size: 14px; }
+.prep-module-options small, .prep-module-options em { font-size: 11px; color: var(--muted); font-style: normal; line-height: 1.5; }
+.prep-options { margin: 22px 0; padding: 20px; border: 1px solid var(--line); border-radius: 12px; }
+.prep-options legend { font-size: 14px; font-weight: 650; padding: 0 8px; }
+.prep-options > fieldset { margin: 18px 0; padding: 0; border: none; }
+.prep-options > fieldset > legend { padding: 0; margin-bottom: 10px; font-size: 12px; }
+.prep-periods { display: flex; flex-wrap: wrap; gap: 28px; }
+.prep-years { padding: 0; margin: 0; border: none; display: flex; align-items: center; gap: 12px; }
+.prep-years legend { padding: 0; margin-bottom: 10px; font-size: 12px; }
+.prep-years label { display: flex; flex-direction: column; gap: 5px; font-size: 11px; color: var(--muted); }
+.prep-years input { width: 100px; font-size: 14px; }
+.prep-season { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+.prep-summary { display: grid; grid-template-columns: 105px 1fr; gap: 15px 18px; font-size: 13px; line-height: 1.6; }
+.prep-summary dt { color: var(--muted); }.prep-summary dd { margin: 0; }
+.prep-run-guide { background: #f3f5ef; border: 1px solid var(--line); padding: 24px; border-radius: 14px; }
+.prep-run-guide ol { padding-left: 20px; }.prep-run-guide li { margin-bottom: 14px; }
+.prep-run-guide .run-button { width: 100%; margin-top: 12px; }
+.prep-bottom { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
+.prep-bottom > span { font-size: 11px; color: var(--muted); }.prep-bottom > div { display: flex; gap: 12px; }
+.prep-card details { margin: 20px 0; }.prep-card summary { cursor: pointer; font-size: 13px; font-weight: 650; }.prep-card details[open] > summary { margin-bottom: 16px; }
+#import-local-results { scroll-margin-top: 90px; }
+@media(max-width: 900px) { .prep-region-grid, .prep-review-grid { grid-template-columns: 1fr; }.prep-module-options { grid-template-columns: 1fr 1fr; }.prep-card .section-heading { align-items: flex-start; flex-direction: column; gap: 18px; } }
+@media(max-width: 560px) { .prep-steps { gap: 5px; }.prep-steps button { padding: 8px 5px; font-size: 11px; gap: 5px; }.prep-steps button span { width: 18px; height: 18px; }.prep-module-options { grid-template-columns: 1fr; }.prep-season { grid-template-columns: 1fr; gap: 0; }.prep-bottom { flex-direction: column; align-items: flex-start; }.prep-summary { grid-template-columns: 1fr; gap: 4px; }.prep-summary dd { margin-bottom: 12px; }.prep-flow a { margin-left: 0; }.prep-bounds { gap: 0 8px; } }

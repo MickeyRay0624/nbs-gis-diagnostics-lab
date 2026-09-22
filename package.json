@@ -1,23 +1,26 @@
 {
   "name": "nbs-gis-diagnostics-lab",
-  "version": "0.4.0",
+  "version": "0.7.0",
   "private": true,
   "type": "module",
   "engines": {
     "node": ">=22.13.0"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "pnpm run docs:build && tsc --noEmit && vite build",
-    "build:pages": "pnpm run docs:build && tsc --noEmit && vite build",
+    "dev": "pnpm run toolkit:build && vite",
+    "build": "pnpm run toolkit:build && pnpm run docs:build && tsc --noEmit && vite build",
+    "build:pages": "pnpm run build && tsx scripts/build-pages-entry.ts",
     "docs:build": "tsx scripts/generate-guide.ts",
     "preview": "vite preview",
-    "test": "tsx --test tests/*.test.ts",
+    "test": "pnpm run toolkit:build && tsx --test tests/*.test.ts",
     "test:demo": "tsx tests/validate-demo.ts",
     "test:glcfcs": "tsx tests/validate-demo.ts --glcfcs",
-    "test:step2": "tsx tests/validate-step2.ts"
+    "test:step2": "tsx tests/validate-step2.ts",
+    "toolkit:build": "tsx scripts/build-python-toolkit.ts",
+    "test:local": "tsx tests/validate-local-preparation.ts"
   },
   "dependencies": {
+    "fflate": "0.8.2",
     "geotiff": "^3.0.5",
     "maplibre-gl": "6.6.0",
     "proj4": "^2.22.0",

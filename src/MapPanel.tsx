@@ -17,6 +17,7 @@ interface MapPanelProps {
   extentOnly?: boolean;
   overlay?: MapOverlay | null;
   opacity?: number;
+  showMarker?: boolean;
 }
 
 // The study-area layer must not wait for remote basemap tiles to finish loading.
@@ -26,7 +27,7 @@ const baseStyle: StyleSpecification = {
   layers: [{ id: "background", type: "background", paint: { "background-color": "#e5ebe1" } }],
 };
 
-export function MapPanel({ aoi, label, loading, error, extentOnly = false, overlay, opacity = .8 }: MapPanelProps) {
+export function MapPanel({ aoi, label, loading, error, extentOnly = false, overlay, opacity = .8, showMarker = true }: MapPanelProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<maplibregl.Map | null>(null);
   const [layerReady, setLayerReady] = useState(false);
@@ -99,7 +100,7 @@ export function MapPanel({ aoi, label, loading, error, extentOnly = false, overl
       element.className = "study-area-marker";
       element.textContent = label;
       element.title = extentOnly ? "Centre of the input raster extent" : "Selected study area";
-      marker = new maplibregl.Marker({ element, anchor: "bottom" })
+      if (showMarker) marker = new maplibregl.Marker({ element, anchor: "bottom" })
         .setLngLat([(b.west + b.east) / 2, (b.south + b.north) / 2]).addTo(map);
       if (fittedGeometry.current !== geometryKey) { focus(); fittedGeometry.current = geometryKey; }
     } else map.jumpTo({ center: [0, 15], zoom: 1.5 });
@@ -109,7 +110,7 @@ export function MapPanel({ aoi, label, loading, error, extentOnly = false, overl
     const resize = new ResizeObserver(() => { map.resize(); if (autoFit) focus(); });
     if (containerRef.current) resize.observe(containerRef.current);
     return () => { active = false; marker?.remove(); resize.disconnect(); map.off("movestart", onMove); focusRef.current = () => {}; };
-  }, [map, aoi, label, extentOnly, geometryKey]);
+  }, [map, aoi, label, extentOnly, geometryKey, showMarker]);
 
   useEffect(() => {
     if (!map) return;

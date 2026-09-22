@@ -12,14 +12,14 @@ type Upload = { year: number; file?: File };
 const BASE = import.meta.env.BASE_URL;
 const message = (e: unknown) => e instanceof Error ? e.message : String(e);
 
-export default function LandCoverLab({ onStudyArea, onResult, selectedView }: { selectedView: "lulc" | "fragmentation"; onStudyArea: (value: StudyAreaState) => void; onResult: (value: Result | null) => void }) {
+export default function LandCoverLab({ onStudyArea, onResult, selectedView, studyAreaOverride }: { studyAreaOverride?: { aoi: VectorCollection; label: string }; selectedView: "lulc" | "fragmentation"; onStudyArea: (value: StudyAreaState) => void; onResult: (value: Result | null) => void }) {
   const [aoi, setAoi] = useState<VectorCollection | null>(null);
   const [footprint, setFootprint] = useState<VectorCollection | null>(null);
   const [footprintLoading, setFootprintLoading] = useState(false);
   const [footprintError, setFootprintError] = useState<string | null>(null);
   const [metadata, setMetadata] = useState<DemoMetadata | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [dataset, setDataset] = useState("demo");
+  const [dataset, setDataset] = useState(studyAreaOverride ? "upload" : "demo");
   const [preset, setPreset] = useState("glc");
   const [module, setModule] = useState<RunRequest["module"]>("both");
   const [years, setYears] = useState([2002, 2012, 2022]);
@@ -28,8 +28,8 @@ export default function LandCoverLab({ onStudyArea, onResult, selectedView }: { 
   const [forest, setForest] = useState([2]);
   const [cell, setCell] = useState(50), [edge, setEdge] = useState(50);
   const [boundaryEdge, setBoundaryEdge] = useState(false);
-  const [vectors, setVectors] = useState<{ aoi?: VectorCollection; protectedAreas?: VectorCollection; oecm?: VectorCollection }>({});
-  const [vectorNames, setVectorNames] = useState<Record<string, string>>({});
+  const [vectors, setVectors] = useState<{ aoi?: VectorCollection; protectedAreas?: VectorCollection; oecm?: VectorCollection }>(studyAreaOverride ? { aoi: studyAreaOverride.aoi } : {});
+  const [vectorNames, setVectorNames] = useState<Record<string, string>>(studyAreaOverride ? { aoi: studyAreaOverride.label } : {});
   const [result, setResult] = useState<Result | null>(null);
   const [running, setRunning] = useState(false), [inspecting, setInspecting] = useState(false);
   const [status, setStatus] = useState("Ready to analyse public data"), [error, setError] = useState<string | null>(null);
@@ -127,14 +127,14 @@ export default function LandCoverLab({ onStudyArea, onResult, selectedView }: { 
         <aside className="control-panel card">
           <div className="section-heading"><div><p className="step-number">01 · RUN SETUP</p><h2>Configure your analysis</h2></div></div>
           <fieldset disabled={running || inspecting} className="controls-fieldset">
-            <label className="field-label" htmlFor="dataset">Data source</label><select id="dataset" value={dataset} onChange={e => { setDataset(e.target.value); if (e.target.value === "demo") { choosePreset("glc"); setCell(50); setEdge(50); } }}><option value="demo">Public data · Ganjam GLC-FCS30D</option><option value="upload">Upload your own GeoTIFFs</option></select>
+            <label className="field-label" htmlFor="dataset">Data source</label><select id="dataset" value={dataset} onChange={e => { setDataset(e.target.value); if (e.target.value === "demo") { choosePreset("glc"); setCell(50); setEdge(50); } }}>{!studyAreaOverride && <option value="demo">Public data · Ganjam GLC-FCS30D</option>}<option value="upload">Upload your own GeoTIFFs</option></select>
             {dataset === "demo" ? <><p className="field-help">Full Ganjam district · 30 m source → 50 m equal-area grid · no account needed.</p><fieldset className="period-fieldset"><legend className="field-label">Analysis years</legend><div className="checkbox-list inline">{[2002, 2012, 2022].map(y => <label key={y}><input type="checkbox" checked={years.includes(y)} onChange={e => setYears(e.target.checked ? [...years, y].sort() : years.filter(v => v !== y))} />{y}</label>)}</div></fieldset></> : <>
               <label className="field-label" htmlFor="preset">Source classification</label><select id="preset" value={preset} onChange={e => choosePreset(e.target.value)}><option value="worldcover">ESA WorldCover</option><option value="esri">ESRI / Impact Observatory</option><option value="glc">GLC-FCS30D · project ten-class legend</option><option value="custom">Other categorical land cover</option></select>
               <p className="field-help">Single-band GeoTIFFs. WGS84, UTM, Web Mercator or EPSG:6933. Code 0 and declared NoData are excluded. Crop large tiles first.</p>
               {uploads.map((u, i) => <div className="upload-period" key={i}><input aria-label={`Year ${i + 1}`} type="number" min={1900} max={2100} value={u.year} onChange={e => setUploads(v => v.map((x, n) => n === i ? { ...x, year: Number(e.target.value) } : x))} /><FileUpload label={`GeoTIFF ${i + 1}`} accept=".tif,.tiff" fileName={u.file?.name ?? ""} onChange={file => setUploads(v => v.map((x, n) => n === i ? { ...x, file } : x))} /><button className="remove-button" aria-label={`Remove period ${i + 1}`} onClick={() => setUploads(v => v.filter((_, n) => n !== i))}>×</button></div>)}
               <div className="output-actions">{uploads.length < 3 && <button onClick={() => setUploads(v => [...v, { year: (v.at(-1)?.year ?? 2019) + 1 }])}>+ Add period</button>}<button onClick={inspect}>Load raster class codes</button></div>
-              <label className="field-label" htmlFor="aoi-upload">AOI boundary (optional)</label><FileUpload id="aoi-upload" label="AOI boundary (optional)" accept=".geojson,.json,.zip" fileName={vectorNames.aoi ?? ""} onChange={file => loadVector("aoi", file)} /><p className="field-help">WGS84 GeoJSON or one zipped Shapefile with .shp, .dbf and .prj. Defaults to the earliest-year raster’s extent.</p>
-              {vectors.aoi && <button className="text-button" onClick={() => { setVectors(v => ({ ...v, aoi: undefined })); setVectorNames(v => ({ ...v, aoi: "" })); }}>Clear {vectorNames.aoi}</button>}
+              {studyAreaOverride ? <p className="field-help">Using the imported boundary: {studyAreaOverride.label}. Restore the Ganjam example or import a different result package to change the shared study area.</p> : <><label className="field-label" htmlFor="aoi-upload">AOI boundary (optional)</label><FileUpload id="aoi-upload" label="AOI boundary (optional)" accept=".geojson,.json,.zip" fileName={vectorNames.aoi ?? ""} onChange={file => loadVector("aoi", file)} /><p className="field-help">WGS84 GeoJSON or one zipped Shapefile with .shp, .dbf and .prj. Defaults to the earliest-year raster’s extent.</p>
+              {vectors.aoi && <button className="text-button" onClick={() => { setVectors(v => ({ ...v, aoi: undefined })); setVectorNames(v => ({ ...v, aoi: "" })); }}>Clear {vectorNames.aoi}</button>}</>}
             </>}
             <label className="field-label" htmlFor="module">Diagnostic module</label><select id="module" value={module} onChange={e => setModule(e.target.value as RunRequest["module"])}><option value="both">LULC change + forest fragmentation</option><option value="lulc">LULC change only</option><option value="fragmentation">Forest fragmentation only</option></select>
             <div className="parameter-grid"><div><label className="field-label" htmlFor="resolution">Grid resolution (m)</label><input id="resolution" type="number" min={10} max={1000} step={10} value={cell} onChange={e => setCell(Number(e.target.value))} /></div>{module !== "lulc" && <div><label className="field-label" htmlFor="edge">Forest edge width (m)</label><input id="edge" type="number" min={cell} max={5000} value={edge} onChange={e => setEdge(Number(e.target.value))} /></div>}</div>

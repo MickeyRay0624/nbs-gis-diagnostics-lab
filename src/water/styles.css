@@ -1,0 +1,28 @@
+.workspace-modes { display:flex; gap:10px; margin:24px 0; flex-wrap:wrap; }
+.workspace-modes button { padding:13px 22px; border:1px solid var(--line); border-radius:30px; background:transparent; color:var(--ink); font:inherit; cursor:pointer; }
+.workspace-modes button[aria-pressed=true] { background:var(--accent-dark); color:white; border-color:var(--accent-dark); }
+.online-water { scroll-margin-top:90px; }
+#water-task, #water-jobs, #water-results { scroll-margin-top:100px; }
+.water-job-detail button { padding:9px 14px; border:1px solid var(--line); border-radius:7px; background:white; color:var(--ink); cursor:pointer; }
+.online-water h2 { font:500 30px Georgia,serif; margin:8px 0 14px; }
+.online-water h3 { font-size:18px; margin:8px 0 20px; }
+.online-water p { line-height:1.7; }
+.water-intro { padding:28px 32px; display:flex; justify-content:space-between; align-items:center; gap:30px; background:#eef4ee; }
+.water-intro p { max-width:720px; color:var(--muted); font-size:14px; margin-bottom:0; }
+.water-flow { display:flex; flex-direction:column; gap:12px; font-size:12px; white-space:nowrap; color:var(--accent-dark); }
+.water-connect, .water-form, .water-jobs, .water-area, .water-result-card { padding:28px; margin-top:20px; }
+.water-connect form { max-width:500px; }.water-connect > p { max-width:760px; font-size:14px; color:var(--muted); }
+.water-connection { display:flex; justify-content:space-between; gap:20px; align-items:center; padding:24px 4px 0; font-size:12px; }
+.water-connection i { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:8px; background:#a87929; }.water-connection i.online { background:#347454; }
+.water-work-grid { display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; }.water-work-grid > * { min-width:0; }
+.water-fields { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.water-note { font-size:12px; color:var(--muted); }.water-form > .run-button { margin-top:12px; width:100%; }
+.water-job-list { max-height:400px; overflow:auto; }.water-job-list > button { display:flex; width:100%; gap:12px; justify-content:space-between; align-items:center; border:1px solid var(--line); border-radius:10px; background:white; margin-bottom:10px; padding:16px; text-align:left; cursor:pointer; color:var(--ink); }
+.water-job-list > button.selected { border-color:var(--accent-dark); background:#f0f5ec; }.water-job-list strong { font-size:13px; }.water-job-list small { display:block; font-size:11px; color:var(--muted); margin-top:6px; }
+.water-status { font:500 11px sans-serif; border-radius:20px; background:#eef0e9; padding:6px 10px; text-transform:capitalize; }.water-status.succeeded { background:#dcefdc; color:#235b3e; }.water-status.failed { background:#f4dfd5; color:#884a37; }.water-status.running { background:#dceff2; color:#255b6e; }
+.water-job-detail { padding:22px 4px 0; display:flex; flex-direction:column; gap:12px; font-size:13px; }.water-job-detail > small { color:var(--muted); font-size:11px; }.water-job-detail progress { width:100%; accent-color:var(--accent-dark); }.water-job-detail button { align-self:flex-start; }
+.water-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin:8px 0 24px; }.water-metrics > div { background:#f1f5ed; padding:22px; border-radius:12px; }.water-metrics small { color:var(--muted); font-size:11px; }.water-metrics strong { display:block; margin-top:12px; font-size:29px; font-weight:500; }.water-metrics em { font-size:13px; font-style:normal; }.water-metrics strong.water-period { font-size:15px; line-height:1.7; }
+.water-legend { display:flex; align-items:center; gap:12px; flex-wrap:wrap; font-size:12px; margin:20px 0; }.water-legend i { width:200px; height:12px; border-radius:3px; }.water-legend small { color:var(--muted); }
+.water-results .series-card { margin:28px 0; }.water-methods { margin-top:24px; font-size:13px; color:var(--muted); line-height:1.8; }.water-methods summary { color:var(--ink); cursor:pointer; font-weight:600; }
+@media(max-width:850px) { .water-work-grid { grid-template-columns:1fr; gap:0; }.water-intro { flex-direction:column; align-items:flex-start; }.water-flow { flex-direction:row; flex-wrap:wrap; } }
+@media(max-width:560px) { .water-intro,.water-connect,.water-form,.water-jobs,.water-area,.water-result-card { padding:20px; }.water-fields { grid-template-columns:1fr; gap:0; }.water-metrics { grid-template-columns:1fr; gap:8px; }.water-metrics > div { padding:16px; }.water-metrics strong { font-size:24px; margin-top:8px; }.water-connection { align-items:flex-start; }.workspace-modes button { padding:12px 15px; font-size:12px; } }

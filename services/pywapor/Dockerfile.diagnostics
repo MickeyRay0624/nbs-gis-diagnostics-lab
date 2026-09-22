@@ -1,0 +1,16 @@
+FROM python:3.12-slim-bookworm
+RUN apt-get update && apt-get install -y --no-install-recommends libexpat1 ca-certificates && rm -rf /var/lib/apt/lists/*
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 GDAL_NUM_THREADS=1 GDAL_CACHEMAX=128
+RUN groupadd --gid 57439 nbs && useradd --uid 57439 --gid nbs --create-home nbs
+COPY requirements-diagnostics.lock.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+RUN python -c "import numpy, rasterio, shapely, pyproj, scipy, netCDF4, earthaccess, pyhdf.SD, pydantic"
+WORKDIR /app
+COPY --chown=nbs:nbs online /app/online
+COPY --chown=nbs:nbs diagnostics /app/diagnostics
+COPY --chown=nbs:nbs build/nbs_prepare /app/nbs_prepare
+COPY --chown=nbs:nbs build/nbs_gis /app/nbs_gis
+COPY --chown=nbs:nbs build/reference /app/reference
+COPY --chown=nbs:nbs build/reference-manifest.json /app/reference-manifest.json
+USER nbs
+CMD ["python", "-m", "diagnostics.worker"]

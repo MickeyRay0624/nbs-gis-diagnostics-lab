@@ -1,26 +1,50 @@
 # NbS Diagnostics Lab — User Manual
 
-**Ganjam Step 2 · Version 0.4.0 · 16 September 2026**
+**Version 0.7 · eight diagnostics in one online workflow · 22 September 2026**
 
-[Open the public website](https://mickeyray0624.github.io/nbs-gis-diagnostics-lab/) · [GitHub repository](https://github.com/MickeyRay0624/nbs-gis-diagnostics-lab) · [Download this manual](https://mickeyray0624.github.io/nbs-gis-diagnostics-lab/guide.en.md)
+The workspace at [lmqstudio.com/nbs](https://lmqstudio.com/nbs/) combines the seven environmental diagnostics and **Water & productivity** in one online workflow. Choose a study area, select diagnostics, review and run. One analysis can contain both environmental and pyWaPOR calculations, with a shared task history and result selector. Python installation and access codes are not required. **Existing data & advanced tools** is temporarily hidden; its source code and scientific documentation remain available. The GitHub Pages entry forwards visitors to this same online workspace.
 
-This manual explains how to use all seven diagnostics, which public datasets were used for the Ganjam tests, how calculations work, and what the results can support. The first release provides public-data screening for technical review. A successful calculation is not expert acceptance or field validation.
+[Open the online platform](https://lmqstudio.com/nbs/) · [GitHub repository](https://github.com/MickeyRay0624/nbs-gis-diagnostics-lab) · [Download this manual](https://lmqstudio.com/nbs/guide.en.md)
+
+Water & productivity currently supports the **Fayoum, Egypt** example boundary and verified public inputs for **1–31 July 2021**. Select Fayoum to include water modelling and optionally other diagnostics for that same boundary. The server recomputes every submitted model run. Custom water regions remain disabled pending provider-access verification. The Ganjam reference supports the original seven diagnostics; it cannot be combined with a water sample from a different region.
+
+The current pyWaPOR thermal-sharpening stage uses ensemble regressions without a fixed random seed. Independent recomputations can differ; retain the exported outputs and run manifest for comparisons. The interface update does not change that modelling behaviour.
+
+This manual explains the online workflow and retains the original advanced-tool instructions for reference. Tests establish software consistency; they do not establish environmental accuracy or local applicability.
 
 ## Contents
 
-1. [Start a diagnostic](#1-start-a-diagnostic)
+0. [Submit an online diagnostic](#0-submit-an-online-diagnostic)
+1. [Advanced-tool reference](#1-start-a-diagnostic-with-the-advanced-tools)
 2. [Understand the map and result controls](#2-understand-the-map-and-result-controls)
 3. [Data used for testing](#3-data-used-for-testing)
 4. [Where calculations happen](#4-where-calculations-happen)
-5. [Seven modules: operation and calculation](#5-seven-modules-operation-and-calculation)
+5. [Module methods](#5-seven-environmental-modules-operation-and-calculation)
 6. [Area, coverage and missing data](#6-area-coverage-and-missing-data)
 7. [Export and assemble the review package](#7-export-and-assemble-the-review-package)
 8. [Use your own inputs](#8-use-your-own-inputs)
 9. [Validation and reproducibility](#9-validation-and-reproducibility)
 10. [Troubleshooting](#10-troubleshooting)
-11. [Completion standard and deferred work](#11-completion-standard-and-deferred-work)
+11. [Completion standard](#11-completion-standard)
 
-## 1. Start a diagnostic
+## 0. Submit an online diagnostic
+
+1. Open **New analysis**. Your workspace opens automatically. Choose **Your study area**, **Ganjam, India** or **Fayoum, Egypt**, and enter a study-area name. For your own area, upload a simplified WGS84 GeoJSON or enter a rectangle.
+2. Select **Choose diagnostics**. The eight cards cover land cover, fragmentation, groundwater, drought and vegetation, climate extremes, flood hazard, land degradation, and water and productivity. Source availability is shown on each card. Fayoum supports water modelling; Ganjam uses its recorded seven-module reference inputs.
+3. Configure periods and thresholds where available, then select **Review analysis** and **Run analysis**. All selected modules belong to one analysis. Environmental and water calculations use the same boundary but retain their respective observation periods, resolutions and methods. Water sample dates are fixed.
+4. Follow **My tasks**. Both old environmental jobs and old water jobs remain available here. Cancel an analysis to stop unfinished child calculations; completed results are retained. You can close the page and return in the same browser. The shared server runs one heavy calculation at a time; a combined analysis may therefore have one module ready while another is still queued or running. Up to two new analyses can be pending per workspace, subject to child-queue limits.
+5. Open **Results** or **View results**, choose an analysis, then select its diagnostic. For environmental results, choose **Map layer**; for water results, choose **Map variable** and **Map period**. Review coverage, units, dates, methods and sources. Transparent pixels represent missing or ineligible data. **Partial results** preserve completed outputs and identify missing modules.
+6. Download maps, CSV tables, **Run details** or **All results** from the selected module. The environmental result archive includes all environmental modules in that calculation; the water archive includes its water outputs. Environmental rasters use band 1 for results and band 2 for eligible area in km². Water uses multiband period rasters and daily/period CSV files. Results are retained for 30 days. Clearing site data or using another browser opens a separate workspace.
+
+New-area land-cover and forest tasks use **WorldCover 2020 v100 and 2021 v200**, with a selectable 30, 50 or 100 m analysis grid. These releases use different algorithms, so their mapped differences include algorithm effects and are not solely real land-cover change. They do not reproduce the Ganjam GLC-FCS30D three-period analysis. The new-area climate workflow uses **NEX-GDDP-CMIP6 v2.0**, retaining native 0.25° cells. The Ganjam reference retains its recorded v1.1 inputs.
+
+Flood, land degradation, climate, land cover and fragmentation use public source access. New-area MODIS vegetation health is enabled using the server’s configured Earthdata account. A Bhubaneswar workflow test acquired 90 real MODIS files for January 2009–2023 and produced seven result layers. January was selected to test the workflow; choose locally appropriate growing seasons for an assessment. New-area groundwater is also enabled. A Bhubaneswar 2020–2021 test processed all 731 daily native-grid regional subsets (23.5 MB) in about 5.6 minutes, producing four maps and 24 monthly values verified by independent calculation. Two years test the workflow rather than establish a long-term trend; choose a longer record for trend interpretation. The server retains the native 0.25° grid and existing coverage rules. Ordinary users need no NASA account. Existing Ganjam source inputs remain available for recalculation.
+
+Online limits protect the shared server: boundary JSON under 190 KB; enclosing rectangle at most 20,000 km², or 2,000 km² and two million cells for new land-cover/forest tasks; at most 240 annual climate subset requests; 10 GB managed downloads; 12 GB task storage; four hours per task. MODIS checks expected source-download volume before fetching data files. If oversized, submit each growing season separately or reduce the area while retaining at least 15 reference years. Keep meaningful climate periods and split models or indices across tasks rather than shortening periods just to fit. Source outages, missing coverage and limits can prevent completion. A one-year workflow test is software validation, not a defensible climate comparison.
+
+The environmental source descriptions and calculation formulas below apply to the Ganjam reference. The browser controls and in-memory session behaviour in sections 1–2 and 7–8 describe the temporarily hidden **Existing data & advanced tools**; online results instead use the persistent task workflow above. Protection/OECM strata, editable class crosswalks and raster/Shapefile uploads are not yet exposed by the online land modules. Online results provide maps, class summaries, transition rows and forest metrics, but do not yet include the advanced tools' gain/loss charts, comparison matrices, map PNG exports or diagnostic brief. [Current online capability gaps](https://github.com/MickeyRay0624/nbs-gis-diagnostics-lab/blob/main/docs/online-workflow-gaps.md) distinguishes implemented calculations from pending controls and presentation.
+
+## 1. Start a diagnostic with the advanced tools
 
 Use a recent desktop browser with JavaScript and WebGL enabled. No Google account, Earth Engine login or software installation is required to run the published example. Initial code, data and basemap downloads need an internet connection. Large custom inputs depend on available device memory.
 
@@ -80,11 +104,11 @@ The WorldCover releases use different algorithms, so their changes should not be
 | Interactive analysis | Web Workers in the visitor's browser | Verify hashes; align/reclassify categorical inputs; calculate transitions and fragmentation; calculate numeric differences, land-degradation combinations and area-weighted statistics. |
 | Presentation and export | Browser main thread | Keep the shared map, display tables/series, render images and create download files. |
 
-A Web Worker is a computation thread on your device. It is not a remote analysis server. The website does not rerun global climate models, authenticate to Google, launch Earth Engine tasks or call the repository's Python engine. It can calculate without a custom backend because the program and prepared inputs are downloaded to your browser.
+A Web Worker is a computation thread on your device. It is not a remote analysis server. The seven environmental diagnostics do not rerun global climate models, authenticate to Google, launch Earth Engine tasks or call the repository's Python engine. The separate online water workspace sends tasks to its configured server. It can calculate without a custom backend because the program and prepared inputs are downloaded to your browser.
 
 Uploaded file contents are processed locally by the application. Public data and basemap requests still use the network. No Google credentials or service-account keys are shipped with the website. Preparing fresh source data requires separate authorized access and is documented in the [data workflow](https://github.com/MickeyRay0624/nbs-gis-diagnostics-lab/blob/main/docs/step2-data.md).
 
-## 5. Seven modules: operation and calculation
+## 5. Seven environmental modules: operation and calculation
 
 ### 5.1 Land-cover change
 
@@ -193,6 +217,14 @@ Partially observed degradation flags are distinguished by component completeness
 
 The latest productivity period is 2008–2023. The dataset record lists latest land-cover/SOC change as 2015–2022, but TIFF band descriptions say 2015–2023. This discrepancy is preserved in provenance and requires confirmation before formal reporting. SOC is modelled using land-cover stock-change factors, not measured soil-carbon loss. Outputs are screening estimates, not official SDG submissions.
 
+### 5.8 Water & productivity
+
+**Use:** Choose **Fayoum, Egypt**, select **Water & productivity**, and submit an analysis. In Results, choose a map variable and whole-month, monthly or dekadal period. The pinned sample covers 1–31 July 2021; it is recomputed from provider input products for each submission. Arbitrary-region water acquisition remains disabled pending provider configuration and a verified new-area run.
+
+pyWaPOR 3.7.3 runs SE_ROOT v3 and ETLook v3 on the nominal 60 m sample input grid. The four primary map variables are evapotranspiration (ET), reference ET, net primary production (NPP) and relative root-zone saturation. Downloads retain all eight output variables, including evaporation, transpiration, interception and AETI. ET = evaporation + transpiration; AETI also includes interception. NPP is carbon production in gC/m², not crop yield or dry biomass. Root-zone saturation is dimensionless, not measured volumetric soil moisture.
+
+Water and NPP period totals require every daily value at a pixel; saturation uses a complete-period mean. Missing days remain missing. Partial calendar periods are labelled as selected days. Summaries use geodesic pixel areas with a pixel-centre boundary mask and include all land-cover types in the boundary, without a crop mask. Thermal sharpening uses an unseeded ensemble fit, so repeated runs can differ even with identical inputs. Retain source hashes, settings and outputs together; this module does not yet calculate a crop yield gap or crop-specific water productivity ratio.
+
 ## 6. Area, coverage and missing data
 
 For the five numeric modules, each prepared cell has an eligible area weight `aᵢ` in km², calculated from AOI intersections in EPSG:6933. Drought uses cropland weights; degradation uses terrestrial weights. Other numeric modules use district intersections.
@@ -210,6 +242,8 @@ Differences are `later − earlier` on their common valid footprint. Where a per
 Land-cover/forest calculations use cell-centre allocation and hectares, while numeric diagnostics use fractional intersections and km². Their denominators can differ slightly. **1 km² = 100 ha.** Compare periods, units and denominators before combining results. Time-series district means can also reflect changing valid coverage.
 
 ## 7. Export and assemble the review package
+
+The following table describes the retained advanced-tool exports. For currently available online downloads, use section 0 and the buttons in Results. The online workflow does not yet provide a single eight-module brief or map PNG export.
 
 | Output | Contents and use |
 | --- | --- |
@@ -236,9 +270,11 @@ Limits: 100 MB and 25 million input pixels per categorical TIFF, eight million a
 
 ### Prepared numeric packages
 
-Expand **Use a prepared Ganjam data package** in the review section. Select exactly one `nbs-step2/v1` catalog JSON and all required `.tif` files together. The catalog must use the same Ganjam boundary hash, valid provenance, bands, units, grids, area weights and matching SHA-256 hashes. The UI limit is 2 MB for the catalog and 100 MB per TIFF; numeric grids are limited to eight million cells, with an additional aggregate memory budget.
+Use **Create Python package** to choose a region, five numeric modules and their periods/scenarios/seasons, then download a configured Python package. Run it locally and select **Import local results** to load its `results.zip`. See the [local preparation guide](local-preparation.en.md) for installation, NASA account requirements, calculations and troubleshooting.
 
-Selecting files does not run the module automatically. Choose a module and run it. **Restore public package** restores the bundled numeric inputs and clears imported numeric results. A custom LULC upload does not update the other five modules, their crop mask or their terrestrial mask. Arbitrary-region numeric acquisition and arbitrary date/scenario selection are not implemented in this release.
+You may also select `catalog.json`, its named boundary GeoJSON and all referenced `.tif` files together. Boundary and raster SHA-256 values must match the catalog. The imported boundary replaces the shared study area; previous numeric and categorical results are cleared. Unselected or failed modules stay unavailable. The two categorical modules use this boundary and require matching uploaded rasters. **Restore Ganjam example** restores the original boundary and bundled inputs.
+
+Imported files stay in browser memory. Run a module after import to inspect its layers and statistics. Refreshing the page clears the imported session. Limits are 2 MB per catalog, 10 MB per boundary, 100 MB per TIFF, eight million cells per grid and forty million input-plus-output cells per module. ZIP limits are 200 MB compressed and 350 MB unpacked. Legacy Ganjam catalog-plus-TIFF imports can use the bundled boundary if its hash matches.
 
 ## 9. Validation and reproducibility
 
@@ -246,13 +282,15 @@ The Ganjam inputs above are used for real-data integration checks. Small synthet
 
 | Check | Recorded evidence |
 | --- | --- |
-| TypeScript analytical tests | 20 tests covering forest geometry, common footprints, missing/negative/zero values, import validation and export round trips. |
-| Python analytical tests | 20 tests including the GIS engine, VHI ranges, dry spells and SOC rounding/incomplete components. |
+| TypeScript analytical and workflow tests | 33 tests covering forest geometry, common footprints, imports, sessions, checksums and eight-module request construction. |
+| Python analytical tests | 34 tests including the GIS engine, VHI, dry spells, SOC rules, MODIS download budgeting and native-grid GLDAS daily readers. |
+| Online service tests | 26 tests covering ownership, durable queues, sessions, shared boundaries, cancellation, limits and restart recovery. |
 | GLC-FCS30D browser/Python comparison | 174 numeric comparisons and exact class-pixel agreement across three 6,350,994-cell forest grids. |
 | Five numeric modules | 575 arithmetic/area checks across 97 layers: groundwater 4, drought 17, climate 54, flood 5, degradation 17. |
 | Climate independent check | Six indices recomputed from daily ACCESS-CM2 values for 1991 and leap year 1992; 12 comparisons. |
 | Degradation provider check | Zero disagreements on 141,801 complete/unambiguous baseline cells and 141,804 latest cells; uncertain SOC thresholds and partial observations excluded. |
 | Browser workflows | Seven modules run; map context, layer controls, downloads, narrow layout and the GitHub Pages base path checked. |
+| Unified v0.7 production workflow | Ganjam seven-module run and Fayoum water + degradation run completed; 140 maps and 148 result-file hashes verified. See [online validation](https://github.com/MickeyRay0624/nbs-gis-diagnostics-lab/blob/main/docs/online-validation.md) for the scope and water repeatability note. |
 
 These tests establish arithmetic and implementation consistency. They do not establish satellite classification accuracy, forecast skill, ecological causality or expert approval. Evidence files and the precise scope are linked in [Step 2 validation](https://github.com/MickeyRay0624/nbs-gis-diagnostics-lab/blob/main/docs/step2-validation.md).
 
@@ -271,25 +309,27 @@ pnpm build
 
 For the separate Python engine and scientific tests, create a virtual environment, install `./engine[test,data]`, then run `pytest engine/tests` and `ruff check engine/src engine/tests`. Full source rebuilding, including Earth Engine export names and sequential preparation commands, is documented in the [data preparation guide](https://github.com/MickeyRay0624/nbs-gis-diagnostics-lab/blob/main/docs/step2-data.md). Runtime/source responsibilities are implemented in `src/analysis`, `src/step2` and `engine/scripts`.
 
-The canonical English manual is `docs/user-guide.en.md`. `pnpm run docs:build` copies it to `public/guide.en.md` for the website download. 
+The canonical English manual is `docs/user-guide.en.md`. `pnpm run docs:build` copies it to `public/guide.en.md` for the website download.
 
 ## 10. Troubleshooting
 
+These entries apply to the current online workspace. Earlier sections identify controls that belong to the hidden advanced tools.
+
 | Symptom | Action / explanation |
 | --- | --- |
-| The map does not show Ganjam clearly | Wait for the boundary status, select Locate study area, and check the study-area label. A basemap-network failure does not prove the analytical boundary failed. |
-| Results are lower down the page | Select Overview to return to the retained map. Calculation does not open a separate results page. |
-| The overview has no result overlay | Run the selected module, enable Result layer, increase opacity and select a layer/year. Transparent areas can be missing or excluded. |
+| The map does not show the area clearly | Wait for the boundary preview, use Locate study area, and check the study-area label. A basemap-network failure does not prove the analytical boundary failed. |
+| The analysis is still running | Check My tasks. Computation continues after closing the page; one heavy calculation runs at a time. |
+| A result overlay is missing | Open Results, choose a completed diagnostic and a map layer, and check opacity and coverage. Transparent areas can be missing or excluded. |
 | A coarse grid looks blocky | This reflects the input scale, particularly 0.25° climate/groundwater. Zooming cannot create local detail. |
-| A module shows inputs available but no results | Prepared inputs are not a completed session run. Select Run diagnostic. |
-| A hash, band, grid or boundary check fails | Select the matching catalog and all its files, or restore the public package. Do not disable integrity checks. |
+| Water is unavailable for the selected region | The current verified water pilot uses Fayoum and July 2021. Select that example; custom water regions await provider verification. |
+| A hash, band, grid or boundary check fails | Retry the download. If it still fails, report the task identifier so the administrator can inspect the result. Do not disable integrity checks. |
 | Some differences or VHI values are missing | Review common-period coverage, reference-year requirements and observation masks; do not replace blanks with zero. |
 | Flood valid coverage is low | It counts positive mapped inundation after exclusions, not all land known to be safe or unsafe. |
-| The worker stops or the page becomes slow | Reduce/crop custom inputs, use a coarser categorical grid, close other heavy tabs or use the separate Python engine. |
-| Results disappeared after reload | Results are not a saved account/session. Run again and export files before closing. |
-| The deployed page appears outdated | Reload after the GitHub Pages deployment has completed; a cached tab may still hold the previous code. |
+| One diagnostic did not complete | Other completed results remain available. Review the displayed source/coverage reason; administrators can inspect the private worker log. |
+| A job exceeds resource limits | Use a smaller study area or split models, indices or growing seasons while retaining meaningful reference periods. |
+| My tasks appears empty | Return to the same browser and site. Clearing site data or using another browser opens a new workspace. Results expire after 30 days. |
+| The deployed page appears outdated | Reload the server platform. GitHub Pages forwards to it; a GitHub push does not redeploy the compute service. |
 
-## 11. Completion standard 
+## 11. Completion standard
 
-The first-release technical standard is **a complete diagnostic supported by public data**: all seven base modules have documented numeric inputs, executable calculations, maps, statistics, machine-readable exports, provenance, coverage/uncertainty notes and Step 3 field-check questions. Land degradation includes all three required subindicators.
-
+The technical standard is **a complete diagnostic supported by public data**: documented inputs, executable calculations, maps, statistics, machine-readable exports, provenance and coverage/uncertainty notes. All seven Ganjam environmental modules and the Fayoum water pilot meet that execution standard within their stated source and region limits. Land degradation includes all three required subindicators. This standard does not imply that every retained advanced-tool feature has already been migrated to the online workflow.

@@ -7,7 +7,7 @@ import { domain, mapPng, palettes, rasterImage } from "./render";
 
 export const number = (n: number | null, digits = 2) => n === null ? "No data" : n.toLocaleString("en", { maximumFractionDigits: digits });
 
-function TimeSeries({ title, unit, points }: { title: string; unit: string; points: SeriesPoint[] }) {
+export function TimeSeries({ title, unit, points }: { title: string; unit: string; points: SeriesPoint[] }) {
   const finite = points.flatMap(p => p.value === null ? [] : [p.value]);
   if (!finite.length) return <p>{title}: no valid observations.</p>;
   const low = Math.min(...finite), high = Math.max(...finite), range = high - low || 1;
@@ -44,12 +44,12 @@ export function NumericResults({ result, catalog, aoi, onOverlay }: { result: Mo
       <div className="section-heading"><div><p className="step-number">MAP & EVIDENCE</p><h2>{result.module.title}</h2></div><span className="status-tag ready">Calculated · review pending</span></div>
       <label className="field-label" htmlFor="numeric-layer">Map layer</label><select id="numeric-layer" value={index} onChange={e => setIndex(Number(e.target.value))}>{result.layers.map((l, i) => <option key={l.spec.id} value={i}>{l.spec.title}</option>)}</select>
       <p className="section-copy">{layer.spec.period} · {layer.spec.unit}</p>
-      <div className="numeric-map"><img src={rendered.overlay.url} alt={`${layer.spec.title} across Ganjam. The same layer is shown on the overview map.`} />
+      <div className="numeric-map"><img src={rendered.overlay.url} alt={`${layer.spec.title} across ${catalog.studyArea.name}. The same layer is shown on the overview map.`} />
         <div className="numeric-legend">{layer.spec.categories ? layer.spec.categories.map(c => <span key={c.value}><i style={{ background: c.color }} />{c.label}</span>) : <><div className="gradient-legend" style={{ background: `linear-gradient(90deg, ${palettes[layer.spec.palette].join(",")})` }} /><div className="legend-endpoints"><span>{number(limits[0])}</span><span>{number(limits[1])} {layer.spec.unit}</span></div></>}<small>Transparent = missing / excluded. Map colours do not add spatial precision.</small></div>
       </div>
       <p className="interpretation">{layer.spec.interpretation}</p>
       {!!stats.classes.length && <div className="table-scroll"><table><caption>Distribution on the valid footprint</caption><thead><tr><th>Class / threshold</th><th>Area (km²)</th><th>Valid area (%)</th></tr></thead><tbody>{stats.classes.map(c => <tr key={c.label}><th>{c.label}</th><td>{number(c.areaKm2)}</td><td>{number(c.percent)}</td></tr>)}</tbody></table></div>}
-      <div className="output-actions"><button onClick={() => download(`${layer.spec.id}.tif`, numericGeoTiff(layer), "image/tiff")}>Layer GeoTIFF ↓</button><button onClick={async () => { try { download(`${layer.spec.id}.png`, await mapPng(layer, rendered.canvas, sources.map(s => `${s.name} ${s.version}`).join(" · ")), "image/png"); } catch (e) { setExportError(String(e)); } }}>Map PNG ↓</button><button onClick={exportTable}>Statistics CSV ↓</button><button onClick={() => download(`${result.module.id}-manifest.json`, JSON.stringify(result.manifest, null, 2))}>Run manifest ↓</button>
+      <div className="output-actions"><button onClick={() => download(`${layer.spec.id}.tif`, numericGeoTiff(layer), "image/tiff")}>Layer GeoTIFF ↓</button><button onClick={async () => { try { download(`${layer.spec.id}.png`, await mapPng(layer, rendered.canvas, sources.map(s => `${s.name} ${s.version}`).join(" · "), catalog.studyArea.name), "image/png"); } catch (e) { setExportError(String(e)); } }}>Map PNG ↓</button><button onClick={exportTable}>Statistics CSV ↓</button><button onClick={() => download(`${result.module.id}-manifest.json`, JSON.stringify(result.manifest, null, 2))}>Run manifest ↓</button>
         {!!stats.classes.length && <button onClick={() => download(`${layer.spec.id}-classes.csv`, csv([["class", "area_km2", "valid_area_percent"], ...stats.classes.map(c => [c.label, c.areaKm2, c.percent ?? ""])]), "text/csv")}>Class areas CSV ↓</button>}</div>
       {exportError && <p className="error-box" role="alert">{exportError}</p>}
     </section>

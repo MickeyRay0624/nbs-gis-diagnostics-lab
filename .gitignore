@@ -12,6 +12,9 @@
 *.log
 .env*
 !.env.example
+/services/pywapor/data/
 # Chinese manuals are maintained outside the public repository.
 /docs/*.zh-CN.md
 /public/*.zh-CN.md
+/services/pywapor/build/
+*.tsbuildinfo

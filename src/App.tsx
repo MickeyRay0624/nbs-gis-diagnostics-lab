@@ -1,1 +1,1 @@
-export { default } from "./step2/Workspace";
+export { default } from "./online/LabWorkspace";

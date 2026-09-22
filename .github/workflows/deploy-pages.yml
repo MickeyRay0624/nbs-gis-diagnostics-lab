@@ -41,7 +41,7 @@ jobs:
       - name: Test browser analysis
         run: pnpm test && pnpm run test:demo && pnpm run test:glcfcs && pnpm run test:step2
 
-      - name: Build static site
+      - name: Build site and link Pages to the online workspace
         run: pnpm run build:pages
 
       - name: Upload GitHub Pages artifact

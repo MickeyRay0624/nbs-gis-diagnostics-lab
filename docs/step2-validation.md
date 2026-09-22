@@ -1,5 +1,7 @@
 # Step 2 validation evidence
 
+This document records the earlier prepared-data/browser release. Current online queues, unified tasks and production verification are recorded separately in [v0.7 online validation](online-validation.md).
+
 The first release separates numerical correctness, input quality and expert acceptance. The following evidence is reproducible from the checked-in prepared data unless raw Earth Engine inputs are explicitly required.
 
 | Check | Evidence | Scope |

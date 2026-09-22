@@ -14,6 +14,8 @@ export function validateCatalog(value: unknown): Catalog {
   if (c.modules.length !== 7 || MODULE_IDS.some(id => !c.modules.some(m => m.id === id))) throw new Error("Catalog must describe all seven Step 2 modules.");
   const nonempty = (v: unknown): v is string => typeof v === "string" && v.trim().length > 0;
   const textList = (v: unknown) => Array.isArray(v) && v.every(nonempty);
+  if (!/^[A-Za-z0-9_-]+\.geojson$/.test(c.studyArea.boundary)) throw new Error("Catalog must name a local GeoJSON boundary.");
+  if (new Set(c.rasters.map(r => r.file)).size !== c.rasters.length) throw new Error("Raster filenames must be unique.");
   if (!nonempty(c.version) || !nonempty(c.preparedAt) || !nonempty(c.studyArea.name) || !/^[a-f0-9]{64}$/.test(c.studyArea.sha256) || !Number.isFinite(c.studyArea.areaKm2)) throw new Error("Catalog identity or boundary checksum is invalid.");
   if (!["pending", "reviewed"].includes(c.review.status) || !nonempty(c.review.detail) || !["not-assessed", "assessed"].includes(c.protection.status) || !nonempty(c.protection.detail)) throw new Error("Catalog review and protection evidence are required.");
   if (c.rasters.length > 32 || c.sources.length > 64) throw new Error("The catalog exceeds the browser package limit.");
