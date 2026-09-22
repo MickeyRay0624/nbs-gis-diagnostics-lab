@@ -4,6 +4,8 @@ import { WaterResults } from '../water/WaterResults';
 import { type DiagnosticClient, type DiagnosticResult } from './client';
 import { type WaterClient, type WaterResult } from '../water/client';
 import { MODULES, type Analysis, type AnalysisModule } from './workflow';
+import { analysisBrief, briefHtml } from './brief';
+import { download } from '../analysis/presets';
 import { ModuleIcon } from './ModuleIcon';
 
 export function AnalysisResults({analysis,diagnosticClient,waterClient}:{analysis:Analysis;diagnosticClient:DiagnosticClient;waterClient:WaterClient}){
@@ -43,6 +45,7 @@ export function AnalysisResults({analysis,diagnosticClient,waterClient}:{analysi
   const cancelled=child?.status==='cancelled'||!child&&analysis.cancel_requested;
   return <div className="analysis-results">
     <div className="results-context"><span className="lab-kicker">EXPLORE YOUR RESULTS</span><h2>{analysis.name}</h2><p>Each diagnostic keeps its own observation dates, source resolution and coverage. Select a module to explore its maps and downloads.</p></div>
+    <div className="brief-download"><div><span className="lab-kicker">ONE ANALYSIS · ONE BRIEF</span><strong>Bring the findings together.</strong><p>Selected modules, coverage, source definitions and change summaries in a printable document.</p></div><div><button className="lab-primary" onClick={()=>download('nbs-analysis-brief.html',briefHtml(analysisBrief(analysis,diagnostics,water)),'text/html')}>Download brief ↓</button><button className="lab-secondary" onClick={()=>download('nbs-analysis-brief.md',analysisBrief(analysis,diagnostics,water),'text/markdown')}>Markdown ↓</button></div></div>
     <div className="results-layout">
       <nav className="result-module-nav" aria-label="Result diagnostics">{MODULES.filter(m=>analysis.modules.includes(m.id)).map(m=><button key={m.id} aria-pressed={selected===m.id} onClick={()=>setSelected(m.id)}><ModuleIcon id={m.id}/><span><strong>{m.title}</strong><small>{moduleStatus(m.id)}</small></span><span aria-hidden="true">↗</span></button>)}</nav>
       <section className="result-surface" aria-label={active.title+' result'}><div className="result-module-heading"><span className={`module-glyph glyph-${active.id}`}><ModuleIcon id={active.id}/></span><div><h3>{active.title}</h3><p>{sourceLabel}</p></div><span className="result-availability">{moduleStatus(selected)}</span></div>

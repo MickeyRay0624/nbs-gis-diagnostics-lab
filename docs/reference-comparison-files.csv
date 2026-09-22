@@ -1,0 +1,14 @@
+category,required_file_or_record,metadata_to_record,status
+Report,Original assessment PDF and annexes,"version; date; page/table/figure identifiers",Not supplied
+Boundary,Original AOI GeoJSON or complete Shapefile,"CRS; vintage; area convention; SHA256; exclusions",Not supplied
+Land cover,One original GeoTIFF per analysis year,"provider; release; year; band; NoData; mask; native grid; SHA256",Not supplied
+Classification,Crosswalk CSV and forest-definition note,"source/target codes; excluded classes; mangroves; orchards; plantations",Not supplied
+Protection,Protected-area polygon layer,"provider; release date; polygon coverage; overlaps; SHA256",Not supplied
+Protection,OECM polygon layer,"provider; release date; polygon coverage; overlaps; SHA256",Not supplied
+Code,Groundwater reference GEE JavaScript,"exact collection/band; imported assets; date filters; reducers; trend",Not supplied
+Code,Original ArcPy/GEE scripts and environment,"commit or hash; dependencies; CRS; snap grid; edge distance; connectivity",Not supplied
+Hydrology,Original groundwater dataset references or frozen inputs,"version; units; baselines; completeness; weighting; native scale",Not supplied
+Vegetation,Original ASIS or VHI products and parameters,"sensor; product; mask; phenology; coefficients; QA; season; reference",Not supplied
+Climate,Original climate inputs and settings,"scenario; model/member; period; thresholds; operators; dry-spell formula",Not supplied
+Reference outputs,Expected GeoTIFFs and complete tables,"units; common coverage; matrix margins; period/stratum totals; SHA256",Not supplied
+Comparison,Metric-specific comparison plan,"grid/NoData rules; tolerances with rationale; stochastic handling",To define

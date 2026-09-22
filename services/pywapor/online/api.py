@@ -31,13 +31,14 @@ def create_app(settings=None):
             origin = request.headers.get("origin")
             if s.public_access and ((origin is not None and origin not in s.origins) or (origin is None and request.headers.get("sec-fetch-site") == "cross-site")):
                 return JSONResponse({"detail": "Submit tasks from the platform website."}, status_code=403)
-            size, chunks = 0, []
-            async for chunk in request.stream():
-                size += len(chunk)
-                if size > 220_000:
-                    return JSONResponse({"detail": "The request exceeds 220 KB. Simplify the boundary."}, status_code=413)
-                chunks.append(chunk)
-            request._body = b"".join(chunks)
+            if request.url.path != "/api/diagnostics/uploads":
+                size, chunks = 0, []
+                async for chunk in request.stream():
+                    size += len(chunk)
+                    if size > 220_000:
+                        return JSONResponse({"detail": "The request exceeds 220 KB. Simplify the boundary."}, status_code=413)
+                    chunks.append(chunk)
+                request._body = b"".join(chunks)
         response = await call_next(request)
         response.headers["Cache-Control"] = "no-store"
         response.headers["X-Content-Type-Options"] = "nosniff"

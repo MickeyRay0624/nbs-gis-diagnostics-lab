@@ -1,6 +1,6 @@
 # Online workflow: supported scope and remaining work
 
-Status checked against the v0.7 implementation on 22 September 2026. This is a capability inventory, not a claim that every retained advanced feature is available online. The eight-module workspace and the optional Python GIS engine serve different workflows.
+Status checked against the v0.8 implementation on 22 September 2026. This is a capability inventory, not a claim that every retained advanced feature is available online. The eight-module workspace and the optional Python GIS engine serve different workflows.
 
 ## Available now
 
@@ -10,19 +10,11 @@ Status checked against the v0.7 implementation on 22 September 2026. This is a c
 - GeoTIFF, CSV, result ZIP and run manifests with sources, methods, hashes and missing-data rules. Browser sessions require no shared access code or local Python installation.
 - Separate standalone GIS/CLI and browser analysis implementations, including advanced categorical features retained in source.
 
-## Priorities for completing the online migration
+## Migration status in v0.8
 
-| Priority | Capability | Current evidence | Remaining work / acceptance evidence |
-| --- | --- | --- | --- |
-| 1 | Flexible land-cover inputs and years | `AnalysisWizard.tsx` accepts GeoJSON/rectangles; `diagnostics/models.py` exposes grid/edge/mangrove options only. Ganjam is a fixed reference; new regions use WorldCover 2020/2021. | Add bounded GeoTIFF and zipped Shapefile uploads, 1–3 forest or 2–3 change periods, source selection and validation inside the online flow. Test one custom three-period analysis through submission and downloads. |
-| 1 | Editable crosswalk and forest definition | `LandCoverLab.tsx` and `analysis/runner.ts` retain CSV crosswalks and forest classes; online requests do not carry them. | Carry validated class mappings, names, colours, NoData rules and forest selections into server jobs and manifests. Preserve defaults without silently treating them as project-approved definitions. |
-| 1 | Protected/OECM/remainder statistics | Both numerical engines support strata; the online worker calls `classify_forest` without strata and explicitly reports coverage as unassessed. | Acquire or accept appropriate polygon layers; keep versions/dates and completeness. Classify the whole AOI before stratifying. Verify overlaps, boundary effects, area conservation and whole-patch allocation. Points alone cannot define protected-area boundaries. |
-| 1 | Change matrix, gains/losses and forest comparison charts | Online exports contain transition rows and whole-area forest metrics. `Results.tsx` retains the advanced matrix and gains/losses chart; these are not used by `DiagnosticResults.tsx`. | Render the matrix, gross gain/loss/net summaries, multi-period map comparisons and forest area/change charts from server outputs. Verify common-coverage denominators and row/column totals. |
-| 2 | Complete forest reporting table | Online metrics include PLAND, NP, TE, ED, MPE, MSI, AWMSI, MPS, LPI, class areas and clearing counts. | Add explicit patch/edge shares, perforation ratio, edge per forest hectare and largest-patch share of forest; document each denominator and units. Add period/stratum comparisons after strata are available. These are different quantities from LPI. |
-| 2 | Shareable maps and diagnostic brief | The advanced tools retain PNG and brief exporters; online buttons expose GeoTIFF, tables, manifest and ZIP. | Add report-ready map images and a unified eight-module brief with source dates, scales, coverage, missing modules and field-check questions. A screenshot does not replace numerical exports. |
-| 2 | Custom-region water modelling | `custom_ready` requires provider configuration; current verified run uses Fayoum, July 2021. | Configure remaining providers, acquire actual data for a small new AOI, verify resource use and numerical outputs, then enable the option. Do not combine a Ganjam analysis with a different-region sample. |
-| 2 | Original-assessment comparison | Current evidence checks Python/browser agreement, arithmetic, conservation and deployed workflows. | Compare against an independently supplied frozen AOI, source rasters, classification and reference outputs. Record differences in grid, edge/perimeter algorithms, time periods and aggregation. Existing tests are not proof of matching another assessment. |
-| 3 | Sankey diagram | No implementation found in the retained or online result components. | Optional visualisation from the validated transition matrix. Keep source class totals and missing coverage explicit. |
+The online workflow now carries bounded GeoTIFF sources and years, crosswalk CSVs, forest selections and protected/OECM polygon layers into private server jobs. The server produces complete transition matrices, gross gain/loss/net tables, common-coverage forest changes, stratum metrics and the missing derived ratios. Results render charts, period-map comparisons and PNG exports; the unified HTML/Markdown brief records every module status.
+
+See [method differences and comparison checklist](method-differences.md). CDS has passed a real ERA5 download; CDSE email activation and a fresh acquisition/model run remain the dependencies for enabling new water regions. Original-assessment validation still requires independently supplied files listed in [the intake manifest](reference-comparison-files.csv). Optional Sankey diagrams, cross-device accounts/sharing and permanent archives remain separate future work.
 
 ## Interpretation details to preserve
 
@@ -37,4 +29,4 @@ Status checked against the v0.7 implementation on 22 September 2026. This is a c
 
 Additional hazards, suitability/priority scoring, intervention selection, yield-gap assessment, external project integrations and a QGIS plugin are not implemented by the current eight-module workflow. These extensions need their own thresholds, methods and acceptance criteria. Water/NPP outputs alone do not complete an irrigation performance or yield-gap assessment.
 
-The intended next release should migrate the retained categorical controls and result presentation into the current workflow while keeping its single entry. The temporary hiding of advanced tools should not be mistaken for completion of that migration.
+The retained advanced-tools entry remains hidden. Its local-only workflow is separate from the uploaded-input server workflow.

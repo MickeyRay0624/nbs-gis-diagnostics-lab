@@ -72,7 +72,7 @@ export function mapPng(layer: LayerResult, map: HTMLCanvasElement, attribution: 
   };
   ctx.fillStyle = "#102d2c";
   let y = wrap(layer.spec.title, 35, 21, true);
-  y = wrap(`${layer.spec.period} · ${layer.spec.unit} · EPSG:${layer.grid.crs} source grid`, y, 13);
+  y = wrap(`${layer.spec.period} · ${layer.spec.unit} · EPSG:${layer.grid.crs} analysis grid`, y, 13);
   ctx.drawImage(map, (out.width - map.width) / 2, y + 10); y += map.height + 35;
   ctx.font = "14px sans-serif";
   if (layer.spec.categories) {
@@ -88,6 +88,6 @@ export function mapPng(layer: LayerResult, map: HTMLCanvasElement, attribution: 
   ctx.fillStyle = "#647572";
   y = wrap(`${studyArea} · transparent = missing / excluded · coverage ${layer.stats.coveragePct.toFixed(1)}% of eligible area`, y + 20, 13);
   y = wrap(attribution, y, 12);
-  wrap("Technical screening · expert review pending. See the run manifest for methods and limitations.", y, 13);
+  wrap("Technical screening · see the run manifest for methods and limitations.", y, 13);
   return new Promise((resolve, reject) => out.toBlob(blob => blob ? resolve(blob) : reject(new Error("PNG export failed.")), "image/png"));
 }

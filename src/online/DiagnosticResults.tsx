@@ -2,9 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { MapPanel } from "../MapPanel";
 import { TimeSeries, number } from "../step2/NumericResults";
 import { download } from "../analysis/presets";
-import { rasterImage, palettes, domain } from "../step2/render";
+import { rasterImage, palettes, domain, mapPng } from "../step2/render";
 import type { LayerResult, ModuleId } from "../step2/model";
 import { readOnlineLayer, type DiagnosticClient, type DiagnosticResult } from "./client";
+
+import { LandCharts } from "./LandCharts";
+import { MapComparison } from "./MapComparison";
 
 export function DiagnosticResults({result,jobId,client,initialModuleId,embedded=false}:{result:DiagnosticResult;jobId:string;client:DiagnosticClient;initialModuleId?:ModuleId;embedded?:boolean}){
   const [moduleId,setModuleId]=useState(initialModuleId??result.modules.find(m=>m.status==="available")?.id);
@@ -26,6 +29,7 @@ export function DiagnosticResults({result,jobId,client,initialModuleId,embedded=
     setBusy(true);setError(null);
     try{download(a.file,await client.asset(jobId,a),a.media_type);}catch(e){setError((e as Error).message);}finally{setBusy(false);}
   }
+  async function savePng(){if(!layer||!rendered)return;setBusy(true);try{download('diagnostic-map.png',await mapPng(layer,rendered.canvas,result.sources.filter(s=>module?.sources?.includes(s.id)).map(s=>`${s.name} · ${s.version} · ${s.licence}`).join('; '),result.name),'image/png');}catch(e){setError((e as Error).message);}finally{setBusy(false);}}
   return <section id="diagnostic-results" className={embedded?"water-results embedded-result":"card water-results"} aria-label="Online diagnostic results">
     {!embedded&&<><div className="section-heading"><div><p className="step-number">SERVER RESULTS · {result.validation.completed_modules.length} / {result.modules.length} COMPLETE</p><h2>{result.name}</h2><p className="section-copy">{result.validation.checks} completed checks · {new Date(result.prepared_at).toLocaleString()}</p></div><span className={`status-tag ${result.complete?"ready":"neutral"}`}>{result.complete?"Calculation complete":"Partial results"}</span></div>
     <p className="section-copy">{result.scope}</p>
@@ -40,12 +44,13 @@ export function DiagnosticResults({result,jobId,client,initialModuleId,embedded=
       {layer&&limits&&<div className="numeric-legend">{layer.spec.categories?layer.spec.categories.map(c=><span key={c.value}><i style={{background:c.color}}/>{c.label}</span>):<><div className="gradient-legend" style={{background:`linear-gradient(90deg,${palettes[layer.spec.palette].join(",")})`}}/><div className="legend-endpoints"><span>{number(limits[0])}</span><span>{number(limits[1])} {layer.spec.unit}</span></div></>}<small>Transparent = missing or outside the eligible area.</small></div>}
       {selected&&<p className="interpretation">{selected.spec.interpretation}</p>}
       {!!selected?.stats.classes.length&&<div className="table-scroll"><table><thead><tr><th>Class / threshold</th><th>Area (km²)</th><th>Valid area (%)</th></tr></thead><tbody>{selected.stats.classes.map(c=><tr key={c.label}><th>{c.label}</th><td>{number(c.areaKm2)}</td><td>{number(c.percent)}</td></tr>)}</tbody></table></div>}
+      {(moduleId==='lulc'||moduleId==='fragmentation')&&<><MapComparison result={result} client={client} jobId={jobId} moduleId={moduleId}/><LandCharts result={result} moduleId={moduleId}/></>}
       {module?.series?.map(s=><TimeSeries key={s.title} {...s}/>)}
-      {result.tables.filter(t=>t.module===moduleId).map(t=><details key={t.file}><summary>{t.title}</summary><div className="table-scroll"><table><thead><tr>{Object.keys(t.rows[0]??{}).map(k=><th key={k}>{k.replaceAll("_"," ")}</th>)}</tr></thead><tbody>{t.rows.map((row,i)=><tr key={i}>{Object.entries(row).map(([k,v])=><td key={k}>{typeof v==="number"?number(v):v??"No data"}</td>)}</tr>)}</tbody></table></div><button disabled={busy} onClick={()=>void save(t.file)}>Download table CSV ↓</button></details>)}
-      <details className="water-methods"><summary>Methods, sources & interpretation</summary><ul>{module?.method?.map(m=><li key={m}>{m}</li>)}</ul><ul>{module?.limitations?.map(m=><li key={m}>{m}</li>)}</ul>{result.sources.filter(s=>module?.sources?.includes(s.id)).map(s=><p key={s.id}><a href={s.url} target="_blank" rel="noreferrer">{s.name} ↗</a> · {s.version}<br/>{s.licence}</p>)}</details>
+      {result.tables.filter(t=>t.module===moduleId).map(t=><details key={t.file}><summary>{t.title}</summary><div className="table-scroll"><table><thead><tr>{Object.keys(t.rows[0]??{}).map(k=><th key={k}>{k.replaceAll("_"," ")}</th>)}</tr></thead><tbody>{t.rows.slice(0,250).map((row,i)=><tr key={i}>{Object.entries(row).map(([k,v])=><td key={k}>{typeof v==="number"?number(v):v??"No data"}</td>)}</tr>)}</tbody></table></div>{t.rows.length>250&&<p>Showing the first 250 rows. The CSV contains all {t.rows.length.toLocaleString()} rows.</p>}<button disabled={busy} onClick={()=>void save(t.file)}>Download table CSV ↓</button></details>)}
+      <details className="water-methods"><summary>Methods, sources & interpretation</summary><ul>{module?.method?.map(m=><li key={m}>{m}</li>)}</ul><ul>{module?.limitations?.map(m=><li key={m}>{m}</li>)}</ul>{result.sources.filter(s=>module?.sources?.includes(s.id)).map(s=><p key={s.id}>{s.url?<a href={s.url} target="_blank" rel="noreferrer">{s.name} ↗</a>:<strong>{s.name}</strong>} · {s.version}<br/>{s.licence}</p>)}</details>
     </>}
     {error&&<p role="alert" className="error-box">{error}</p>}
-    <div className="output-actions">{asset&&module?.status==="available"&&<button disabled={busy} onClick={()=>void save(asset.file)}>Layer GeoTIFF ↓</button>}<button disabled={busy} onClick={()=>void save("statistics.csv")}>Statistics CSV ↓</button><button disabled={busy} onClick={()=>void save("results.zip")}>All results ↓</button><button disabled={busy} onClick={()=>void save("run-manifest.json")}>Run details ↓</button></div>
+    <div className="output-actions"><button disabled={busy||!layer} onClick={()=>void savePng()}>Map PNG ↓</button>{asset&&module?.status==="available"&&<button disabled={busy} onClick={()=>void save(asset.file)}>Layer GeoTIFF ↓</button>}<button disabled={busy} onClick={()=>void save("statistics.csv")}>Statistics CSV ↓</button><button disabled={busy} onClick={()=>void save("results.zip")}>All results ↓</button><button disabled={busy} onClick={()=>void save("run-manifest.json")}>Run details ↓</button></div>
     {busy&&<p role="status">Downloading and checking the result file…</p>}
   </section>;
 }

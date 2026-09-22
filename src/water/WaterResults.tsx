@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { MapPanel } from "../MapPanel";
 import { TimeSeries, number } from "../step2/NumericResults";
-import { rasterImage, palettes, domain } from "../step2/render";
+import { rasterImage, palettes, domain, mapPng } from "../step2/render";
 import { download } from "../analysis/presets";
 import type { LayerResult } from "../step2/model";
 import { readWaterLayer, type WaterResult, type WaterClient } from "./client";
@@ -43,6 +43,7 @@ export function WaterResults({ result, jobId, client, embedded=false }: { result
     catch (e) { setError(e instanceof Error ? e.message : String(e)); }
     finally { setBusy(false); }
   };
+  async function savePng(){if(!layer||!rendered)return;setBusy(true);try{download('water-map.png',await mapPng(layer,rendered.canvas,result.model+' · '+(result.source_url??'Server-acquired sources; see run manifest'),result.name),'image/png');}catch(e){setError((e as Error).message);}finally{setBusy(false);}}
   return <section className="water-results" aria-label="Online water results">
     {!embedded&&<div className="section-heading"><div><p className="step-number">RESULTS READY · {result.model}</p><h2>{result.name}</h2><p className="section-copy">{result.validation.checks} data checks passed · {result.grid.width} × {result.grid.height} pixels · original model grid</p></div><span className="status-tag neutral">Technical screening</span></div>}
     <div className="water-fields"><label className="prep-field">Map variable<select value={variable} onChange={e => setVariable(e.target.value)}>{result.series.map(s => <option key={s.id} value={s.id}>{s.title}</option>)}</select></label>
@@ -54,7 +55,7 @@ export function WaterResults({ result, jobId, client, embedded=false }: { result
     <div className="overlay-slider"><label htmlFor="water-opacity">Map opacity</label><input id="water-opacity" type="range" min={0} max={1} step={.05} value={opacity} onChange={e => setOpacity(Number(e.target.value))} /></div>
     {layer && limits && <div className="water-legend"><span>{number(limits[0])}</span><i style={{ background: `linear-gradient(to right, ${palettes[layer.spec.palette].join(",")})` }} /><span>{number(limits[1])} {layer.spec.unit === "1" ? "" : layer.spec.unit}</span><small>Transparent = missing or outside the selected area</small></div>}
     {series && <TimeSeries {...series} unit={series.unit === "1" ? "Fraction (0–1)" : series.unit} />}
-    <div className="output-actions">{asset && <button disabled={busy} onClick={() => void save(asset.file)}>Period GeoTIFF ↓</button>}<button disabled={busy} onClick={() => void save("daily-summary.csv")}>Daily CSV ↓</button><button disabled={busy} onClick={() => void save("period-summary.csv")}>Period CSV ↓</button><button disabled={busy} onClick={() => void save("results.zip")}>All results ↓</button><button disabled={busy} onClick={() => void save("run-manifest.json")}>Run details ↓</button></div>
+    <div className="output-actions"><button disabled={busy||!layer} onClick={()=>void savePng()}>Map PNG ↓</button>{asset && <button disabled={busy} onClick={() => void save(asset.file)}>Period GeoTIFF ↓</button>}<button disabled={busy} onClick={() => void save("daily-summary.csv")}>Daily CSV ↓</button><button disabled={busy} onClick={() => void save("period-summary.csv")}>Period CSV ↓</button><button disabled={busy} onClick={() => void save("results.zip")}>All results ↓</button><button disabled={busy} onClick={() => void save("run-manifest.json")}>Run details ↓</button></div>
     {busy && <p role="status">Downloading and checking the result file…</p>}
     <details className="water-methods"><summary>Methods, sources & interpretation</summary><p>{result.scope}</p><ul>{result.notes.map(n => <li key={n}>{n}</li>)}</ul>{result.source_url && <a href={result.source_url} target="_blank" rel="noreferrer">FAO public sample source ↗</a>}<p>Period totals show only pixels with a complete series of daily model values. Cloud-filtered and interpolated model inputs are documented in the run configuration.</p></details>
   </section>;

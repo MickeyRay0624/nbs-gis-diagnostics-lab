@@ -10,3 +10,5 @@ await copyFile(
   new URL("../docs/local-preparation.en.md", import.meta.url),
   new URL("../public/local-preparation.en.md", import.meta.url),
 );
+
+for(const name of ['method-differences.md','reference-comparison-files.csv'])await copyFile(new URL(`../docs/${name}`,import.meta.url),new URL(`../public/${name}`,import.meta.url));

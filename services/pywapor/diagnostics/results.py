@@ -13,6 +13,12 @@ from rasterio.shutil import copy as copy_raster
 from nbs_prepare.core import json_bytes, statistics
 
 
+def csv_cell(value):
+    if isinstance(value,str) and value.lstrip().startswith(("=", "+", "-", "@")):
+        return "\'" + value
+    return value
+
+
 def sha_file(path):
     h = hashlib.sha256()
     with Path(path).open("rb") as f:
@@ -100,7 +106,7 @@ class Publisher:
         self.tables.append(dict(module=module,title=title,file=filename,rows=rows))
         with (self.out / filename).open("w",newline="") as f:
             writer = csv.DictWriter(f,fieldnames=list(rows[0]))
-            writer.writeheader(); writer.writerows(rows)
+            writer.writeheader(); writer.writerows({k: csv_cell(v) for k,v in row.items()} for row in rows)
 
     def finish(self):
         if not self.layers:
@@ -110,11 +116,12 @@ class Publisher:
                           interpretation="These checks verify data and arithmetic, not field accuracy or causal effects.")
         (self.out / "validation.json").write_bytes(json_bytes(validation))
         with (self.out / "statistics.csv").open("w",newline="") as f:
-            writer=csv.DictWriter(f,fieldnames=list(self.rows[0]));writer.writeheader();writer.writerows(self.rows)
+            writer=csv.DictWriter(f,fieldnames=list(self.rows[0]));writer.writeheader();writer.writerows({k: csv_cell(v) for k,v in row.items()} for row in self.rows)
         prepared = datetime.now(timezone.utc).isoformat()
         result = dict(schema="nbs-online-diagnostics/v1",name=self.request["name"],prepared_at=prepared,complete=complete,scope=self.scope,
                       boundary=self.boundary,modules=self.modules,layers=self.layers,sources=list(self.sources.values()),tables=self.tables,validation={k:v for k,v in validation.items() if k != "checks_detail"})
-        (self.out / "run-manifest.json").write_bytes(json_bytes(dict(request=self.request,prepared_at=prepared,scope=self.scope,sources=result["sources"],modules=self.modules,review="Technical screening; expert review pending.")))
+        if hasattr(self, "land"): result["land"] = self.land
+        (self.out / "run-manifest.json").write_bytes(json_bytes(dict(request=self.request,prepared_at=prepared,scope=self.scope,sources=result["sources"],modules=self.modules,land=getattr(self,"land",None),interpretation="Technical screening; computational checks do not establish field accuracy.")))
         (self.out / "README.txt").write_text("NBS server-generated diagnostic results\n\n" + self.scope + "\n\nEach COG contains the result in band 1 and eligible pixel area (km2) in band 2. NoData remains unknown. Only modules marked available completed. All calculations and statistics ran on the server; the browser displays these results.\n\nSee run-manifest.json for methods, source versions and interpretation limits. Result validation does not establish environmental truth.\n")
         media={".tif":"image/tiff",".csv":"text/csv",".json":"application/json",".geojson":"application/geo+json",".txt":"text/plain",".zip":"application/zip"}
         def asset(p):

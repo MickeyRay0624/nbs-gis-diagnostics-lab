@@ -1,21 +1,61 @@
 from dataclasses import replace
+import asyncio
 import json
 import re
 import shutil
 import time
 from typing import Annotated
 
-from fastapi import Depends, Header, HTTPException
+from fastapi import Depends, Header, HTTPException, Request, Query
 from fastapi.responses import FileResponse
+from starlette.concurrency import run_in_threadpool
 
 from online.store import Store, Conflict, QueueFull, public_job
 from .models import DiagnosticRequest, MODULES, NASA_MODULES, nasa_ready
+from .uploads import Uploads, public_upload
 
 
 def install(app, settings, owner):
     s = replace(settings, data=settings.data / "diagnostics")
     s.data.mkdir(parents=True, exist_ok=True, mode=0o700)
     store = Store(s.data)
+    uploads = Uploads(s.data)
+    inspecting = asyncio.Semaphore(1)
+    app.state.uploads = uploads
+
+    @app.post("/api/diagnostics/uploads", status_code=201)
+    async def upload(request: Request, kind: str = Query(), name: str = Query(max_length=120), user: str = Depends(owner)):
+        if request.headers.get("content-type", "").split(";")[0] != "application/octet-stream":
+            raise HTTPException(415, "Send a binary source file.")
+        if shutil.disk_usage(s.data).free < s.min_free_bytes + 100_000_000:
+            raise HTTPException(503, "Source storage is nearly full.")
+        try: key, limit = uploads.reserve(user, kind, name)
+        except ValueError as exc: raise HTTPException(422, str(exc)) from exc
+        complete = False
+        try:
+            path = uploads.path(key)
+            with path.open("xb") as out:
+                path.chmod(0o600)
+                size = 0
+                async for chunk in request.stream():
+                    size += len(chunk)
+                    if size > limit: raise HTTPException(413, "This source file exceeds the upload limit.")
+                    out.write(chunk)
+            if not size: raise HTTPException(422, "The file is empty.")
+            async with inspecting:
+                row = await run_in_threadpool(uploads.finish, key)
+            complete = True
+            return public_upload(row)
+        except (ValueError, OSError) as exc:
+            raise HTTPException(422, "The source could not be validated. " + str(exc)) from exc
+        finally:
+            if not complete: uploads.discard(key, user)
+
+    @app.post("/api/diagnostics/uploads/{upload_id}/discard")
+    def discard_upload(upload_id: str, user: str = Depends(owner)):
+        try: uploads.discard(upload_id, user)
+        except ValueError as exc: raise HTTPException(404, "Source not found.") from exc
+        return {"removed_from_draft": True}
 
     def get_job(job_id, user):
         if not re.fullmatch(r"[a-f0-9]{32}", job_id):
@@ -42,6 +82,7 @@ def install(app, settings, owner):
         return {"analyst":user if user in s.keys else "Your workspace", "worker_online":heartbeat.exists() and time.time()-heartbeat.stat().st_mtime < 45,
                 "sample_ready":(s.data / "sample-ready.json").exists(), "retention_days":s.retention_days,
                 "max_area_km2":20000, "land_cover_max_area_km2":2000, "max_climate_requests":240,
+                "uploads_enabled":True, "max_raster_bytes":100_000_000, "max_vector_bytes":5_000_000,
                 "modules":[{"id":k,"title":v,"custom_enabled":k not in NASA_MODULES or nasa_ready(k),
                             "reason":None if k not in NASA_MODULES or nasa_ready(k) else f"Server {'GLDAS' if k == 'groundwater' else 'MODIS'} data access is awaiting authorization and verification."} for k,v in MODULES.items()]}
 
@@ -57,7 +98,10 @@ def install(app, settings, owner):
         if shutil.disk_usage(s.data).free < s.min_free_bytes:
             raise HTTPException(503, "Result storage is nearly full.")
         try:
+            uploads.pin(payload.model_dump(mode="json"), user, s.retention_days)
             return public_job(store.create(user, idempotency_key, payload.model_dump(mode="json"), s))
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
         except QueueFull as exc:
             raise HTTPException(429, str(exc)) from exc
         except Conflict as exc:

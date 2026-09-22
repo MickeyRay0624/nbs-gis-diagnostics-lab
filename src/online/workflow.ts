@@ -36,8 +36,9 @@ export function buildAnalysis(input:{preset:Preset;name:string;boundary:VectorCo
   if(new TextEncoder().encode(JSON.stringify(boundary)).length>190000)throw new Error('Simplify the boundary to under 190 KB.');
   const result:AnalysisRequest={name:name.trim()};
   const diagnosticModules=modules.filter((m):m is ModuleId=>m!=='water');
+  if(diagnosticModules.some(m=>m==='lulc'||m==='fragmentation'))validateLand(land,preset,diagnosticModules.includes('lulc'),diagnosticModules.includes('fragmentation'));
   if(diagnosticModules.length){
-    if(preset==='ganjam')result.diagnostics={mode:'ganjam',name:result.name,modules:diagnosticModules};
+    if(preset==='ganjam')result.diagnostics={mode:'ganjam',name:result.name,modules:diagnosticModules,land_cover:land};
     else {
       const numeric=diagnosticModules.filter(m=>m!=='lulc'&&m!=='fragmentation');
       const job={...config,name:result.name,modules:numeric.length?numeric:['flood']} as Job;
@@ -61,4 +62,23 @@ export function buildAnalysis(input:{preset:Preset;name:string;boundary:VectorCo
     }
   }
   return result;
+}
+
+export function validateLand(land:NonNullable<DiagnosticRequest['land_cover']>,preset:Preset,lulc:boolean,forest:boolean){
+  const periods=land.source==='uploaded'?(land.rasters??[]).map(r=>r.year):land.years??(preset==='ganjam'?[2002,2012,2022]:[2020,2021]);
+  if(periods.length<(lulc?2:1)||periods.length>3||new Set(periods).size!==periods.length||periods.some(y=>!Number.isInteger(y)||y<1900||y>2100))throw new Error('Choose distinct years: two or three for land-cover change, one to three for forest structure.');
+  if(land.edge_width_m<land.resolution||land.edge_width_m>1000)throw new Error('Forest edge width must be between one analysis cell and 1,000 m.');
+  if(land.source==='uploaded'&&!land.crosswalk?.length)throw new Error('Upload your categorical rasters and define a crosswalk.');
+  if(land.crosswalk){
+    if(land.crosswalk.length>256||new Set(land.crosswalk.map(r=>r.source)).size!==land.crosswalk.length)throw new Error('Use one crosswalk row for each source code (up to 256).');
+    const targets=new Map<number,string>();
+    for(const r of land.crosswalk){
+      if(!Number.isInteger(r.source)||r.source<1||r.source>65534||!Number.isInteger(r.code)||r.code<0||r.code>999||!r.name.trim()||r.name.length>80||!/^#[a-f0-9]{6}$/i.test(r.color))throw new Error('Complete every crosswalk row: source code, target code (0–999; 0 excludes), name and colour.');
+      const identity=r.name.trim()+r.color.toLowerCase();
+      if(targets.has(r.code)&&targets.get(r.code)!==identity)throw new Error('Merged classes must have the same target name and colour.');
+      targets.set(r.code,identity);
+    }
+    if(targets.size>64)throw new Error('Use no more than 64 target classes.');
+    if(forest&&(!land.forest_codes?.length||land.forest_codes.some(c=>!targets.has(c))))throw new Error('Choose which target classes count as forest.');
+  }
 }

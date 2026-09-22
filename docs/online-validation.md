@@ -1,4 +1,25 @@
-# v0.7 online workflow validation
+# Online workflow validation
+
+## v0.8 landscape migration — 22 September 2026
+
+The production workspace now accepts one to three categorical GeoTIFFs with explicit years, class crosswalks, forest definitions and optional protected/OECM polygons. It publishes change matrices, gross gain/loss/net and forest-group charts, period-map comparisons, PNG export and a combined HTML/Markdown brief. The retained advanced-tools entry is still hidden.
+
+| Check | Evidence |
+| --- | --- |
+| Frontend unit tests | 37 passed, including high source-code collision prevention and safe brief rendering/statuses. TypeScript and the production build passed. |
+| Online service tests | 32 passed, including ownership, upload validation/limits/expiry, source integrity, common-coverage change, strata conservation and a three-period upload-to-result integration. |
+| Existing Ganjam results | All 9 land/forest map statistics and every original forest-metric field exactly matched the previous production run for the same 2002/2012/2022 inputs and definitions. Added metrics and charts do not change those earlier values. |
+| Live HTTPS upload and calculation | Three real Ganjam GLC-FCS30D subsets, each 320,626 bytes, passed the dedicated large-body upload route. The custom-area job produced 9 maps and 5 tables with 15 computation checks. |
+| Protection/OECM overlap | The live job used explicitly labelled artificial overlapping polygons to test allocation. Forest areas summed across disjoint strata, and gross gain minus gross loss equalled net change. These polygons do not establish actual protected status in Ganjam. |
+| Live result integrity | All 23 downloadable files passed byte-size and SHA-256 checks through the production HTTPS API. |
+| Browser checks | Production three-step input flow and local completed results were inspected at 1280 px; the result page also had no document overflow at 319 px. Map/chart export controls, matrix rendering and the printable brief were checked. The map and gain/loss PNG files were downloaded and visually inspected. |
+| Provider setup | ERA5 terms were accepted with the account owner's explicit authorization. A real CDS request returned a valid 25,171-byte NetCDF with `t2m`. CDSE authentication returned `Account is not fully set up`; the official login returned to the email-activation page. |
+
+The fresh custom-water model run remains blocked by CDSE email activation. `NBS_ENABLE_CUSTOM` remains false; this release does not claim that arbitrary-region water computation has passed. All provider secrets are confined to the server's private environment, outside source control and result files.
+
+The original-assessment comparison remains dependent on the files in [the comparison intake checklist](reference-comparison-files.csv). The [method differences](method-differences.md) include the baseline boundary/grid, forest denominators, GLDAS/GEE comparison status, VHI versus ASIS, and the differing climate periods and dry-spell definitions.
+
+## v0.7 integration baseline
 
 22 September 2026. This release publishes the already deployed eight-module workspace, compute services and portable data-preparation code. The GitHub Pages entry forwards to the canonical online platform at <https://lmqstudio.com/nbs/>. A GitHub push does not redeploy the Ubuntu containers.
 
@@ -47,4 +68,4 @@ ET differed by approximately 0.098% and NPP by 0.149%. These are recorded differ
 
 ## Limits of this evidence
 
-The tests establish execution, output integrity and arithmetic consistency. They do not validate ecological causality, satellite accuracy, local groundwater observations, crop yield or another team's historical assessment. Arbitrary-region water modelling, full protection/OECM analysis and the remaining advanced-tool migration are not claimed complete; see [capability gaps](online-workflow-gaps.md).
+The tests establish execution, output integrity and arithmetic consistency. They do not validate ecological causality, satellite accuracy, local groundwater observations, crop yield or another team's historical assessment. This v0.7 baseline did not cover arbitrary-region water modelling or protection/OECM uploads. The v0.8 evidence above adds bounded online protection/OECM analysis; custom water remains pending. See [capability gaps](online-workflow-gaps.md).

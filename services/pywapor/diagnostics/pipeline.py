@@ -82,84 +82,8 @@ def layer_spec(id,title,period,categories=None,interpretation=""):
 
 
 def land_cover(publisher, request, ctx=None):
-    reference=request["mode"] == "ganjam"
-    options=request["land_cover"]
-    rasters={}; classes=[]
-    if reference:
-        with (REFERENCE / "glcfcs/crosswalk.csv").open() as f:
-            rows=list(csv.DictReader(f))
-        crosswalk={int(row["source_code"]):int(row["target_code"]) for row in rows}
-        unique={int(row["target_code"]):(row["target_name"],row["color"]) for row in rows}
-        classes=[(c,*v) for c,v in unique.items()]
-        for year in [2002,2012,2022]:
-            with rasterio.open(REFERENCE / f"glcfcs/ganjam_{year}_50m.tif") as src:
-                source=src.read(1); transform=src.transform; crs=src.crs
-                data=np.zeros(source.shape,dtype="uint8")
-                for original,target in crosswalk.items():data[source==original]=target
-                if not np.isin(source,[0,*crosswalk]).all():raise ValueError("Unexpected reference land class.")
-                rasters[year]=data
-        forest=[2]; resolution=50
-        source=dict(id="glcfcs-online",name="GLC-FCS30D prepared Ganjam inputs",version="2002, 2012, 2022 · project crosswalk",licence="CC BY 4.0",url="https://doi.org/10.5194/essd-16-1353-2024",description="Previously prepared 50 m Ganjam categorical inputs, reclassified and recalculated on this server.",resolution="30 m source · prepared 50 m equal-area grid")
-        note="Prepared Ganjam categorical inputs are reused; classification differences and fragmentation are freshly computed."
-    else:
-        resolution=options["resolution"]
-        transform,shape=grid_for(ctx.aoi,resolution,6933);crs=rasterio.crs.CRS.from_epsg(6933)
-        classes=WORLD
-        w,s,e,n=ctx.aoi.bounds
-        for year,version in [(2020,"v100"),(2021,"v200")]:
-            data=np.zeros(shape,dtype="uint8")
-            for y in range(math.floor(s/3)*3,math.ceil(n/3)*3,3):
-                for x in range(math.floor(w/3)*3,math.ceil(e/3)*3,3):
-                    tile=f"{'N' if y>=0 else 'S'}{abs(y):02d}{'E' if x>=0 else 'W'}{abs(x):03d}"
-                    url=f"https://esa-worldcover.s3.eu-central-1.amazonaws.com/{version}/{year}/map/ESA_WorldCover_10m_{year}_{version}_{tile}_Map.tif"
-                    part=crop_cog(ctx,url,[1],transform,shape,6933,factor=max(1,resolution//10))[0]
-                    valid=np.isfinite(part)&(part>0)
-                    if not np.isin(part[valid],[c[0] for c in WORLD]).all():raise ValueError("Unexpected WorldCover class.")
-                    data[valid]=part[valid].astype("uint8")
-            rasters[year]=data
-        forest=[10,95] if options["include_mangroves"] else [10]
-        source=dict(id="worldcover-online",name="ESA WorldCover",version="2020 v100 and 2021 v200",licence="CC BY 4.0",url="https://esa-worldcover.org/en/data-access",description="Public 10 m COG windows, nearest-neighbour sampled onto the chosen equal-area analysis grid. © ESA WorldCover project 2020/2021 / Contains modified Copernicus Sentinel data processed by ESA WorldCover consortium.",resolution=f"10 m source · {resolution} m analysis grid")
-        note="WorldCover 2020 and 2021 use different algorithms. Mapped differences include algorithm effects and must not be interpreted solely as real land-cover change."
-    aoi,area_aoi=read_boundary(json_bytes(publisher.boundary))
-    first=next(iter(rasters.values()))
-    inside=rasterize([(mapping(area_aoi),1)],out_shape=first.shape,transform=transform).astype(bool)
-    weights=np.where(inside,resolution**2/1e6,0).astype("float32")
-    for data in rasters.values():data[~inside]=0
-    if not any(np.any(a>0) for a in rasters.values()):raise ValueError("No classified cells inside the study area.")
-    publisher.source(source)
-    method=[f"Nearest-neighbour categorical comparison on an EPSG:6933 square {resolution} m grid.","Pixel-centre boundary mask; areas equal included pixel counts times analysis-cell area. NoData is excluded from comparisons.",note]
-    def module(mid):
-        return dict(id=mid,title=MODULES[mid],question="What patterns are present in the selected area?",status="available",sources=[source["id"]],method=method,limitations=[note,"Protection / OECM coverage is not assessed. Technical screening requires expert review."],fieldChecks=["Can local observations corroborate these patterns?"])
-    if "lulc" in request["modules"]:
-        for year,data in rasters.items():
-            values=data.astype("float32");values[data==0]=np.nan
-            publisher.add("lulc",layer_spec(f"cover-{year}",f"Land cover · {year}",year,classes,note),values,weights,transform,crs,source["resolution"])
-        transitions=[];names={c:n for c,n,_ in classes};years=sorted(rasters)
-        pairs=list(zip(years[:-1],years[1:]))
-        if len(years)>2:pairs.append((years[0],years[-1]))
-        for start,end in pairs:
-            a,b=rasters[start],rasters[end]; valid=(a>0)&(b>0)&inside
-            change=np.where(valid,(a!=b).astype("float32"),np.nan)
-            publisher.add("lulc",layer_spec(f"change-{start}-{end}",f"Class change · {start}–{end}",f"{start}–{end}",[(0,"Same mapped class","#d8ded8"),(1,"Different mapped class","#cf7058")],note),change,weights,transform,crs,source["resolution"])
-            encoded=a[valid].astype("int32")*256+b[valid]
-            codes,counts=np.unique(encoded,return_counts=True)
-            for code,count in zip(codes,counts):
-                x,y=int(code)//256,int(code)%256
-                transitions.append(dict(start_year=start,end_year=end,from_class=names[x],to_class=names[y],area_ha=float(count)*resolution**2/10000,pixels=int(count)))
-        publisher.table("lulc","Land-cover transitions","land-cover-transitions.csv",transitions)
-        publisher.modules.append(module("lulc"))
-    if "fragmentation" in request["modules"]:
-        metrics=[]
-        for year,data in rasters.items():
-            out,rows,qa=classify_forest(data,forest,resolution,options["edge_width_m"],count_boundary=options["count_boundary_as_edge"])
-            if not qa["class_conservation"]:raise ValueError("Forest class conservation failed.")
-            publisher.checks.append(dict(module="fragmentation",layer=f"forest-{year}",check="Forest pixels conserved across patch, edge and core classes",passed=True))
-            values=out.astype("float32");values[out==255]=np.nan
-            publisher.add("fragmentation",layer_spec(f"fragmentation-{year}",f"Forest structure · {year}",year,FRAGMENT,"Internal clearings are non-forest. NoData holes are unknown. Forest connectivity uses eight neighbours; clearing connectivity uses four."),values,weights,transform,crs,source["resolution"])
-            metrics.extend(dict(year=year,**row) for row in rows)
-        publisher.table("fragmentation","Forest metrics","forest-metrics.csv",metrics)
-        m=module("fragmentation");m["method"]=[*method,f"Forest classes {forest}; edge width {options['edge_width_m']} m; boundary counted as edge: {options['count_boundary_as_edge']}."]
-        publisher.modules.append(m)
+    from .land import run_land
+    return run_land(publisher, request, REFERENCE, ctx)
 
 
 def run(folder):

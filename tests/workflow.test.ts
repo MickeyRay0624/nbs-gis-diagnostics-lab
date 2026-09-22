@@ -31,3 +31,11 @@ test('invalid empty selections and water limits are rejected before submission',
   assert.throws(()=>buildAnalysis({...input(),preset:'custom',waterCustom:true,waterDates:{start:'2024-01-01',end:'2024-03-01'}}),/31 days/);
   assert.throws(()=>buildAnalysis({...input(),preset:'custom',waterCustom:true,boundary:bboxBoundary(30,28,32,30)}),/500 km/);
 });
+
+test('custom landscape definitions remain attached to Ganjam requests',()=>{
+  const land={...input().land,years:[2002,2022],crosswalk:[{source:51,code:999,name:'Forest',color:'#228844'}],forest_codes:[999],protected_upload_id:'a'.repeat(32)};
+  const r=buildAnalysis({...input(),preset:'ganjam',modules:['lulc','fragmentation'],land});
+  assert.deepEqual(r.diagnostics?.land_cover,land);
+  assert.throws(()=>buildAnalysis({...input(),preset:'ganjam',modules:['lulc'],land:{...land,years:[2012]}}),/distinct years/);
+  assert.throws(()=>buildAnalysis({...input(),modules:['fragmentation'],land:{...land,forest_codes:[2]}}),/forest/);
+});

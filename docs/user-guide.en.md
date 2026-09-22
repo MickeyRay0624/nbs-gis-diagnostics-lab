@@ -1,6 +1,6 @@
 # NbS Diagnostics Lab — User Manual
 
-**Version 0.7 · eight diagnostics in one online workflow · 22 September 2026**
+**Version 0.8 · eight diagnostics in one online workflow · 22 September 2026**
 
 The workspace at [lmqstudio.com/nbs](https://lmqstudio.com/nbs/) combines the seven environmental diagnostics and **Water & productivity** in one online workflow. Choose a study area, select diagnostics, review and run. One analysis can contain both environmental and pyWaPOR calculations, with a shared task history and result selector. Python installation and access codes are not required. **Existing data & advanced tools** is temporarily hidden; its source code and scientific documentation remain available. The GitHub Pages entry forwards visitors to this same online workspace.
 
@@ -29,7 +29,7 @@ This manual explains the online workflow and retains the original advanced-tool 
 
 ## 0. Submit an online diagnostic
 
-1. Open **New analysis**. Your workspace opens automatically. Choose **Your study area**, **Ganjam, India** or **Fayoum, Egypt**, and enter a study-area name. For your own area, upload a simplified WGS84 GeoJSON or enter a rectangle.
+1. Open **New analysis**. Your workspace opens automatically. Choose **Your study area**, **Ganjam, India** or **Fayoum, Egypt**, and enter a study-area name. For your own area, upload a simplified GeoJSON or zipped Shapefile, or enter a rectangle.
 2. Select **Choose diagnostics**. The eight cards cover land cover, fragmentation, groundwater, drought and vegetation, climate extremes, flood hazard, land degradation, and water and productivity. Source availability is shown on each card. Fayoum supports water modelling; Ganjam uses its recorded seven-module reference inputs.
 3. Configure periods and thresholds where available, then select **Review analysis** and **Run analysis**. All selected modules belong to one analysis. Environmental and water calculations use the same boundary but retain their respective observation periods, resolutions and methods. Water sample dates are fixed.
 4. Follow **My tasks**. Both old environmental jobs and old water jobs remain available here. Cancel an analysis to stop unfinished child calculations; completed results are retained. You can close the page and return in the same browser. The shared server runs one heavy calculation at a time; a combined analysis may therefore have one module ready while another is still queued or running. Up to two new analyses can be pending per workspace, subject to child-queue limits.
@@ -42,7 +42,24 @@ Flood, land degradation, climate, land cover and fragmentation use public source
 
 Online limits protect the shared server: boundary JSON under 190 KB; enclosing rectangle at most 20,000 km², or 2,000 km² and two million cells for new land-cover/forest tasks; at most 240 annual climate subset requests; 10 GB managed downloads; 12 GB task storage; four hours per task. MODIS checks expected source-download volume before fetching data files. If oversized, submit each growing season separately or reduce the area while retaining at least 15 reference years. Keep meaningful climate periods and split models or indices across tasks rather than shortening periods just to fit. Source outages, missing coverage and limits can prevent completion. A one-year workflow test is software validation, not a defensible climate comparison.
 
-The environmental source descriptions and calculation formulas below apply to the Ganjam reference. The browser controls and in-memory session behaviour in sections 1–2 and 7–8 describe the temporarily hidden **Existing data & advanced tools**; online results instead use the persistent task workflow above. Protection/OECM strata, editable class crosswalks and raster/Shapefile uploads are not yet exposed by the online land modules. Online results provide maps, class summaries, transition rows and forest metrics, but do not yet include the advanced tools' gain/loss charts, comparison matrices, map PNG exports or diagnostic brief. [Current online capability gaps](https://github.com/MickeyRay0624/nbs-gis-diagnostics-lab/blob/main/docs/online-workflow-gaps.md) distinguishes implemented calculations from pending controls and presentation.
+### Online landscape inputs and results
+
+When land cover or forest is selected, **Landscape inputs** has three expandable sections:
+
+1. **Data & years**: keep the available reference maps or upload 1–3 single-band categorical GeoTIFFs (100 MB and 25 million input pixels per file). Choose the correct year for each file and a dataset/version label. Change needs at least two years. All periods must use a consistent source-code legend. Zipped Shapefiles are accepted for AOI and protection polygons, not as land-cover raster inputs.
+2. **Class crosswalk & forest definition**: edit source→target codes, class names and colours, or import a CSV (`source_code,target_code,target_name,color`). Identical target codes merge classes. Target 0 excludes a class. Choose the target classes that count as forest. Presets help with WorldCover, ESRI (clouds excluded) and GLC-FCS30D; they do not automatically acquire ESRI or GLC-FCS rasters for a new area.
+3. **Protected areas & OECMs**: optionally upload one polygon layer for each, and record source/date/completeness. GeoJSON or one zipped Shapefile is accepted, up to 5 MB of converted GeoJSON. Whole-AOI forest classification precedes stratification. Protected takes priority on overlaps. “Outside supplied polygons” does not establish unprotected status.
+
+Uploaded rasters allow up to eight million aligned analysis cells and a 20,000 km² enclosing rectangle. Public WorldCover acquisition retains its two-million-cell / 2,000 km² limit. Draft uploads expire after 24 hours; submitted sources are pinned through result retention. Files belong to the current browser workspace. No Python is needed on the user's computer.
+
+Results now include period-map comparisons, an explicit change matrix, gross gain/loss/net charts, forest-area charts by spatial group, a full forest metrics table and CSVs. Change always uses cells valid in both years. Zero-denominator derived ratios are missing. Forest patch/edge/core percentages, internal-clearing/forest ratio, TE in km, edge per forest hectare and largest-patch share of forest have explicit units and denominators in the method notes.
+
+**Map PNG** exports the selected map with its legend, source, period and coverage. **Chart PNG** exports each change chart or matrix. **Download brief** at the top of Results creates a printable HTML document covering all eight module statuses, selected results, definitions, sources, coverage and inputs' fingerprints. Open it in a browser and Print → Save as PDF if needed; a Markdown version is also available. The module ZIPs retain full numerical data. Old jobs remain available, but need to be rerun to produce the new change tables and definition metadata.
+
+The [method-differences table](https://lmqstudio.com/nbs/method-differences.md) distinguishes the current boundary, 50 m grid, forest rules, GLDAS/reference-script comparison, VHI/ASIS and climate scenarios/thresholds. The [reference-file checklist](https://lmqstudio.com/nbs/reference-comparison-files.csv) records the files still needed to compare the original assessment.
+
+The calculation formulas below describe the Ganjam reference unless stated otherwise. Sections 1–2, 4 and 7–8 retain the **hidden advanced-tool** controls and local processing as reference; the current online workspace uses the persistent server workflow above. Do not apply the old browser-only file/privacy description to new online uploads: selected source files now go to private server storage for calculation.
+
 
 ## 1. Start a diagnostic with the advanced tools
 

@@ -189,8 +189,13 @@ def install(app, settings, owner):
     analyses=Analyses(settings)
     app.state.analyses=analyses
     async def loop():
+        last_cleanup = 0
         while True:
-            try: await asyncio.to_thread(analyses.dispatch)
+            try:
+                await asyncio.to_thread(analyses.dispatch)
+                if time.time() - last_cleanup > 3600:
+                    await asyncio.to_thread(app.state.uploads.cleanup)
+                    last_cleanup = time.time()
             except Exception:
                 import logging
                 logging.getLogger(__name__).exception('Analysis dispatch will retry')
@@ -231,7 +236,10 @@ def install(app, settings, owner):
                 raise HTTPException(503,'The Fayoum sample inputs are being prepared.')
         if shutil.disk_usage(settings.data).free < settings.min_free_bytes:
             raise HTTPException(503,'Result storage is nearly full.')
-        try:return analyses.create(user,idempotency_key,payload.model_dump(mode='json'))
+        try:
+            if d: app.state.uploads.pin(d.model_dump(mode='json'),user,settings.retention_days)
+            return analyses.create(user,idempotency_key,payload.model_dump(mode='json'))
+        except ValueError as exc:raise HTTPException(422,str(exc)) from exc
         except QueueFull as exc:raise HTTPException(429,str(exc)) from exc
         except Conflict as exc:raise HTTPException(409,str(exc)) from exc
 
