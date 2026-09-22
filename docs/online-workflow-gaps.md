@@ -4,7 +4,7 @@ Status checked against the v0.8 implementation on 22 September 2026. This is a c
 
 ## Available now
 
-- One browser submission flow, shared study area, persistent task history, cancellation and retained partial results for seven environmental diagnostics plus the Fayoum water pilot.
+- One browser submission flow, shared study area, persistent task history, cancellation and retained partial results for seven environmental diagnostics plus water modelling for the Fayoum example and bounded custom areas.
 - Recalculation of all seven Ganjam reference modules, including GLC-FCS30D 2002/2012/2022, and bounded source acquisition for new-area environmental tasks.
 - New-area climate periods, models, scenarios, thresholds; groundwater periods; VHI seasons and reference years; flood return periods; land-cover grid size and forest-edge options.
 - GeoTIFF, CSV, result ZIP and run manifests with sources, methods, hashes and missing-data rules. Browser sessions require no shared access code or local Python installation.
@@ -14,7 +14,7 @@ Status checked against the v0.8 implementation on 22 September 2026. This is a c
 
 The online workflow now carries bounded GeoTIFF sources and years, crosswalk CSVs, forest selections and protected/OECM polygon layers into private server jobs. The server produces complete transition matrices, gross gain/loss/net tables, common-coverage forest changes, stratum metrics and the missing derived ratios. Results render charts, period-map comparisons and PNG exports; the unified HTML/Markdown brief records every module status.
 
-See [method differences and comparison checklist](method-differences.md). CDSE activation and NASA LAADS profile/authorization are complete; real Sentinel-2, VIIRS geolocation, ERA5 and AgERA5 download probes pass. A fresh acquisition/model/export run remains the dependency for enabling new water regions. Original-assessment validation still requires independently supplied files listed in [the intake manifest](reference-comparison-files.csv). Optional Sankey diagrams, cross-device accounts/sharing and permanent archives remain separate future work.
+See [method differences and comparison checklist](method-differences.md). Custom water regions are enabled after real Ganjam source acquisition, modelling and export, plus a fully covered five-day reprocessing check. NASA, CDSE and CDS accounts are configured on the server. Water supports a 500 km² enclosing rectangle, 1–31 completed days from 2018 onwards and 50°S–50°N. Source gaps can leave period maps missing; the result page explains why and preserves daily outputs. Original-assessment validation still requires independently supplied files listed in [the intake manifest](reference-comparison-files.csv). Optional Sankey diagrams, cross-device accounts/sharing and permanent archives remain separate future work.
 
 ## Interpretation details to preserve
 
@@ -23,6 +23,7 @@ See [method differences and comparison checklist](method-differences.md). CDSE a
 - Internal clearings are non-forest, not a fourth part of forest area. Patch/edge/core sum to forest; NP counts connected forest components, not only the red map category. LPI divides by landscape area, while a largest-patch forest share uses forest area.
 - Preserve product-specific source periods and eligible-area denominators. MODIS VHI is not ASIS; NPP is not crop yield. The low-emission scenario and the published degradation period discrepancy remain separate questions.
 - The current water thermal sharpener is stochastic; retain result manifests and actual outputs. See [repeatability evidence](online-validation.md).
+- The water configuration uses Suomi NPP VIIRS. NASA's announced November 2026 product-delivery transition needs a separately verified replacement for later observations; see [source-lifecycle details](method-differences.md).
 - Sessions are browser-specific and outputs expire after 30 days. Cross-device retrieval, durable project archives and collaborator sharing need an explicit product design; removing the access-code form does not create a user account system.
 
 ## Separate extensions

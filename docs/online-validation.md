@@ -28,11 +28,38 @@ noninteractive credentials, token destinations, lossless packed-coordinate
 copying, truncated range rejection and required-source checks. Fresh custom
 runs record SHA-256 hashes of the prepared provider inputs in their manifests.
 
-These are provider-access checks. A fresh small-area acquisition/model/export
-run is still required before enabling public custom-water submissions. The
-earlier acquisition-only attempts were cancelled and are not counted as
-completed water-model runs. `NBS_ENABLE_CUSTOM` remains false during validation.
-Provider secrets stay outside source control and result files.
+The fresh custom job `d71026e1e4044bf682d570cccbf4edc4` completed on the server
+for Ganjam bounds `[84.81, 19.35, 84.85, 19.39]`, 1–7 January 2021. Acquisition
+used seven configured provider products, all recorded with prepared-input
+SHA-256 hashes. SE_ROOT v3, ETLook v3 and export completed on the 73 × 73 grid
+with 25 checks. Total queue-to-finish time was about 56.1 minutes; acquisition
+took 52.5 minutes. All 12 downloadable files passed size and SHA-256 checks
+through production HTTPS; ZIP entries matched their individual files. The
+browser raster reader independently checked all 12 map/period combinations.
+
+Coverage matters: 1–2 January had no finite ET, NPP or root-zone values, while
+3–7 January had 100% coverage of the 5,184 included cells. Complete seven-day
+ET/NPP/root-zone maps therefore correctly remain NoData; reference ET has full
+coverage. Missing days were not replaced with zero. The result page now explains
+empty complete-period maps, retains daily charts/downloads and omits an empty
+colour scale.
+
+A separate **validation-only** run reprocessed the seven identical acquired
+provider inputs for 3–7 January through both preparation stages, SE_ROOT and
+ETLook. It did not redownload the sources or reuse computed model outputs. All
+12 map/period combinations had 100% valid coverage, all 25 export checks passed,
+and the browser raster reader independently checked means, coverage and cell
+counts. Five-day area-weighted ET was 6.47435 mm, NPP 5.00205 gC/m², relative
+root-zone saturation 0.53608 and reference ET 11.61984 mm. These are model
+outputs, not field validation; stochastic sharpening prevents an identical-pixel
+recomputation guarantee.
+
+`NBS_ENABLE_CUSTOM=true` is now enabled in production. A fresh anonymous HTTPS
+workspace successfully submitted and cancelled a custom water analysis through
+the unified endpoint. That cancelled transport check is **not** counted as a
+completed model run. Earlier acquisition-only attempts were also cancelled and
+are not counted as completed models. Provider secrets stay outside source
+control and result files. Frontend tests: 37 passed; service tests: 40 passed.
 
 ## v0.8 landscape migration — 22 September 2026
 
@@ -49,7 +76,7 @@ The production workspace now accepts one to three categorical GeoTIFFs with expl
 | Browser checks | Production three-step input flow and local completed results were inspected at 1280 px; the result page also had no document overflow at 319 px. Map/chart export controls, matrix rendering and the printable brief were checked. The map and gain/loss PNG files were downloaded and visually inspected. |
 | Initial provider setup | ERA5 terms were accepted with the account owner's explicit authorization. A real CDS request returned a valid 25,171-byte NetCDF with `t2m`. CDSE initially required email activation; the follow-up above records its resolution. |
 
-At the landscape release, custom water was still gated. The follow-up above records subsequent provider verification; the landscape evidence alone does not establish a successful arbitrary-region water run.
+At the landscape release, custom water was still gated. The follow-up above records the subsequent fresh custom run, coverage limitations and production activation; the landscape evidence alone does not establish water-model performance.
 
 The original-assessment comparison remains dependent on the files in [the comparison intake checklist](reference-comparison-files.csv). The [method differences](method-differences.md) include the baseline boundary/grid, forest denominators, GLDAS/GEE comparison status, VHI versus ASIS, and the differing climate periods and dry-spell definitions.
 
@@ -102,4 +129,4 @@ ET differed by approximately 0.098% and NPP by 0.149%. These are recorded differ
 
 ## Limits of this evidence
 
-The tests establish execution, output integrity and arithmetic consistency. They do not validate ecological causality, satellite accuracy, local groundwater observations, crop yield or another team's historical assessment. This v0.7 baseline did not cover arbitrary-region water modelling or protection/OECM uploads. The v0.8 evidence above adds bounded online protection/OECM analysis; custom water remains pending. See [capability gaps](online-workflow-gaps.md).
+The tests establish execution, output integrity and arithmetic consistency. They do not validate ecological causality, satellite accuracy, local groundwater observations, crop yield or another team's historical assessment. This v0.7 baseline did not cover arbitrary-region water modelling or protection/OECM uploads. The v0.8 evidence above adds bounded online protection/OECM analysis and a custom-water rollout with explicit coverage evidence. See [capability gaps](online-workflow-gaps.md).

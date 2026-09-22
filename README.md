@@ -19,13 +19,13 @@ The manual covers operation of every module, the real Ganjam public datasets use
 | Land degradation | Trends.Earth SDG 15.3.1 v1.2 | All three subindicators, SOC percentage change, one-out-all-out, component completeness, baseline and 2023 status |
 | Water & productivity | FAO Fayoum sample provider inputs, 1–31 July 2021; pyWaPOR 3.7.3 | ET, reference ET, NPP and root-zone saturation maps; daily/period summaries and model outputs |
 
-The first seven rows describe **Ganjam reference data**; the water row describes **Fayoum**. Eight selectable modules do not mean all eight currently support every region. The online flow does not yet expose the retained advanced tools' arbitrary GeoTIFF/Shapefile uploads, editable class crosswalk or protection/OECM stratification. See [online capability gaps and next steps](docs/online-workflow-gaps.md) and [v0.7 validation](docs/online-validation.md).
+The first seven rows describe **Ganjam reference data**; the water row describes **Fayoum**. Eight selectable modules do not mean all eight currently support every region. The online flow accepts bounded categorical GeoTIFFs, explicit years, editable class crosswalks, forest definitions and protection/OECM polygons. See [online capability gaps and next steps](docs/online-workflow-gaps.md) and [production validation](docs/online-validation.md).
 
 Drought is a **MODIS seasonal alternative**, not FAO ASIS. Climate scenarios differ from the reference report’s RCP2.6. Land-degradation periods follow the publisher, including the documented discrepancy between its latest land-cover/SOC record (2015–2022) and TIFF labels (2015–2023). Full methods and limitations are in the catalog and [English user manual](docs/user-guide.en.md).
 
 ### Online water and productivity
 
-Open **New analysis**, choose **Fayoum, Egypt** and select **Water & productivity** alongside any other desired diagnostics. Submit once and view maps and time series through the unified **Results** page. Tasks continue on the server after the page closes. The first pilot recomputes the FAO Fayoum sample; custom regions require configured and verified provider accounts. See [service deployment and limits](services/pywapor/README.md).
+Open **New analysis**, choose **Fayoum, Egypt** and select **Water & productivity** alongside any other desired diagnostics. Submit once and view maps and time series through the unified **Results** page. Tasks continue on the server after the page closes. Alternatively choose **Your study area**, select Water & productivity and set your dates. Custom source acquisition is enabled using server-managed NASA, CDSE and CDS accounts. Tasks support a 500 km² enclosing rectangle and 1–31 completed days from 2018 onwards, within 50°S–50°N. Cloud gaps can leave daily or complete-period outputs missing; review coverage. See [service deployment and limits](services/pywapor/README.md).
 
 ### Online environmental diagnostics
 
@@ -50,7 +50,7 @@ The complete public diagnostic inputs occupy roughly **4.5 MB compressed**, excl
 - Browser Web Workers: input hashes, categorical alignment/reclassification, forest analysis, continuous-map arithmetic, subindicator combination and weighted statistics.
 - Online workspaces: server source acquisition, all numerical calculations, persistent queues and result storage. The browser renders selected output layers and verifies their checksums.
 - Static hosting: frontend, prepared public rasters and provenance. The advanced workspace code retains optional browser/local preparation tools; its UI entry is temporarily hidden.
-- The online wizard accepts a boundary GeoJSON or rectangle, then the server acquires the source rasters. Raster/Shapefile uploads and browser-only processing remain in the hidden advanced implementation.
+- The online wizard accepts a boundary GeoJSON, zipped Shapefile or rectangle, then the server acquires source rasters. Land-cover and forest tasks can instead use uploaded categorical GeoTIFFs, a crosswalk and protection/OECM polygons; calculations run on the server.
 
 Continuous-module area weights use AOI intersections in square kilometres. Crop and terrestrial modules use documented eligible-area masks. The land-cover engine uses cell-centre allocation. Zero and negative values are valid numeric data; NoData never becomes stable land, no drought or safe floodplain.
 
@@ -77,7 +77,7 @@ These checks validate software and data handling, **not environmental attributio
 
 Calculations and checks establish implementation consistency; local forest definitions, crop calendars, climate thresholds and observations determine how results should be interpreted. Missing protection polygons do not establish that land is unprotected. These are interpretation considerations, not an additional approval step for using the platform.
 
-New-area acquisition is available for the seven environmental diagnostics within documented limits. Remaining work includes custom-region water acquisition, migration of advanced land-cover inputs and protection statistics into the online flow, richer comparison charts and report exports. ASIS, low-emission climate scenarios, additional hazards, suitability scoring, intervention selection and cost-benefit analysis are separate extensions; they are not implied by the eight-module release.
+New-area acquisition is available for the seven environmental diagnostics within documented limits. Custom-region water acquisition is enabled after a fresh Ganjam acquisition/model/export run and a complete-period reprocessing check. Land-cover uploads, protection statistics, comparison charts and printable briefs are available online. Independent comparison with the original assessment still needs the files listed in the [comparison intake checklist](docs/reference-comparison-files.csv). ASIS, low-emission climate scenarios, additional hazards, suitability scoring, intervention selection and cost-benefit analysis are separate extensions; they are not implied by the eight-module release.
 
 ## Sources and deployment
 
@@ -91,4 +91,4 @@ Maintain the English manual in `docs/user-guide.en.md`. `pnpm run docs:build` cr
 
 ## Online landscape migration (0.8)
 
-The unified workspace accepts custom categorical GeoTIFFs and years, CSV crosswalks, forest definitions and protected/OECM polygon layers. It computes change matrices, gross gains/losses, forest spatial-group metrics and common-coverage comparisons on the server. Results include PNG maps/charts and a unified printable HTML/Markdown brief. See the [method-differences table](docs/method-differences.md) and [original-assessment file checklist](docs/reference-comparison-files.csv). Custom water areas await provider registration and a verified fresh acquisition/model run.
+The unified workspace accepts custom categorical GeoTIFFs and years, CSV crosswalks, forest definitions and protected/OECM polygon layers. It computes change matrices, gross gains/losses, forest spatial-group metrics and common-coverage comparisons on the server. Results include PNG maps/charts and a unified printable HTML/Markdown brief. See the [method-differences table](docs/method-differences.md) and [original-assessment file checklist](docs/reference-comparison-files.csv). Custom water areas are enabled within the service limits. The [validation record](docs/online-validation.md) distinguishes fresh acquisition, complete-period model checks and source-coverage gaps.

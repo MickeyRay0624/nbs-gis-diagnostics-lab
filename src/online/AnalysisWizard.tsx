@@ -28,6 +28,7 @@ export function AnalysisWizard({ganjam,diagnostics,water,client,onSubmit,initial
       return {boundary,area:validateBoundary(boundary).areaKm2,error:null};
     }catch(e){return {boundary:null,area:null,error:(e as Error).message};}
   },[preset,ganjam,boundaryMode,uploaded,bounds]);
+  function setWaterDate(key:'start'|'end',value:string){setWaterDates(d=>({...d,[key]:value}));setError(null);}
   const patch=<K extends keyof Job>(key:K,value:Job[K])=>{setJob(j=>({...j,[key]:value}));setError(null);};
   function usePreset(next:Preset){
     setPreset(next);setError(null);setLand(defaultLand());
@@ -35,7 +36,11 @@ export function AnalysisWizard({ganjam,diagnostics,water,client,onSubmit,initial
     setModules(next==='ganjam'?MODULES.filter(m=>m.id!=='water').map(m=>m.id):next==='fayoum'?['water']:['flood','degradation']);
   }
   function unavailable(id:AnalysisModule){
-    if(id==='water')return preset==='fayoum'?water.sample_ready?null:'Sample inputs are being prepared':preset==='ganjam'||!water.custom_enabled?'Choose the Fayoum sample to run this module':null;
+    if(id==='water'){
+      if(preset==='fayoum')return water.sample_ready?null:'Sample inputs are being prepared';
+      if(!water.custom_enabled)return 'Choose the Fayoum sample to run this module';
+      return preset==='ganjam'?'Choose a smaller custom area or the Fayoum sample':null;
+    }
     if(preset==='ganjam')return diagnostics.sample_ready?null:'Reference inputs are being prepared';
     return diagnostics.modules.find(m=>m.id===id)?.custom_enabled?null:'Source access is awaiting verification';
   }
@@ -73,7 +78,7 @@ export function AnalysisWizard({ganjam,diagnostics,water,client,onSubmit,initial
               {boundaryMode==='rectangle'?<div className="prep-bounds">{['West longitude','South latitude','East longitude','North latitude'].map((label,i)=><label className="prep-field" key={label}>{label}<input type="number" step="0.01" value={bounds[i]} onChange={e=>setBounds(b=>b.map((v,n)=>n===i?Number(e.target.value):v))}/></label>)}</div>:<label className="boundary-upload"><span aria-hidden="true">↥</span><strong>{filename||'Choose a boundary file'}</strong><small>GeoJSON or zipped Shapefile · simplify to ≤190 KB GeoJSON</small><input aria-label="Boundary GeoJSON" type="file" accept=".geojson,.json,.zip" onChange={async e=>{const file=e.target.files?.[0];if(!file)return;try{const doc=await readVector(file);doc.features.forEach(f=>{f.properties={};});if(new TextEncoder().encode(JSON.stringify(doc)).length>190000)throw new Error('Simplify the boundary to under 190 KB of GeoJSON.');const b=validateBoundary(doc);setUploaded(b.boundary);setFilename(file.name);setError(null);}catch(err){setUploaded(null);setError((err as Error).message);}e.target.value='';}}/></label>}
             </>}
             <div className="builder-map"><MapPanel aoi={region.boundary} label={name||'Study-area preview'} loading={preset==='ganjam'&&!ganjam} error={region.error} showMarker={false}/><div className="map-caption"><span>STUDY-AREA PREVIEW</span><strong>{region.area!==null?`${region.area.toLocaleString('en',{maximumFractionDigits:1})} km²`:'No boundary selected'}</strong></div></div>
-            {preset==='ganjam'&&<p className="builder-note">The server recalculates verified Ganjam inputs using their recorded source periods. Water modelling is available through the Fayoum sample.</p>}
+            {preset==='ganjam'&&<p className="builder-note">The server recalculates verified Ganjam inputs using their recorded source periods. {water.custom_enabled?'For water modelling, choose Your study area with an enclosing rectangle up to 500 km², or use the Fayoum example.':'Water modelling is available through the Fayoum sample.'}</p>}
             {preset==='fayoum'&&<p className="builder-note">All selected modules will use this Fayoum boundary. Water modelling uses verified inputs for July 2021; other diagnostics keep their own source periods.</p>}
           </>}
           {step===1&&<>
@@ -83,7 +88,7 @@ export function AnalysisWizard({ganjam,diagnostics,water,client,onSubmit,initial
             {modules.some(m=>m==='lulc'||m==='fragmentation')&&<LandInputs land={land} setLand={setLand} preset={preset} forest={modules.includes('fragmentation')} client={client} files={sourceFiles} setFiles={setSourceFiles} onBusy={setUploading}/>}
             {preset==='ganjam'?<div className="source-period-note"><strong>Other diagnostic periods remain fixed</strong><p>Climate, groundwater, drought, flood and degradation keep the recorded Ganjam source periods. Review these alongside the results.</p></div>:<>
               {!!config.modules.length&&<details className="module-settings" open><summary>Diagnostic settings <span>Periods, scenarios & methods</span></summary><DiagnosticOptions job={config} patch={patch} land={land} setLand={setLand} landModules={[]}/></details>}
-              {modules.includes('water')&&<fieldset className="prep-options water-date-settings"><legend>Water & productivity period</legend><div className="water-fields"><label className="prep-field">Start date<input type="date" value={preset==='fayoum'?FAYOUM.start:waterDates.start} disabled={preset==='fayoum'} onChange={e=>setWaterDates(v=>({...v,start:e.target.value}))}/></label><label className="prep-field">End date<input type="date" value={preset==='fayoum'?FAYOUM.end:waterDates.end} disabled={preset==='fayoum'} onChange={e=>setWaterDates(v=>({...v,end:e.target.value}))}/></label></div><p>{preset==='fayoum'?'The verified sample covers 1–31 July 2021. The server computes new pyWaPOR results for every submitted analysis.':'Up to 31 days and a 500 km² enclosing rectangle. Select completed dates from 2018 onwards.'}</p></fieldset>}
+              {modules.includes('water')&&<fieldset className="prep-options water-date-settings"><legend>Water & productivity period</legend><div className="water-fields"><label className="prep-field">Start date<input type="date" value={preset==='fayoum'?FAYOUM.start:waterDates.start} disabled={preset==='fayoum'} onInput={e=>setWaterDate('start',e.currentTarget.value)} onChange={e=>setWaterDate('start',e.currentTarget.value)}/></label><label className="prep-field">End date<input type="date" value={preset==='fayoum'?FAYOUM.end:waterDates.end} disabled={preset==='fayoum'} onInput={e=>setWaterDate('end',e.currentTarget.value)} onChange={e=>setWaterDate('end',e.currentTarget.value)}/></label></div><p>{preset==='fayoum'?'The verified sample covers 1–31 July 2021. The server computes new pyWaPOR results for every submitted analysis.':'Up to 31 days and a 500 km² enclosing rectangle, between 50°S and 50°N. Select completed dates from 2018 onwards. Satellite cloud cover and source availability can limit usable observations.'}</p></fieldset>}
             </>}
           </>}
           {step===2&&<>

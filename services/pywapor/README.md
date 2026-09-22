@@ -16,9 +16,10 @@ Visitors need only a browser; the workspace opens automatically. The service use
 
 The first deployed pilot supports the pinned FAO Fayoum provider inputs for
 1–31 July 2021, recomputed for each job. These are satellite/weather product
-caches, not precomputed model results. Arbitrary regions remain disabled until
-NASA Earthdata, Copernicus Data Space and CDS access are configured and a new-area
-run is verified. The model uses the nominal 60 m `WaPOR3_level_2` input grid.
+caches, not precomputed model results. Custom regions are enabled on the production
+server after a fresh Ganjam source/model/export run and a complete-period check
+using those acquired inputs. The model uses the nominal 60 m `WaPOR3_level_2`
+input grid. Other deployments must configure and verify their own provider access.
 
 The existing pyWaPOR thermal sharpener fits a `BaggingRegressor` without a fixed `random_state`. Fresh runs are not guaranteed to reproduce earlier pixels exactly. Preserve each result and run manifest; compare source hashes, configuration, coverage and numeric differences rather than assuming byte-for-byte model equality. The v0.7 workflow integration does not modify the scientific pipeline or set a new seed.
 
@@ -53,7 +54,8 @@ Eight-module browser workflow --HTTPS + HttpOnly session--> FastAPI
 - Each browser workspace sees only its own jobs. An automatic HttpOnly cookie
   restores its history; clearing site data opens a new workspace. Optional
   legacy analyst keys remain server secrets and are never built into frontend assets.
-- Limit: 500 km² **enclosing rectangle**, 31 inclusive days, 8 pending jobs total,
+- Limit: 500 km² **enclosing rectangle**, 1–31 completed days from 2018 onwards,
+  within 50°S–50°N (CHIRPS coverage); 8 pending jobs total,
   2 pending per browser workspace. A single compute worker serializes jobs.
 - The deployment caps API memory at 256 MB and worker memory at 1.5 GB, with up
   to 3 GB combined RAM/swap for the worker and 1 CPU. These are pilot settings
@@ -138,6 +140,10 @@ with a valid historical period and verify acquisition, quality filtering and
 outputs. Set `NBS_ENABLE_CUSTOM=true` only as part of that rollout; readiness
 checks confirm presence of secrets, not whether a provider will accept them.
 Full Ganjam exceeds the pilot area limit: use a smaller test polygon/rectangle.
+The production flag was enabled on 22 September 2026; see the [fresh acquisition,
+coverage and validation evidence](../../docs/online-validation.md). A seven-day
+Ganjam acquisition took about 56 minutes end to end, predominantly provider
+downloads. This is one measured run, not a runtime guarantee.
 
 ## Results and scientific interpretation
 
