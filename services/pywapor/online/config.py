@@ -58,3 +58,19 @@ def provider_credentials():
 
 def custom_ready(settings):
     return settings.custom_enabled and all(all(pair) for pair in provider_credentials().values())
+
+
+def configure_accounts(accounts, copernicus_odata, mode):
+    credentials = provider_credentials()
+
+    def get_account(name):
+        if mode == "sample":
+            raise RuntimeError("The public sample unexpectedly requested authenticated input.")
+        if name not in credentials or not all(credentials[name]):
+            raise RuntimeError("A required provider account is not configured on the server.")
+        return credentials[name]
+
+    # copernicus_odata imports `get` directly, before Project starts. Replacing
+    # accounts.get alone leaves that alias pointing at the interactive getter.
+    accounts.get = get_account
+    copernicus_odata.get = get_account

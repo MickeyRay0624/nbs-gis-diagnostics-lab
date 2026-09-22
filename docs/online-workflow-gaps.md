@@ -14,7 +14,7 @@ Status checked against the v0.8 implementation on 22 September 2026. This is a c
 
 The online workflow now carries bounded GeoTIFF sources and years, crosswalk CSVs, forest selections and protected/OECM polygon layers into private server jobs. The server produces complete transition matrices, gross gain/loss/net tables, common-coverage forest changes, stratum metrics and the missing derived ratios. Results render charts, period-map comparisons and PNG exports; the unified HTML/Markdown brief records every module status.
 
-See [method differences and comparison checklist](method-differences.md). CDS has passed a real ERA5 download; CDSE email activation and a fresh acquisition/model run remain the dependencies for enabling new water regions. Original-assessment validation still requires independently supplied files listed in [the intake manifest](reference-comparison-files.csv). Optional Sankey diagrams, cross-device accounts/sharing and permanent archives remain separate future work.
+See [method differences and comparison checklist](method-differences.md). CDSE activation and NASA LAADS profile/authorization are complete; real Sentinel-2, VIIRS geolocation, ERA5 and AgERA5 download probes pass. A fresh acquisition/model/export run remains the dependency for enabling new water regions. Original-assessment validation still requires independently supplied files listed in [the intake manifest](reference-comparison-files.csv). Optional Sankey diagrams, cross-device accounts/sharing and permanent archives remain separate future work.
 
 ## Interpretation details to preserve
 

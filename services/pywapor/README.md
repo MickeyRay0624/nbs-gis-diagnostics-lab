@@ -83,7 +83,7 @@ provider secrets or access codes in a public web root or in Git.
 2. Run `python3 prepare-build.py` in a full repository checkout, then `docker compose build`. The images install their own compatible Python/GDAL
    environment. Existing host Python installations are not modified.
 3. Create `data`, give it mode `700`, and assign it to the image user. For the pinned image that user
-   is UID/GID **57439**; verify with `docker run --rm nbs-pywapor:0.4.0 id`.
+   is UID/GID **57439**; verify with `docker run --rm nbs-pywapor:0.4.2 id`.
 4. Provision sources once, either from the FAO archive:
 
    ```sh
@@ -115,6 +115,15 @@ Set `NBS_NASA_USERNAME`, `NBS_NASA_PASSWORD`, `NBS_CDSE_USERNAME`,
 complete provider registration and applicable dataset terms. The worker supplies
 credentials through pyWaPOR's account getter without interactive prompts or
 writing into site-packages. They are never placed in job payloads or exports.
+
+CDSE's downloader also holds a direct import of the account getter; the worker
+configures both references. For NASA VIIRS, complete any Earthdata profile fields
+requested by LAADS and authorize LAADS Web once. The worker then uses the official
+[EDL find-or-create token API](https://urs.earthdata.nasa.gov/documentation/for_users/user_token)
+instead of the interactive OAuth callback. Tokens stay in process memory, are
+reused within a job, and are sent only to the HTTPS LAADS data host. Existing
+tokens are not revoked. Provider passwords still belong only in the private
+server environment; browser visitors do not need their own provider accounts.
 
 Before opening custom regions to analysts, perform a controlled small-area run
 with a valid historical period and verify acquisition, quality filtering and

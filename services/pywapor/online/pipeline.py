@@ -7,7 +7,8 @@ import shutil
 import sys
 import time
 
-from .config import provider_credentials
+from .config import configure_accounts
+from .providers import configure_laads
 
 
 def stage(folder, title):
@@ -25,19 +26,14 @@ def main():
     import dask
     import pywapor
     from pywapor.collect import accounts
-
-    credentials = provider_credentials()
-
-    def get_account(name):
-        if request["mode"] == "sample":
-            raise RuntimeError("The public sample unexpectedly requested authenticated input.")
-        if name not in credentials or not all(credentials[name]):
-            raise RuntimeError("A required provider account is not configured on the server.")
-        return credentials[name]
+    from pywapor.collect.protocol import copernicus_odata
 
     # pyWaPOR's default getter prompts and writes keys into site-packages. A
     # server worker must use only configured secrets and must never prompt.
-    accounts.get = get_account
+    configure_accounts(accounts, copernicus_odata, request["mode"])
+    if request["mode"] == "custom":
+        from pywapor.collect.product import VIIRSL1
+        configure_laads(VIIRSL1, accounts)
     source_manifest = None
     if request["mode"] == "sample":
         stage(folder, "Verifying the FAO public source inputs")

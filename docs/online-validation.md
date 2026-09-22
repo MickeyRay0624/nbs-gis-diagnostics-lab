@@ -1,5 +1,27 @@
 # Online workflow validation
 
+## Custom-water provider follow-up — 22 September 2026
+
+CDSE activation is complete: the server's authentication request succeeds, and
+an actual Sentinel-2 download over a small Ganjam area produced two 73 × 73
+observations with 10,658 finite values each for NDVI and albedo. ERA5 returned a
+valid 25,171-byte temperature NetCDF; AgERA5 returned an 18,723-byte archive
+containing a daily solar-radiation subset. The NASA profile was completed with
+the account owner's supplied organization and LAADS Web was authorized.
+
+The worker now configures CDSE's directly imported credential getter as well as
+the shared getter. NASA's browser OAuth callback stalled in the server client;
+the official EDL token route returned a valid 20,541-byte VIIRS geolocation
+NetCDF (4 × 4 finite latitude values). The service uses that route with a
+process-local token and a restricted HTTPS data session. All 35 service tests
+pass, including noninteractive credentials and token destination checks.
+
+These are provider-access checks. A fresh small-area acquisition/model/export
+run is still required before enabling public custom-water submissions. The
+earlier acquisition-only attempts were cancelled and are not counted as
+completed water-model runs. `NBS_ENABLE_CUSTOM` remains false during validation.
+Provider secrets stay outside source control and result files.
+
 ## v0.8 landscape migration — 22 September 2026
 
 The production workspace now accepts one to three categorical GeoTIFFs with explicit years, class crosswalks, forest definitions and optional protected/OECM polygons. It publishes change matrices, gross gain/loss/net and forest-group charts, period-map comparisons, PNG export and a combined HTML/Markdown brief. The retained advanced-tools entry is still hidden.
@@ -13,9 +35,9 @@ The production workspace now accepts one to three categorical GeoTIFFs with expl
 | Protection/OECM overlap | The live job used explicitly labelled artificial overlapping polygons to test allocation. Forest areas summed across disjoint strata, and gross gain minus gross loss equalled net change. These polygons do not establish actual protected status in Ganjam. |
 | Live result integrity | All 23 downloadable files passed byte-size and SHA-256 checks through the production HTTPS API. |
 | Browser checks | Production three-step input flow and local completed results were inspected at 1280 px; the result page also had no document overflow at 319 px. Map/chart export controls, matrix rendering and the printable brief were checked. The map and gain/loss PNG files were downloaded and visually inspected. |
-| Provider setup | ERA5 terms were accepted with the account owner's explicit authorization. A real CDS request returned a valid 25,171-byte NetCDF with `t2m`. CDSE authentication returned `Account is not fully set up`; the official login returned to the email-activation page. |
+| Initial provider setup | ERA5 terms were accepted with the account owner's explicit authorization. A real CDS request returned a valid 25,171-byte NetCDF with `t2m`. CDSE initially required email activation; the follow-up above records its resolution. |
 
-The fresh custom-water model run remains blocked by CDSE email activation. `NBS_ENABLE_CUSTOM` remains false; this release does not claim that arbitrary-region water computation has passed. All provider secrets are confined to the server's private environment, outside source control and result files.
+At the landscape release, custom water was still gated. The follow-up above records subsequent provider verification; the landscape evidence alone does not establish a successful arbitrary-region water run.
 
 The original-assessment comparison remains dependent on the files in [the comparison intake checklist](reference-comparison-files.csv). The [method differences](method-differences.md) include the baseline boundary/grid, forest denominators, GLDAS/GEE comparison status, VHI versus ASIS, and the differing climate periods and dry-spell definitions.
 
