@@ -6,7 +6,7 @@ Version **0.8.0** unifies all eight diagnostics in one study-area → module sel
 
 **[Open the website](https://lmqstudio.com/nbs/)** · **[Read the English user manual](docs/user-guide.en.md)** · [Download the manual](https://lmqstudio.com/nbs/guide.en.md)
 
-The manual covers operation of every module, the real Ganjam public datasets used for testing, calculation formulas, exports and interpretation limits. The Chinese manual is kept locally by the project owner and is excluded from this release's repository tree and website.
+The manual covers operation of every module, the real Ganjam public datasets used for testing, calculation formulas, exports and interpretation limits. 
 
 | Module | Reference public inputs | Online outputs |
 | --- | --- | --- |
